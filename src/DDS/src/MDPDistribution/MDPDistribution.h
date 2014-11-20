@@ -17,7 +17,7 @@
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-08-13
+	\date 	2014-10-03
 */
 // ===========================================================================
 class dds::MDPDistribution : public IMDPDistribution
@@ -27,11 +27,12 @@ class dds::MDPDistribution : public IMDPDistribution
 		//	Public Constructor/Destructor
 		// =================================================================
 		/**
-			\brief		Constructor.
+			\brief		     Constructor.
 
-			\param[name	The name of this MDPDistribution.
+			\param[name	     The name of this MDPDistribution.
+			\param[shortName	The short name of this IMDPDistribution.
 		*/
-		MDPDistribution(std::string name);
+		MDPDistribution(std::string name, std::string shortName);
 		
 		
 		/**

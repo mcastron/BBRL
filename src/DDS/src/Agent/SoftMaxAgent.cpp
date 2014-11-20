@@ -23,7 +23,9 @@ SoftMaxAgent::SoftMaxAgent(double tau_, CModel* iniModel_) :
 	assert(tau > 0.0);
 	
 	stringstream sstr;
-	sstr << "Soft-Max (" << tau << ", no model)";
+	sstr << "Soft-Max (" << setprecision(ceil(log10(tau) + 2)) << tau;
+	if (iniModel) { sstr << ", " << iniModel->getName() << ")"; }
+	else          { sstr << ", no model)";                      }
 	setName(sstr.str());
 	
 	//	Check integrity
@@ -224,11 +226,13 @@ void SoftMaxAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		const vector<double>& V = dirDistrib->getV();
 		
 		iniModel = new CModel(
-				dirDistrib->getName(), nX, nU, iniState, N, rType, R, V);
+				dirDistrib->getShortName(), nX, nU, iniState, N, rType,
+				R, V);
 		
 		
 		stringstream sstr;
-		sstr << "Soft-Max (" << tau << ", ";
+		sstr << "Soft-Max (" << setprecision(ceil(log10(tau) + 2));
+		sstr << tau << ", ";
 		sstr << iniModel->getName() << ")";
 		setName(sstr.str());
 	}

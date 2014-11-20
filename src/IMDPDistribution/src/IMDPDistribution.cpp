@@ -13,8 +13,9 @@ void IMDPDistribution::serialize(ostream& os) const
 	
 	
 	os << IMDPDistribution::toString() << "\n";
-	os << 1 << "\n";
+	os << 2 << "\n";
 	os << name << "\n";
+	os << shortName << "\n";
 }
 
 
@@ -45,6 +46,12 @@ void IMDPDistribution::deserialize(istream& is) throw (SerializableException)
 	//	'name'
 	if (!getline(is, tmp)) { throwEOFMsg("name"); }
 	name = tmp;
+	++i;
+	
+	
+	//	'shortName'
+	if (!getline(is, tmp)) { throwEOFMsg("shortName"); }
+	shortName = tmp;
 	++i;
 	
 	

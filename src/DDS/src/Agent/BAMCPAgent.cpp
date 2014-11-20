@@ -1,7 +1,4 @@
 
-/* TODO - replace "BAMCPAgent" the agent class name */
-
-
 #include "BAMCPAgent.h"
 
 using namespace std;
@@ -12,21 +9,27 @@ using namespace utils;
 // ===========================================================================
 //	Public Constructors/Destructor
 // ===========================================================================
-BAMCPAgent::BAMCPAgent(unsigned int K_) :
-          K(K_), bamcp(0), simulator(0), samplerFact(0)
-{
-     //	Check integrity
-	#ifndef NDEBUG
-	checkIntegrity();
-	#endif
-}
-
-
 BAMCPAgent::BAMCPAgent(std::istream& is) :
           Agent(), bamcp(0), simulator(0), samplerFact(0)
 {
 	try							{ dDeserialize(is);	}
 	catch (SerializableException e)	{ deserialize(is);	}
+}
+
+
+BAMCPAgent::BAMCPAgent(unsigned int K_) :
+          K(K_), bamcp(0), simulator(0), samplerFact(0)
+{
+     stringstream sstr;
+	sstr << "BAMCP (" << K;
+	sstr << ", no model)";
+	setName(sstr.str());
+     
+     
+     //	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
 }
 
 
@@ -61,7 +64,7 @@ void BAMCPAgent::learnOnline(int x, int u, int y, double r)
 
 
 void BAMCPAgent::reset() throw (MDPException)
-{
+{     
      if (bamcp)          { delete bamcp;       bamcp       = 0; }
      if (simulator)      { delete simulator;   simulator   = 0; }
      if (samplerFact)    { delete samplerFact; samplerFact = 0; }
@@ -115,7 +118,6 @@ void BAMCPAgent::serialize(ostream& os) const
 	
 	
 	//  'R'
-	os << (nX*nU*nX) << "\n";
 	for (unsigned int u = 0; u < nU; ++u)
 		for (unsigned int x = 0; x < nX; ++x)
 		{
@@ -129,7 +131,6 @@ void BAMCPAgent::serialize(ostream& os) const
 	
 	
 	//  'priorcountList'
-	os << (nX*nU*nX) << "\n";
 	for (unsigned int u = 0; u < nU; ++u)
 		for (unsigned int x = 0; x < nX; ++x)
 		{
@@ -268,6 +269,12 @@ void BAMCPAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		nU = dirDistrib->getNbActions();
 		R = dirDistrib->getR();
 		priorcountList = dirDistrib->getTheta();
+		
+		
+		stringstream sstr;
+		sstr << "BAMCP (" << K << ", ";
+		sstr << dirDistrib->getShortName() << ")";
+		setName(sstr.str());
 	}
 	
 	
@@ -279,7 +286,6 @@ void BAMCPAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		
 		throw AgentException(msg);
 	}
-
 		
 	
 	//	Check integrity

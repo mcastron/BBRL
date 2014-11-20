@@ -31,7 +31,11 @@ VDBEEGreedyAgent::VDBEEGreedyAgent(
 	
 	
 	stringstream sstr;
-	sstr << "VDBE e-Greedy (" << sigma << ", " << delta << ", no model)";
+	sstr << "VDBE e-Greedy (";
+	sstr << setprecision(ceil(log10(sigma) + 2)) << sigma << ", ";
+	sstr << setprecision(ceil(log10(delta) + 2)) << delta;
+	if (iniModel) { sstr << ", " << iniModel->getName() << ")"; }
+	else          { sstr << ", no model)";                      }
 	setName(sstr.str());
 	
 	//	Check integrity
@@ -270,11 +274,14 @@ void VDBEEGreedyAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		const vector<double>& V = dirDistrib->getV();
 		
 		iniModel = new CModel(
-				dirDistrib->getName(), nX, nU, iniState, N, rType, R, V);
+				dirDistrib->getShortName(), nX, nU, iniState, N, rType,
+				R, V);
 		
 		
 		stringstream sstr;
-		sstr << "VDBE e-Greedy (" << sigma << ", " << delta << ", ";
+		sstr << "VDBE e-Greedy (";
+		sstr << setprecision(ceil(log10(sigma) + 2)) << sigma << ", ";
+		sstr << setprecision(ceil(log10(delta) + 2)) << delta << ", ";
 		sstr << iniModel->getName() << ")";
 		setName(sstr.str());
 	}

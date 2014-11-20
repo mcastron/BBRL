@@ -91,7 +91,7 @@ class MDPSimulator : public SIMULATOR
 		   std::vector<std::vector<double>::const_iterator > maxList;
 		   maxList = utils::search::max<vector<double> >(
 		             RV.begin(), RV.end());		   
-		   RewardRange = *(maxList[0]);   
+		   RewardRange = *(maxList[0]);
 		   
 		   T = 0;
 		   R = new double[nX*nU*nX];
@@ -126,10 +126,7 @@ class MDPSimulator : public SIMULATOR
 		                                                               const
           {
                if (mdp == 0)
-               {
-                     throw std::runtime_error(
-                              "Unable to simulate the MDP!");
-               }
+                     throw std::runtime_error("Unable to simulate the MDP!");
                
                else
                {

@@ -1,8 +1,9 @@
 Serializable
 0
 IMDPDistribution
-1
+2
 Pessimistic GChain distribution
+PGC
 MDPDistribution
 0
 DirMultiDistribution

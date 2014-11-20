@@ -17,7 +17,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BUILD_TYPE})
 # ----------------------------------------------------------------------------
 #	DEBUG
 # ----------------------------------------------------------------------------
-set(CMAKE_CXX_FLAGS "-O0 -g -Wall -W -Wextra -Wno-long-long -pedantic-errors")
+#set(CMAKE_CXX_FLAGS "-O0 -g -Wall -W -Wextra -Wno-long-long -pedantic-errors")
 
 # ----------------------------------------------------------------------------
 #	VALGRIND
@@ -33,8 +33,8 @@ set(CMAKE_CXX_FLAGS "-O0 -g -Wall -W -Wextra -Wno-long-long -pedantic-errors")
 # ----------------------------------------------------------------------------
 #	RELEASE
 # ----------------------------------------------------------------------------
-#add_definitions(-DNDEBUG)
-#set(CMAKE_CXX_FLAGS "-g -O3 -fPIC")
+add_definitions(-DNDEBUG)
+set(CMAKE_CXX_FLAGS "-g -O3 -fPIC")
 
 
 # ============================================================================

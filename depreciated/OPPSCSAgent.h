@@ -1,11 +1,12 @@
 
-#ifndef BAMCPAGENT_H
-#define BAMCPAGENT_H
+#ifndef OPPSCSAGENT_H
+#define OPPSCSAGENT_H
 
 #include "Agent.h"
-#include "Guez/MDPSimulator.h"
-#include "Guez/planners/mcp/bamcp/bamcp.h"
-#include "Guez/samplers/FDMsamplerFactory.h"
+#include "../AgentFactory/AgentFactory.h"
+#include "../MDP/MDP.h"
+#include "../MDP/CModel.h"
+#include "../MDPDistribution/MDPDistribution.h"
 #include "../MDPDistribution/DirMultiDistribution.h"
 #include "../dds.h"
 #include "../../ExternalLibs.h"
@@ -13,62 +14,60 @@
 
 // ===========================================================================
 /**
-	\class 	BAMCPAgent
+	\class 	OPPSCSAgent
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of a BAMCP Agent to address MDP problems for:
+	\brief 	Interface of an e-greedy Agent to address MDP problems for:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
+			
+			For Offline learning, does not support another distribution
+			than 'DirMultiDistribution'.
 
-               (based on Guez work)
-
-	\date 	2014-10-06
+	\date 	2014-08-13
 */
 // ===========================================================================
-/* final */ class dds::BAMCPAgent : public dds::Agent
+/* final */ class dds::OPPSCSAgent : public dds::Agent
 {		
 	public:
 		// =================================================================
-		//	Public Constructors/Destructor
+		//	Public Constructor/Destructor
 		// =================================================================
 		/**
 			\brief	Constructor.
 			
 			\param[is	The 'ifstream' containting the data representing
-					the BAMCPAgent to load.
+					the OPPSCSAgent to load.
 					(can either be compressed or uncompressed)
 		*/
-		BAMCPAgent(std::istream& is);
-
-
+		OPPSCSAgent(std::istream& is);
+		
+		
 		/**
-			\brief           Constructor.
+			\brief			Constructor.
 			
-			\param[K_        The number of nodes to insert to the BAMCP
-			                 tree at each time-step.
+			\param[n			The number of draws of the UCB1's.
+			\param[c			The constant used in the UCB1 formula:
+								I_t(i) = mu_i + c * sqrt(ln(n_t) / n_i)
+			\param[agentFactory	An AgentFactory to generate the Agents of
+							the strategy space.	
+							'agentFactory->init()' function must
+							have been called before.	
+			\param[boundsList	The list of bounds defining the strategy
+							space.
+			\param[gamma		The discount factor.
+			\param[T			The horizon limit.
 		*/
-		BAMCPAgent(unsigned int K_);
+		OPPSCSAgent(	unsigned int n_, double c_,
+					AgentFactory* agentFactory_,
+					double gamma_, unsigned int T_);
 		
 		
 		/**
 			\brief	Destructor.
 		*/
-		~BAMCPAgent();
-
-
-		// =================================================================
-		//	Public static methods
-		// =================================================================
-		/**
-			\brief	Return the string representation of this class name.
-			
-			\return	The string representation of this class name.
-		*/
-		static std::string toString()
-		{
-		   return "BAMCPAgent";
-		}
+		~OPPSCSAgent();
 
 
 		// =================================================================
@@ -110,7 +109,7 @@
 		*/
 		Agent* clone() const
 		{
-			return cloneInstance<BAMCPAgent>(this);
+			return cloneInstance<OPPSCSAgent>(this);
 		}
 		
 		
@@ -120,7 +119,7 @@
 			
 			\return	The name of the class of this object.
 		*/
-		std::string getClassName() const { return BAMCPAgent::toString(); }
+		std::string getClassName() const { return "OPPSCSAgent"; }
 
 		
 		/**
@@ -144,62 +143,45 @@
 	private:
 		// =================================================================
 		//	Private attributes
-		// =================================================================	
+		// =================================================================
 		/**
-		   \brief    The number of nodes to insert to the BAMCP tree
-		             at each time-step.
+			\brief	The Agent learned by OPPSCS.
 		*/
-		unsigned int K;
-		
-		
-		/**
-		   \brief    The BAMCP algorithm (implemented by Guez).
-		*/
-		BAMCP* bamcp;
-		
-		
-		/**
-		   \brief    A Simulator (required by 'BAMCP').
-		*/
-		SIMULATOR* simulator;
+		Agent* agent;
 
 
 		/**
-		   \brief    The current SamplerFactory (required by 'BAMCP').
+			\brief	The number of draws of the UCB1's.
 		*/
-		SamplerFactory* samplerFact;
+		unsigned int n;
 		
 		
 		/**
-		   \brief    The initial state of the MDPs to be played.
+			\brief	The constant used in the UCB1 formula:
+						I_t(i) = mu_i + c * sqrt(ln(n_t) / n_i)
 		*/
-		int iniState;
+		double c;
 		
 		
 		/**
-		   \brief    The number of states of the MDPs to be played.
+			\brief	An AgentFactory to generate the Agents of the
+					strategy space.	
 		*/
-		unsigned int nX;
+		AgentFactory* agentFactory;
 		
 		
 		/**
-		   \brief    The number of actions of the MDPs to be played.
+			\brief	The discount factor.
 		*/
-		unsigned int nU;
+		double gamma;
 		
 		
 		/**
-		   \brief    The reward function of the MDPs to be played.
+			\brief	The horizon limit.
 		*/
-		std::vector<double> R;
-		
-		
-		/**
-		   \brief    The list of prior observations for each transition.
-		*/
-		vector<double> priorcountList;
-		
-		
+		unsigned int T;
+
+
 		// =================================================================
 		//	Private methods
 		// =================================================================

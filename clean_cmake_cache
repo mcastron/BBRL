@@ -1,0 +1,10 @@
+
+make clean
+find . -name "*~" | xargs rm
+find . -name "CMakeFiles" | xargs rm -R
+find . -name "CMakeCache*" | xargs rm
+find . -name "cmake_install.cmake" | xargs rm
+find . -name "Makefile" | xargs rm
+find . -name "*.a" | xargs rm
+find . -name "*.o" | xargs rm
+

@@ -10,7 +10,8 @@ using namespace utils;
 // ===========================================================================
 //	Public Constructor/Destructor
 // ===========================================================================
-MDPDistribution::MDPDistribution(string name) : IMDPDistribution(name) {}
+MDPDistribution::MDPDistribution(string name, string shortName) :
+          IMDPDistribution(name, shortName) {}
 
 
 // ===========================================================================

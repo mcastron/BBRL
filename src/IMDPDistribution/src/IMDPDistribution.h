@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a RL MDP distribution.
 			
-	\date 	2013-08-13
+	\date 	2014-10-03
 */
 // ===========================================================================
 class IMDPDistribution : public Serializable
@@ -29,8 +29,8 @@ class IMDPDistribution : public Serializable
 			\param[shortName_	The short name of this IMDPDistribution.
 		*/
 		IMDPDistribution(
-				std::string name_ = "",
-				std::string shortName_ = "") :
+				std::string name_ = "no name",
+				std::string shortName_ = "no name") :
 					Serializable(), name(name_), shortName(shortName_) {}
 		
 		

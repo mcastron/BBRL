@@ -17,6 +17,7 @@ dds::EGreedyAgentFactory::EGreedyAgentFactory(std::istream& is) :
 
 dds::EGreedyAgentFactory::EGreedyAgentFactory(
 		double minEps_, double maxEps_, double minC_, double maxC_) :
+		     shortDistribName("no name"),
 			minEps(minEps_), maxEps(maxEps_), minC(minC_), maxC(maxC_)
 {
 	assert((minEps >= 0.0) && (minEps <= 1.0) && (minEps < maxEps));
@@ -41,7 +42,7 @@ void dds::EGreedyAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 		const dds::DirMultiDistribution* dirDistrib = 
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
 		
-		
+		shortDistribName = dirDistrib->getShortName();		
 		nX = dirDistrib->getNbStates();
 		nU = dirDistrib->getNbActions();
 		iniState = dirDistrib->getIniState();
@@ -88,7 +89,8 @@ dds::Agent* dds::EGreedyAgentFactory::get(const vector<double>& paramList)
 		N.push_back(round(paramList[i]));
 	
 	return (new EGreedyAgent(
-			epsilon, new CModel("", nX, nU, iniState, N, rType, R, V)));
+               epsilon,
+			new CModel(shortDistribName, nX, nU, iniState, N, rType, R, V)));
 }
 
 

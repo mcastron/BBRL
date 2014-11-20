@@ -17,13 +17,13 @@ DirMultiDistribution:: DirMultiDistribution(std::istream& is) :
 
 
 DirMultiDistribution::DirMultiDistribution(
-		string name,
+		string name, string shortName,
 		unsigned int nX_, unsigned int nU_,
 		int iniState_,
 		const vector<double>& theta_,
 		RewardType rType_,
 		const vector<double>& R_, const vector<double>& V_) :
-			MDPDistribution(name),
+			MDPDistribution(name, shortName),
 			nX(nX_), nU(nU_), iniState(iniState_),
 			theta(theta_), rType(rType_), R(R_), V(V_)
 {

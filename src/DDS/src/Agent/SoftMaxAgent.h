@@ -24,7 +24,7 @@
 			For Offline learning, does not support another distribution
 			than 'DirMultiDistribution'.
 
-	\date 	2014-09-23
+	\date 	2014-10-06
 */
 // ===========================================================================
 /* final */ class dds::SoftMaxAgent : public dds::Agent

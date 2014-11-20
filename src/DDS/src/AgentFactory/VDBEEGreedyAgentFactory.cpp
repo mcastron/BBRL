@@ -20,6 +20,7 @@ dds::VDBEEGreedyAgentFactory::VDBEEGreedyAgentFactory(
 		double minDelta_, double maxDelta_,
 		double minIniEps_, double maxIniEps_,
 		double minC_, double maxC_) :
+		     shortDistribName("no name"),
 			minSigma(minSigma_), maxSigma(maxSigma_),
 			minDelta(minDelta_), maxDelta(maxDelta_),
 			minIniEps(minIniEps_), maxIniEps(maxIniEps_),
@@ -54,6 +55,7 @@ void dds::VDBEEGreedyAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
 		
 		
+		shortDistribName = dirDistrib->getShortName();
 		nX = dirDistrib->getNbStates();
 		nU = dirDistrib->getNbActions();
 		iniState = dirDistrib->getIniState();
@@ -110,7 +112,7 @@ dds::Agent* dds::VDBEEGreedyAgentFactory::get(const vector<double>& paramList)
 	
 	return (new VDBEEGreedyAgent(
 			sigma, delta, iniEps,
-			new CModel("", nX, nU, iniState, N, rType, R, V)));
+			new CModel(shortDistribName, nX, nU, iniState, N, rType, R, V)));
 }
 
 

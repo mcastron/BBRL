@@ -26,32 +26,14 @@ using namespace utils;
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
-//   Extra structures
-// ---------------------------------------------------------------------------
-class AgentData
-{
-     public:
-          string name, expName;
-          double offlineTime;
-          double onlineTime;
-          double mean;
-          double gap;
-};
-
-
-// ---------------------------------------------------------------------------
 //	Extra functions
 // ---------------------------------------------------------------------------
 void help();
 void latex(int argc, char* argv[]) throw (parsing::ParsingException);
 void matlab(int argc, char* argv[]) throw (parsing::ParsingException);
-void writeLatexTable(ostream& os,
-                     string expName, vector<AgentData>& agentDataList);
-void writeMatlabFunction(ostream& os, string functionName,
-                         vector<AgentData>& agentDataList);
 void splitTime(double t,
                unsigned int& days, unsigned int& hours, unsigned int& minutes,
-               unsigned int& seconds, unsigned int& milliseconds);
+               unsigned int& seconds, double& milliseconds);
 
 // ---------------------------------------------------------------------------
 //	Main function
@@ -99,9 +81,8 @@ void help()
 
 void latex(int argc, char* argv[]) throw (parsing::ParsingException)
 {
-     vector<AgentData> agentDataList;
-
      //   1.   Parse the Agents
+     vector<Agent*> agentList;
      int iAgent = 0;
      while (iAgent < (argc - 1))
      {
@@ -118,22 +99,17 @@ void latex(int argc, char* argv[]) throw (parsing::ParsingException)
                argvBis[argcBis] = argv[iAgent];
                ++iAgent;
                ++argcBis;
-          }
+          }     
+          agentList.push_back(Agent::parse(argcBis, argvBis));
           
-          Agent* agent = Agent::parse(argcBis, argvBis);
           delete[] argvBis;
-          
-          AgentData agentData;
-          agentData.name = agent->getName();
-          agentData.offlineTime = agent->getOfflineTime();
-          agentDataList.push_back(agentData);
-          
-          delete agent;
      }
      
      
+     
      //   2.   Parse the Experiments
-     int iExp = 0, nExp = 0;
+     vector<Experiment*> expList;
+     int iExp = 0;
      while (iExp < (argc - 1))
      {
           while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
@@ -147,22 +123,8 @@ void latex(int argc, char* argv[]) throw (parsing::ParsingException)
           while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
                argvBis[argcBis++] = argv[iExp++];
           
-          Experiment* exp = Experiment::parse(argcBis, argvBis);         
+          expList.push_back(Experiment::parse(argcBis, argvBis));          
           delete argvBis;
-          
-          agentDataList[nExp].expName = (exp->getName());
-          agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
-                    / (double) exp->getNbOfMDPs());
-          
-          vector<double> dsrList = exp->computeDSRList();
-			pair<double, double> CI95
-					= statistics::computeCI95<double>(dsrList);
-                    
-          agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
-          agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
-          ++nExp;
-          
-          delete exp;
      }
      
      
@@ -173,68 +135,141 @@ void latex(int argc, char* argv[]) throw (parsing::ParsingException)
      
      //   4.   Run
 	ofstream os(output.c_str());
-	while (!agentDataList.empty())
+	while (!expList.empty())
 	{
-		string expName = agentDataList[0].expName;
-		vector<AgentData> tAgentDataList;
+		string expName = expList[0]->getName();
+		vector<Agent*> tAgentList;
+		vector<Experiment*> tExpList;
 		
-		for (int i = 0; i < (int) agentDataList.size(); ++i)
+		for (unsigned int i = 0; i < expList.size(); ++i)
 		{
-			if (agentDataList[i].expName == expName)
+			if (expList[i]->getName() == expName)
 			{
-				tAgentDataList.push_back(agentDataList[i]);
+				tAgentList.push_back(agentList[i]);
+				tExpList.push_back(expList[i]);
 				
-				for (int j = (i + 1); j < (int) agentDataList.size(); ++j)
-					agentDataList[j - 1] = agentDataList[j];
+				for (unsigned int j = (i + 1); j < agentList.size(); ++j)
+				{
+					agentList[j - 1] = agentList[j];
+					expList[j - 1] = expList[j];
+				}
 				
-				agentDataList.pop_back();				
+				agentList.pop_back();
+				expList.pop_back();
+				
 				--i;
 			}
 		}
 		
-		writeLatexTable(os, expName, tAgentDataList);
+		os << "\\begin{table}\n";
+		os << "\t\\centering\n";
+		os << "\t\\begin{tabular}{l|c|c|c}\n";
+		os << "\t\tAgent & Offline time & Online time & Mean score\\\\\n";
+		os << "\t\t\\hline\n";
+		
+		for (unsigned int i = 0; i < tExpList.size(); ++i)
+		{
+			os << "\t\t";
+			
+			os << tAgentList[i]->getName();
+			
+			int offlineTime = round(tAgentList[i]->getOfflineTime());
+			if (offlineTime < 1)
+				os << " & - ";
+			else
+			{
+                    unsigned int days, hours, minutes, seconds;
+                    double milliseconds;
+                    splitTime(offlineTime, days, hours, minutes,
+                              seconds, milliseconds);
+                    
+                    os << " & ";
+                    
+                    if (days > 0) { os << "$" << days << "$d "; }
+                    if ((days > 0) || (hours > 0))
+                         os << "$" << hours << "$h ";
+                    if ((days > 0) || (hours > 0) || (minutes > 0))
+                         os << "$" << minutes << "$m ";
+                    if ((days > 0) || (hours > 0) || (minutes > 0)
+                              || (seconds > 0))
+                    {          
+                         os << "$" << seconds << "$s ";
+                    }     
+                    os << "$" << setprecision(ceil(log10(milliseconds) + 2));
+                    os << milliseconds << "$ms ";
+			}
+			
+			double onlineTime = (tExpList[i]->getTimeElapsed()
+					/ (double) tExpList[i]->getNbOfMDPs());
+               unsigned int days, hours, minutes, seconds;
+               double milliseconds;
+               splitTime(onlineTime, days, hours, minutes,
+                         seconds, milliseconds);
+
+			os << " & ";
+               
+               if (days > 0) { os << "$" << days << "$d "; }
+               if ((days > 0) || (hours > 0)) { os << "$" << hours << "$h "; }
+               if ((days > 0) || (hours > 0) || (minutes > 0))
+                    os << "$" << minutes << "$m ";
+               if ((days > 0) || (hours > 0) || (minutes > 0) || (seconds > 0))
+                    os << "$" << seconds << "$s ";
+               os << "$" << setprecision(ceil(log10(milliseconds) + 2));
+               os << milliseconds << "$ms ";
+			
+			vector<double> dsrList = tExpList[i]->computeDSRList();
+			pair<double, double> CI95
+					= statistics::computeCI95<double>(dsrList);
+
+			double mean = ((CI95.first + CI95.second) / 2.0);
+			os << setprecision(ceil(log10(mean) + 2));
+			os << " & $" << mean << " \\pm ";
+			
+			double gap = (CI95.second - mean);
+			os << setprecision(ceil(log10(gap) + 2));
+			os << gap << "$";
+			
+			os << "\\\\\n";
+		}
+		os << "\t\\end{tabular}\n";
+		os << "\t\\caption{" << tExpList[0]->getName() << "}\n";
+		os << "\\end{table}\n\n";
 	}
 	os.close();
+	
+	
+	//  5.   Free data
+	for (int i = 0; i < (int) agentList.size(); ++i) { delete agentList[i]; }
+	for (int i = 0; i < (int) expList.size(); ++i)   { delete expList[i];   }
 }
 
 
 void matlab(int argc, char* argv[]) throw (parsing::ParsingException)
 {
-     vector<AgentData> agentDataList;
-
      //   1.   Parse the Agents
+     vector<Agent*> agentList;
      int iAgent = 0;
      while (iAgent < (argc - 1))
      {
           while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
                ++iAgent;
-   
+          
           int argcBis = 2;
           char** argvBis = new char*[argc];
           argvBis[0] = argv[0];
           argvBis[1] = argv[iAgent++];
-
+          
           while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
-          {               
-               argvBis[argcBis] = argv[iAgent];
-               ++iAgent;
-               ++argcBis;
-          }
+               argvBis[argcBis++] = argv[iAgent++];
           
-          Agent* agent = Agent::parse(argcBis, argvBis);
-          delete[] argvBis;
-          
-          AgentData agentData;
-          agentData.name = agent->getName();
-          agentData.offlineTime = agent->getOfflineTime();
-          agentDataList.push_back(agentData);
-          
-          delete agent;
+          agentList.push_back(Agent::parse(argcBis, argvBis));          
+          delete argvBis;
      }
      
      
      //   2.   Parse the Experiments
-     int iExp = 0, nExp = 0;
+     vector<Experiment*> expList;
+     int iExp = 0;
      while (iExp < (argc - 1))
      {
           while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
@@ -248,22 +283,8 @@ void matlab(int argc, char* argv[]) throw (parsing::ParsingException)
           while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
                argvBis[argcBis++] = argv[iExp++];
           
-          Experiment* exp = Experiment::parse(argcBis, argvBis);         
-          delete argvBis;
-          
-          agentDataList[nExp].expName = (exp->getName());
-          agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
-                    / (double) exp->getNbOfMDPs());
-          
-          vector<double> dsrList = exp->computeDSRList();
-			pair<double, double> CI95
-					= statistics::computeCI95<double>(dsrList);
-                    
-          agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
-          agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
-          ++nExp;
-          
-          delete exp;
+          expList.push_back(Experiment::parse(argcBis, argvBis));          
+          delete[] argvBis;
      }
      
      
@@ -276,111 +297,50 @@ void matlab(int argc, char* argv[]) throw (parsing::ParsingException)
 	string functionName = tmp.substr(0, tmp.find_last_of('.'));	
 	
 	ofstream os(output.c_str());
-     writeMatlabFunction(os, functionName, agentDataList);
-	os.close();
-}
-
-
-void writeLatexTable(ostream& os,
-                     string expName, vector<AgentData>& agentDataList)
-{
-     os << "\n";
-     os << "\\begin{table}\n";
-	os << "\t\\centering\n";
-	os << "\t\\begin{tabular}{l|c|c|c}\n";
-	os << "\t\tAgent & Offline time & Online time & Mean score\\\\\n";
-	os << "\t\t\\hline\n";
 	
-	for (unsigned int i = 0; i < agentDataList.size(); ++i)
-	{
-          AgentData& agentData = agentDataList[i];
-          
-          //   Write 'name'
-		os << "\t\t" << agentData.name;
-
-          //   Write 'offline time'
-          unsigned int days, hours, minutes, seconds, milliseconds;
-          splitTime(agentData.offlineTime, days, hours, minutes,
-                    seconds, milliseconds);
-          
-          os << " & ";
-          if (days > 0) { os << "$" << days << "$d "; }
-          if ((days > 0) || (hours > 0))
-               os << "$" << hours << "$h ";
-          if ((days > 0) || (hours > 0) || (minutes > 0))
-               os << "$" << minutes << "$m ";
-          if ((days > 0) || (hours > 0) || (minutes > 0) || (seconds > 0))
-               os << "$" << seconds << "$s ";
-          os << "$" << setprecision(ceil(log10(milliseconds) + 2));
-          os << milliseconds << "$ms ";
-		
-		
-          //   Write 'online time'
-          splitTime(agentData.onlineTime, days, hours, minutes,
-                    seconds, milliseconds);
-
-		os << " & ";
-          if (days > 0) { os << "$" << days << "$d "; }
-          if ((days > 0) || (hours > 0)) { os << "$" << hours << "$h "; }
-          if ((days > 0) || (hours > 0) || (minutes > 0))
-               os << "$" << minutes << "$m ";
-          if ((days > 0) || (hours > 0) || (minutes > 0) || (seconds > 0))
-               os << "$" << seconds << "$s ";
-          os << "$" << setprecision(ceil(log10(milliseconds) + 2));
-          os << milliseconds << "$ms ";
-		
-		
-          //   Write 'score'
-		os << " & $";
-		os << setprecision(ceil(log10(agentData.mean) + 2));
-		os << agentData.mean;
-		os << " \\pm ";
-		os << setprecision(ceil(log10(agentData.gap) + 2));
-		os << agentData.gap << "$";
-		
-		os << "\\\\\n";
-	}
-	os << "\t\\end{tabular}\n";
-	os << "\t\\caption{" << expName << "}\n";
-	os << "\\end{table}\n\n";
-}
-
-
-void writeMatlabFunction(ostream& os, string functionName,
-                         vector<AgentData>& agentDataList)
-{
-     os << "\n";
+	os << "\n";
 	os << "function " << functionName << "()\n";
 	os << "\tY =\t[\n\t\t";
 	vector<string> agentNameList;
 	vector<string> expNameList;
-	while (!agentDataList.empty())
+	while (!expList.empty())
 	{
-		string expName = agentDataList[0].expName;
+		string expName = expList[0]->getName();
 		expNameList.push_back(expName);
 		
-		vector<AgentData> tAgentDataList;
-		for (unsigned int i = 0; i < agentDataList.size(); ++i)
+		vector<Agent*> tAgentList;
+		vector<Experiment*> tExpList;
+		
+		for (unsigned int i = 0; i < expList.size(); ++i)
 		{
-			if (agentDataList[i].expName == expName)
+			if (expList[i]->getName() == expName)
 			{
-				tAgentDataList.push_back(agentDataList[i]);
+				tAgentList.push_back(agentList[i]);
+				tExpList.push_back(expList[i]);
 				
-				for (int j = (i + 1); j < (int) agentDataList.size(); ++j)
-					agentDataList[j - 1] = agentDataList[j];
+				agentList[i] = agentList.back();
+				expList[i] = expList.back();
 				
-				agentDataList.pop_back();				
+				agentList.pop_back();
+				expList.pop_back();
+				
 				--i;
 			}
 		}
 
 		os << "\t";
-		for (unsigned int i = 0; i < tAgentDataList.size(); ++i)
+		for (unsigned int i = 0; i < tExpList.size(); ++i)
 		{
 			if (expNameList.size() == 1)
-				agentNameList.push_back(tAgentDataList[i].name);
+				agentNameList.push_back(tAgentList[i]->getName());
+			
+			vector<double> dsrList = tExpList[i]->computeDSRList();
+			pair<double, double> CI95
+					= statistics::computeCI95<double>(dsrList);
 
-			os << " " << tAgentDataList[i].mean;
+			double mean = ((CI95.first + CI95.second) / 2.0);
+
+			os << " " << mean;
 		}
 		os << "\n\t\t";
 	}
@@ -425,12 +385,18 @@ void writeMatlabFunction(ostream& os, string functionName,
 		os << "\'" << agentNameList[i] << "\', ";
 	os << "\'" << agentNameList.back() << "\');\n";
 	os << "\tlegend(\'Location\', \'NorthEastOutside\');\n";
-}
 
+	os.close();
+	
+	
+	//  5.   Free data
+	for (int i = 0; i < (int) agentList.size(); ++i) { delete agentList[i]; }
+	for (int i = 0; i < (int) expList.size(); ++i)   { delete expList[i];   }
+}
 
 void splitTime(double t,
                unsigned int& days, unsigned int& hours, unsigned int& minutes,
-               unsigned int& seconds, unsigned int& milliseconds)
+               unsigned int& seconds, double& milliseconds)
 {   
      days = floor(t / (24*60*60*1000));
      t -= (days * (24*60*60*1000));
@@ -444,5 +410,5 @@ void splitTime(double t,
      seconds = floor(t / 1000);
      t -= (seconds * 1000);
      
-     milliseconds = round(t);
+     milliseconds = t;
 }

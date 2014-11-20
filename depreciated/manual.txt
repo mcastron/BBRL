@@ -1,0 +1,5 @@
+
+-> méthodes virtuelles pures
+-> méthodes "toString()" et "getClassName()"
+-> inclure "X.h" dans "dds.cpp" & "DDSLib.h"
+-> appeler "Serializable::checkIn()" dans "dds::init()"

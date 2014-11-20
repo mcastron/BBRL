@@ -17,6 +17,7 @@ dds::SoftMaxAgentFactory::SoftMaxAgentFactory(std::istream& is) :
 
 dds::SoftMaxAgentFactory::SoftMaxAgentFactory(
 		double minTau_, double maxTau_, double minC_, double maxC_) :
+		     shortDistribName("no name"),
 			minTau(minTau_), maxTau(maxTau_),
 			minC(minC_), maxC(maxC_)
 {
@@ -43,6 +44,7 @@ void dds::SoftMaxAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
 		
 		
+		shortDistribName = dirDistrib->getShortName();
 		nX = dirDistrib->getNbStates();
 		nU = dirDistrib->getNbActions();
 		iniState = dirDistrib->getIniState();
@@ -89,7 +91,8 @@ dds::Agent* dds::SoftMaxAgentFactory::get(const vector<double>& paramList)
 		N.push_back(round(paramList[i]));
 	
 	return (new SoftMaxAgent(
-			tau, new CModel("", nX, nU, iniState, N, rType, R, V)));
+			tau,
+			new CModel(shortDistribName, nX, nU, iniState, N, rType, R, V)));
 }
 
 

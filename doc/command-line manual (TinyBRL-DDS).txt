@@ -273,16 +273,16 @@ USAGE EXAMPLES
                --discount_factor 0.95 \
                --horizon_limit 250 \
                --safe_simulations \
-               --compress-output \
+               --compress_output \
                --output "data/experiments/UGC-exp.dat"
 
      
-     --- Run Experiment ---     
+     --- Run Experiment mode ---  
           ./TinyBRL-DDS --run_experiment \
                --experiment --experiment_file "data/experiments/UGC-exp.dat.zz" \
                --agent EGreedyAgent --agent_file "data/agents/egreedy_agent(0.25).dat" \
                --n_threads 4 \
-               --compress-output \
+               --compress_output \
                --output "data/results/UGC-exp[egreedy_agent(0.25)].dat" \
                --refresh_frequency 1000 \
                --backup_frequency 15000

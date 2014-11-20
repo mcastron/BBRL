@@ -19,7 +19,7 @@
 	
 	\brief 	Interface of an SoftMaxAgentFactory to generate RL Agents.
 
-	\date 	2014-09-23
+	\date 	2014-10-03
 */
 // ===========================================================================
 /* final */ class dds::SoftMaxAgentFactory : public dds::AgentFactory
@@ -146,6 +146,13 @@
 		// =================================================================
 		//	Private attributes
 		// =================================================================
+		/**
+               \brief    The short name of the distribution used to initial
+                         this AgentFactory.
+		*/
+		std::string shortDistribName;
+		
+		
 		/**
 			\brief	The minimal and maximal values of tau respectively.
 		*/

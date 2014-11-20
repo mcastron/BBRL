@@ -24,9 +24,9 @@ EGreedyAgent::EGreedyAgent(double epsilon_, CModel* iniModel_) :
 	
 
 	stringstream sstr;
-	sstr << "e-Greedy (" << epsilon << ", ";
-	if (iniModel) { sstr << iniModel->getName() << ")"; }
-	else          { sstr << ", no model)";              }
+	sstr << "e-Greedy (" << setprecision(ceil(log10(epsilon) + 2)) << epsilon;
+	if (iniModel) { sstr << ", " << iniModel->getName() << ")"; }
+	else          { sstr << ", no model)";                      }
 	setName(sstr.str());
 
 	
@@ -226,11 +226,13 @@ void EGreedyAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		const vector<double>& V = dirDistrib->getV();
 		
 		iniModel = new CModel(
-				dirDistrib->getName(), nX, nU, iniState, N, rType, R, V);
+				dirDistrib->getShortName(), nX, nU, iniState, N, rType,
+				R, V);
 		
 		
 		stringstream sstr;
-		sstr << "e-Greedy (" << epsilon << ", ";
+		sstr << "e-Greedy (" << setprecision(ceil(log10(epsilon) + 2));
+		sstr << epsilon << ", ";
 		sstr << iniModel->getName() << ")";
 		setName(sstr.str());
 	}

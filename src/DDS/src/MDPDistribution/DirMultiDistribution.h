@@ -25,7 +25,7 @@
 			The DM distribution can be updated. It consists to increment
 			the observation counters.
 
-	\date 	2014-08-13
+	\date 	2014-10-03
 */
 // ===========================================================================
 /* final */ class dds::DirMultiDistribution : public dds::MDPDistribution
@@ -64,7 +64,7 @@
 							(size: nX * nU * nX or 0; if 0: no variance)
 		*/
 		DirMultiDistribution(
-				std::string name,
+				std::string name, std::string shortName,
 				unsigned int nX_, unsigned int nU_,
 				int iniState_,
 				const std::vector<double>& theta_,

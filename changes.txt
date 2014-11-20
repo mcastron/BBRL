@@ -1,0 +1,12 @@
+
+1.0.1
+     - Memory optimization for 'TinyBRL-export'.
+     - Minor bug fixed in Agents names.
+       (BAMCPAgent/EGreedyAgent/SoftMaxAgent/VDBEEGreedyAgent)
+     - Add support of short names for MDPDistributions
+       (IMDPDistribution, MDPDistribution, DirMultiDistribution).
+     - Add usage of short distribution names in AgentFactories.
+       (EGreedyAgentFactory/SoftMaxAgentFactory/VDBEEGreedyAgentFactory)
+
+1.0
+     - Initial release
