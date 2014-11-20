@@ -342,11 +342,13 @@ namespace utils
 	
 	
 	/**
+          \brief	This namespace gathers several functions for parsing
+                    command-line parameters.
 	*/
 	namespace parsing
 	{
 	    class ParsingException: public std::exception
-          {
+         {
           	public:
           		// =======================================================
           		//	Public Constructors/Destructors

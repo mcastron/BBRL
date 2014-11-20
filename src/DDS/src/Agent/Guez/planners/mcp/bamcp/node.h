@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include "../../../utils/utils2.h"
+#include "../../../utils/memorypool.h"
 #include <iostream>
 #include "../../../planners/mcp/value.h"
 

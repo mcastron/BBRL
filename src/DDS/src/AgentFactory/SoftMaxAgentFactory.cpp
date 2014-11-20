@@ -15,17 +15,17 @@ dds::SoftMaxAgentFactory::SoftMaxAgentFactory(std::istream& is) :
 }
 
 
-dds::SoftMaxAgentFactory::SoftMaxAgentFactory(
-		double minTau_, double maxTau_, double minC_, double maxC_) :
-		     shortDistribName("no name"),
-			minTau(minTau_), maxTau(maxTau_),
-			minC(minC_), maxC(maxC_)
+dds::SoftMaxAgentFactory::SoftMaxAgentFactory(double minTau_, double maxTau_) :
+          minTau(minTau_), maxTau(maxTau_)
 {
 	assert((minTau > 0.0) && (minTau < maxTau));
 	assert((maxTau > 0.0) && (maxTau > minTau));
+}
 
-	assert((minC >= 0.0) && (minC < maxC));
-	assert((maxC >= 0.0) && (maxC > minC));
+
+dds::SoftMaxAgentFactory::~SoftMaxAgentFactory()
+{
+     if (iniModel) { delete iniModel; }
 }
 
 
@@ -43,28 +43,25 @@ void dds::SoftMaxAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 		const dds::DirMultiDistribution* dirDistrib = 
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
 		
-		
-		shortDistribName = dirDistrib->getShortName();
-		nX = dirDistrib->getNbStates();
-		nU = dirDistrib->getNbActions();
-		iniState = dirDistrib->getIniState();
-		R = dirDistrib->getR();
-		V = dirDistrib->getV();
-		
 		boundsList.clear();
 		splitAccList.clear();
 		
 		boundsList.push_back(pair<double, double>(minTau, maxTau));
 		splitAccList.push_back(0.01);
-		
-		for (unsigned int x = 0; x < nX; ++x)
-			for (unsigned int u = 0; u < nU; ++u)
-				for (unsigned int y = 0; y < nX; ++y)
-				{
-					boundsList.push_back(
-							pair<double, double>(minC, maxC));
-					splitAccList.push_back(1.0);
-				}
+
+
+		std::string shortDistribName = dirDistrib->getShortName();		
+		unsigned int nX = dirDistrib->getNbStates();
+		unsigned int nU = dirDistrib->getNbActions();
+		int iniState = dirDistrib->getIniState();
+		vector<double> N = dirDistrib->getTheta();
+		RewardType rType = dirDistrib->getRType();
+		vector<double> R = dirDistrib->getR();
+		vector<double> V = dirDistrib->getV();
+
+          if (iniModel) { delete iniModel; }
+          iniModel = new CModel(
+                    shortDistribName, nX, nU, iniState, N, rType, R, V);
 	}
 	
 	
@@ -82,17 +79,10 @@ void dds::SoftMaxAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 dds::Agent* dds::SoftMaxAgentFactory::get(const vector<double>& paramList)
 								const throw (AgentFactoryException)
 {
-	assert(paramList.size() == (1 + nX*nU*nX));
+	assert(paramList.size() == 1);
 	
-	
-	double tau = paramList[0];
-	vector<double> N;
-	for (unsigned int i = 1; i < paramList.size(); ++i)
-		N.push_back(round(paramList[i]));
-	
-	return (new SoftMaxAgent(
-			tau,
-			new CModel(shortDistribName, nX, nU, iniState, N, rType, R, V)));
+
+	return (new SoftMaxAgent(paramList[0], iniModel->clone()));
 }
 
 
@@ -102,7 +92,7 @@ void dds::SoftMaxAgentFactory::serialize(ostream& os) const
 	
 	
 	os << SoftMaxAgentFactory::toString() << "\n";
-	os << 4 << "\n";
+	os << 3 << "\n";
 	
 	
 	//  'minTau'
@@ -112,13 +102,15 @@ void dds::SoftMaxAgentFactory::serialize(ostream& os) const
 	//  'maxTau'
 	os << maxTau << "\n";
 	
+
+     //  'iniModel'
+	stringstream iniModelStream;
+	iniModel->serialize(iniModelStream);
 	
-	//  'minC'
-	os << minC << "\n";
-	
-	
-	//  'maxC'
-	os << maxC << "\n";
+	os << iniModelStream.str().length() << "\n";
+	copy(istreambuf_iterator<char>(iniModelStream),
+			istreambuf_iterator<char>(),
+			ostreambuf_iterator<char>(os));
 }
 
 
@@ -147,27 +139,29 @@ void dds::SoftMaxAgentFactory::deserialize(istream& is)
 	int i = 0;
 	
 	
-     //	'minEps'
+     //	'minTau'
 	if (!getline(is, tmp)) { throwEOFMsg("minTau"); }
 	minTau = atof(tmp.c_str());
 	++i;
 
 
-     //	'maxEps'
+     //	'maxTau'
 	if (!getline(is, tmp)) { throwEOFMsg("maxTau"); }
 	maxTau = atof(tmp.c_str());
 	++i;
 
 
-     //	'minC'
-	if (!getline(is, tmp)) { throwEOFMsg("minC"); }
-	minC = atof(tmp.c_str());
-	++i;
-
-
-     //	'maxC'
-	if (!getline(is, tmp)) { throwEOFMsg("maxC"); }
-	maxC = atof(tmp.c_str());
+     //  'iniModel'
+	if (!getline(is, tmp)) { throwEOFMsg("iniModel"); }
+	unsigned int iniModelStreamLength = atoi(tmp.c_str());
+	
+	stringstream iniModelStream;
+	tmp.resize(iniModelStreamLength);
+	is.read(&tmp[0], iniModelStreamLength);
+	iniModelStream << tmp;
+	
+	iniModel = dynamic_cast<CModel*>(
+			Serializable::createInstance<CModel>(iniModelStream));
 	++i;
 	
 	

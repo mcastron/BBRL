@@ -1,4 +1,3 @@
-
 #include "bamcp.h"
 #include <math.h>
 #include "../../../utils/guez_utils.h"
@@ -35,17 +34,13 @@ BAMCP::PARAMS::PARAMS()
 {
 }
 
-//BAMCP::BAMCP(const SIMULATOR& simulator, const PARAMS& params,
-//		SamplerFactory& sampFact)
-//	TODO: ADDED
 BAMCP::BAMCP(const SIMULATOR& simulator, const PARAMS& params,
-		SamplerFactory& sampFact, std::vector<double> priorcountList)
-//		
+		SamplerFactory& sampFact)
 :   Params(params),
 		Simulator(simulator),
     TreeDepth(0),
 		SampFact(sampFact)
-{     
+{
     VNODE::NumChildren = Simulator.GetNumActions();
     QNODE::NumChildren = Simulator.GetNumObservations();
 
@@ -55,14 +50,6 @@ BAMCP::BAMCP(const SIMULATOR& simulator, const PARAMS& params,
 		S = Simulator.GetNumObservations();
 		SA = S*A;
 		SAS = S*A*S;
-		
-		//	TODO - Added
-		if (priorcountList.empty())
-		{
-		   priorcountList.resize(SAS);
-		   for (unsigned int i = 0; i < SAS; ++i) { priorcountList[i] = 1.0; }
-		}
-		//
 		
 		RLPI = new uint[S];
 		V = new double[S];
@@ -83,16 +70,10 @@ BAMCP::BAMCP(const SIMULATOR& simulator, const PARAMS& params,
 		if(!Params.BANDIT){
 			counts = new uint[SAS];
 			for(uint c=0;c<SAS;++c){
-			//	counts[c] = 0;
-			//
-				counts[c] = priorcountList[c];
-			//				
+				counts[c] = 0;
 			}
 		}
 		else{
-			//	TODO: ADDED			
-			cout << "Warning: BANDIT case not supported!\n";
-			//			
 			assert(S == 2);
 			counts = new uint[SA];
 			for(uint c=0;c<SA;++c){
@@ -102,38 +83,12 @@ BAMCP::BAMCP(const SIMULATOR& simulator, const PARAMS& params,
 		
 		countsSum = new double[SA];
 		std::fill(countsSum,countsSum+SA,SampFact.getAlphaMean()*S);
-		//	TODO: ADDED
-		for (unsigned int ss = 0; ss < S; ++ss)
-			for (unsigned int aa = 0; aa < A; ++aa)
-				for (unsigned int observation = 0; observation < S;
-				                                             ++observation)
-					countsSum[ss*A+aa] += counts[ss*SA+S*aa+observation];
-					
-		//
+	
 		step = 0;
   
 
 //		meand.open("BMCP_meandepth",std::ios_base::app);	
 //		maxd.open("BMCP_maxdepth",std::ios_base::app);
-
-	//	TODO:	ADDED
-//	cout << "Initialising fast UCB table with exp. const. ";
-//	cout << params.ExplorationConstant << "...  ";
-			
-//	UCB.resize(UCB_N);
-//	for (unsigned int N = 0; N < UCB_N; ++N)
-//	{
-//		UCB[N].resize(UCB_n);
-//		
-//		UCB[N][0] = Infinity;
-//		for (unsigned int n = 1; n < UCB_n; ++n)
-//			UCB[N][n] = params.ExplorationConstant * sqrt(log(N + 1) / n);		
-//	}
-//	cout << "done" << endl;
-	
-	InitialisedFastUCB = true;
-	//	TODO:	ADDED
-	
 }
 
 BAMCP::~BAMCP()
@@ -150,7 +105,7 @@ BAMCP::~BAMCP()
 	delete[] GreedyA;
 
 	VNODE::Free(Root, Simulator);
-  // TODO:	VNODE::FreeAll();
+     VNODE::FreeAll();
 }
 
 bool BAMCP::Update(uint ss, uint aa, uint observation, double reward)
@@ -445,12 +400,10 @@ double BAMCP::Rollout(const SIMULATOR* mdp, uint state)
     return totalReward;
 }
 
-/* TODO	double BAMCP::UCB[UCB_N][UCB_n];*/
-/* TODO	bool BAMCP::InitialisedFastUCB = true;*/
-
-//	TODO
-//void BAMCP::InitFastUCB(double exploration) /*TODO: ADDED*/ {} /*TODO: ADDED*/
-void BAMCP::InitFastUCB(double) /*TODO: ADDED*/ {} /*TODO: ADDED*/
+//double BAMCP::UCB[UCB_N][UCB_n];
+//bool BAMCP::InitialisedFastUCB = true;
+//
+//void BAMCP::InitFastUCB(double exploration)
 //{
 //    cout << "Initialising fast UCB table with exp. const. " 
 //			<< exploration << "...  ";
@@ -463,25 +416,13 @@ void BAMCP::InitFastUCB(double) /*TODO: ADDED*/ {} /*TODO: ADDED*/
 //    cout << "done" << endl;
 //    InitialisedFastUCB = true;
 //}
-//	TODO
 
-//	TODO - Modified
-double BAMCP::QRoot(uint action)
-{
-	QNODE& qnode = Root->Child(action);
-     double q = qnode.Value.GetValue();
-     
-     return q;
-}
-//	TODO - Modified
 
-//inline double BAMCP::FastUCB(int N, int n, double logN) const
 inline double BAMCP::FastUCB(int, int n, double logN) const
 {
-	/*	TODO: REMOVED
-    if (InitialisedFastUCB && N < UCB_N && n < UCB_n)
-        return UCB[N][n];
-	*/
+//    if (InitialisedFastUCB && N < UCB_N && n < UCB_n)
+//        return UCB[N][n];
+
     if (n == 0)
         return Infinity;
     else

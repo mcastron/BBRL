@@ -20,13 +20,14 @@ using namespace utils;
 	
 	\author	Castronovo Michael
 
-	\date	2014-09-19
+	\date	2014-10-14
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
 //   Extra functions
 // ---------------------------------------------------------------------------
 void help();
+void formulaVGen(int argc, char* argv[])     throw (parsing::ParsingException);
 void offlineLearning(int argc, char* argv[]) throw (parsing::ParsingException);
 void newExperiment(int argc, char* argv[])   throw (parsing::ParsingException);
 void runExperiment(int argc, char* argv[])   throw (parsing::ParsingException);
@@ -46,6 +47,9 @@ int main(int argc, char* argv[])
 	bool modeIsHelp =
 	     parsing::hasFlag(argc, argv, "--help");
 
+     bool modeIsFormulaVGen =
+          parsing::hasFlag(argc, argv, "--formula_set_generation");
+
      bool modeIsOfflineLearning =
           parsing::hasFlag(argc, argv, "--offline_learning");
 
@@ -60,6 +64,7 @@ int main(int argc, char* argv[])
      try
      {
           if (modeIsHelp)                { help();                        }
+          else if (modeIsFormulaVGen)    { formulaVGen(argc, argv);       }
           else if (modeIsOfflineLearning){ offlineLearning(argc, argv);   }
           else if (modeIsNewExperiment)  { newExperiment(argc, argv);     }
           else if (modeIsRunExperiment)  { runExperiment(argc, argv);     }
@@ -81,6 +86,119 @@ void help()
 {
      ifstream is("doc/command-line manual (TinyBRL-DDS).txt");
      for (string tmp; getline(is, tmp);) { cout << tmp << "\n"; }
+}
+
+
+void formulaVGen(int argc, char* argv[]) throw (parsing::ParsingException)
+{
+     //   1.   Get 'nVar', 'nTokens', 'tokenListStr' and 'maxSize'
+     unsigned int nVar = atoi(
+               (parsing::getValue(argc, argv, "--n_variables")).c_str());
+
+     unsigned int nbTokens = atoi(
+               (parsing::getValue(argc, argv, "--tokens")).c_str());
+
+     vector<string> tokenListStr =
+               parsing::getValues(argc, argv, "--tokens", (nbTokens + 1));
+     tokenListStr.erase(tokenListStr.begin());          
+
+     unsigned int maxSize = atoi(
+               (parsing::getValue(argc, argv, "--max_size")).c_str());
+
+
+     //   2.   Get 'nPoints', 'minV', 'maxV' and 'reduce'
+     bool toReduce = parsing::hasFlag(argc, argv, "--reduce");
+     
+     unsigned int nPoints;
+     vector<string> range;
+     double minV, maxV;
+     
+     if (toReduce)
+     {
+          nPoints = atoi((parsing::getValue(argc, argv, "--n_points")).c_str());
+          range = parsing::getValues(argc, argv, "--points_range", 2);
+          minV = atof(range[0].c_str());
+          maxV = atof(range[1].c_str());
+     }
+
+
+     //   3.   Get 'compressOutput' and 'output'
+     bool compressOutput = parsing::hasFlag(argc, argv, "--compress_output");
+     string output = parsing::getValue(argc, argv, "--output");
+     
+     
+     //   4.   Build the set of tokens
+     set<Token*, Token::pComp> tokenSet;
+      try
+     {          
+          //   Variables
+          for (unsigned int i = 0; i < nVar; ++i)
+               tokenSet.insert(new Variable(i));
+               
+          //   Other tokens
+          for (unsigned int i = 0; i < tokenListStr.size(); ++i)
+               tokenSet.insert(Token::getToken(tokenListStr[i]));
+     }
+     catch (TokenException& e) { throw parsing::ParsingException(e.what()); }
+     
+     
+     //   5.   Produce the set of points
+     vector<vector<double> >pointList;
+     for (unsigned int i = 0; i < nPoints; ++i)
+     {
+          pointList.push_back(vector<double>());
+          for (unsigned int j = 0; j < nVar; ++j)
+          {
+               pointList.back().push_back(
+                         RandomGen::randRange_Uniform(minV, maxV));
+          }
+     }
+     
+     
+     //   6.   Run
+     Chrono time;
+	cout << "\n";
+	cout << "\tGenerate the set of formulas..." << flush;
+     FormulaVector formulaList = Formula::generate(tokenSet, maxSize);
+     cout << "done! (in " << time.get() << "ms)\n";
+
+     if (toReduce)
+     {
+          time.restart();
+	     cout << "\tReduce the set of formulas..." << flush;
+          formulaList = Formula::reduce(formulaList, pointList);
+          cout << "done! (in " << time.get() << "ms)\n";
+     }
+
+
+     //   7.   Export     
+     Chrono exportTime;
+	cout << "\tExport the results..." << flush;
+	
+	if (compressOutput)
+	{	
+		ofstream os((output + ".zz").c_str());
+		formulaList.zSerialize(os, Z_BEST_COMPRESSION);
+		os.close();
+	}
+	
+	else
+	{
+		ofstream os(output.c_str());
+		formulaList.serialize(os);
+		os.close();
+	}
+	
+	cout << "done! (in " << exportTime.get() << "ms)\n\n";
+
+
+     //   8.   Free
+     set<Token*, Token::pComp>::iterator it  = tokenSet.begin();
+     set<Token*, Token::pComp>::iterator end = tokenSet.end();
+     for (; it != end; ++it) { if (*it) { delete (*it); } }
+     
+     for (unsigned int i = 0; i < formulaList.size(); ++i)
+          delete formulaList[i];
 }
 
 

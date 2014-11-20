@@ -17,7 +17,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BUILD_TYPE})
 # ----------------------------------------------------------------------------
 #	DEBUG
 # ----------------------------------------------------------------------------
-#set(CMAKE_CXX_FLAGS "-O0 -g -Wall -W -Wextra -Wno-long-long -pedantic-errors")
+set(CMAKE_CXX_FLAGS "-O0 -g -Wall -W -Wextra -Wno-long-long -pedantic-errors")
 
 # ----------------------------------------------------------------------------
 #	VALGRIND
@@ -33,14 +33,15 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BUILD_TYPE})
 # ----------------------------------------------------------------------------
 #	RELEASE
 # ----------------------------------------------------------------------------
-add_definitions(-DNDEBUG)
-set(CMAKE_CXX_FLAGS "-g -O3 -fPIC")
+#add_definitions(-DNDEBUG)
+#set(CMAKE_CXX_FLAGS "-g -O3 -fPIC")
 
 
 # ============================================================================
 #	Custom ibraries
 # ============================================================================
 add_subdirectory(src/DDS)
+add_subdirectory(src/Formula)
 add_subdirectory(src/IAgent)
 add_subdirectory(src/IMDP)
 add_subdirectory(src/IMDPDistribution)
@@ -53,6 +54,7 @@ add_subdirectory(src/Utils)
 #	Executables declaration
 # ============================================================================
 add_executable(TinyBRL-DDS 	src/main.cpp)
+add_executable(test       	src/test.cpp)
 add_executable(TinyBRL-zlib	src/main-zlib.cpp)
 add_executable(TinyBRL-export src/main-export.cpp)
 
@@ -62,6 +64,17 @@ add_executable(TinyBRL-export src/main-export.cpp)
 # ============================================================================
 target_link_libraries(TinyBRL-DDS
 					DDS
+					Formula
+					IAgent
+					IMDP
+					IMDPDistribution
+					IExperiment
+					Serializable
+					Utils)		#	uses Boost 1.52 if possible.
+
+target_link_libraries(test
+					DDS
+					Formula
 					IAgent
 					IMDP
 					IMDPDistribution
@@ -73,6 +86,7 @@ target_link_libraries(TinyBRL-zlib Utils)
 
 target_link_libraries(TinyBRL-export
 					DDS
+					Formula
 					IAgent
 					IMDP
 					IMDPDistribution

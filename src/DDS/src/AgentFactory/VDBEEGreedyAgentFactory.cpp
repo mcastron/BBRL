@@ -18,13 +18,10 @@ dds::VDBEEGreedyAgentFactory::VDBEEGreedyAgentFactory(std::istream& is) :
 dds::VDBEEGreedyAgentFactory::VDBEEGreedyAgentFactory(
 		double minSigma_, double maxSigma_,
 		double minDelta_, double maxDelta_,
-		double minIniEps_, double maxIniEps_,
-		double minC_, double maxC_) :
-		     shortDistribName("no name"),
+		double minIniEps_, double maxIniEps_) :
 			minSigma(minSigma_), maxSigma(maxSigma_),
 			minDelta(minDelta_), maxDelta(maxDelta_),
-			minIniEps(minIniEps_), maxIniEps(maxIniEps_),
-			minC(minC_), maxC(maxC_)
+			minIniEps(minIniEps_), maxIniEps(maxIniEps_)
 {
 	assert((minSigma > 0.0) && (minSigma < maxSigma));
 	assert((maxSigma > 0.0) && (maxSigma > minSigma));
@@ -34,9 +31,12 @@ dds::VDBEEGreedyAgentFactory::VDBEEGreedyAgentFactory(
 
 	assert((minIniEps >= 0) && (minIniEps <= 1.0) && (minIniEps < maxIniEps));
 	assert((maxIniEps >= 0) && (maxIniEps <= 1.0) && (maxIniEps > minIniEps));
+}
 
-	assert((minC >= 0.0) && (minC < maxC));
-	assert((maxC >= 0.0) && (maxC > minC));
+
+dds::VDBEEGreedyAgentFactory::~VDBEEGreedyAgentFactory()
+{
+     if (iniModel) { delete iniModel; }
 }
 
 
@@ -54,14 +54,6 @@ void dds::VDBEEGreedyAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 		const dds::DirMultiDistribution* dirDistrib = 
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
 		
-		
-		shortDistribName = dirDistrib->getShortName();
-		nX = dirDistrib->getNbStates();
-		nU = dirDistrib->getNbActions();
-		iniState = dirDistrib->getIniState();
-		R = dirDistrib->getR();
-		V = dirDistrib->getV();
-		
 		boundsList.clear();
 		splitAccList.clear();
 		
@@ -73,15 +65,20 @@ void dds::VDBEEGreedyAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 		
 		boundsList.push_back(pair<double, double>(minIniEps, maxIniEps));
 		splitAccList.push_back(0.01);
-		
-		for (unsigned int x = 0; x < nX; ++x)
-			for (unsigned int u = 0; u < nU; ++u)
-				for (unsigned int y = 0; y < nX; ++y)
-				{
-					boundsList.push_back(
-							pair<double, double>(minC, maxC));
-					splitAccList.push_back(1.0);
-				}
+
+
+		std::string shortDistribName = dirDistrib->getShortName();		
+		unsigned int nX = dirDistrib->getNbStates();
+		unsigned int nU = dirDistrib->getNbActions();
+		int iniState = dirDistrib->getIniState();
+		vector<double> N = dirDistrib->getTheta();
+		RewardType rType = dirDistrib->getRType();
+		vector<double> R = dirDistrib->getR();
+		vector<double> V = dirDistrib->getV();
+
+          if (iniModel) { delete iniModel; }
+          iniModel = new CModel(
+                    shortDistribName, nX, nU, iniState, N, rType, R, V);
 	}
 	
 	
@@ -99,20 +96,14 @@ void dds::VDBEEGreedyAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 dds::Agent* dds::VDBEEGreedyAgentFactory::get(const vector<double>& paramList)
 									const throw (AgentFactoryException)
 {
-	assert(paramList.size() == (3 + nX*nU*nX));
+	assert(paramList.size() == 3);
 	
 	
 	double sigma = paramList[0];
 	double delta = paramList[1];
 	double iniEps = paramList[2];
 	
-	vector<double> N;
-	for (unsigned int i = 3; i < paramList.size(); ++i)
-		N.push_back(round(paramList[i]));
-	
-	return (new VDBEEGreedyAgent(
-			sigma, delta, iniEps,
-			new CModel(shortDistribName, nX, nU, iniState, N, rType, R, V)));
+	return (new VDBEEGreedyAgent(sigma, delta, iniEps, iniModel->clone()));
 }
 
 
@@ -122,7 +113,7 @@ void dds::VDBEEGreedyAgentFactory::serialize(ostream& os) const
 	
 	
 	os << VDBEEGreedyAgentFactory::toString() << "\n";
-	os << 8 << "\n";
+	os << 7 << "\n";
 	
 	
 	//  'minSigma'
@@ -141,20 +132,22 @@ void dds::VDBEEGreedyAgentFactory::serialize(ostream& os) const
 	os << maxDelta << "\n";
 	
 	
-	//  'minEps'
+	//  'minIniEps'
 	os << minIniEps << "\n";
 	
 	
-	//  'maxEps'
+	//  'maxIniEps'
 	os << maxIniEps << "\n";
 	
 	
-	//  'minC'
-	os << minC << "\n";
+	//  'iniModel'
+	stringstream iniModelStream;
+	iniModel->serialize(iniModelStream);
 	
-	
-	//  'maxC'
-	os << maxC << "\n";
+	os << iniModelStream.str().length() << "\n";
+	copy(istreambuf_iterator<char>(iniModelStream),
+			istreambuf_iterator<char>(),
+			ostreambuf_iterator<char>(os));
 }
 
 
@@ -219,15 +212,17 @@ void dds::VDBEEGreedyAgentFactory::deserialize(istream& is)
 	++i;
 
 
-     //	'minC'
-	if (!getline(is, tmp)) { throwEOFMsg("minC"); }
-	minC = atof(tmp.c_str());
-	++i;
-
-
-     //	'maxC'
-	if (!getline(is, tmp)) { throwEOFMsg("maxC"); }
-	maxC = atof(tmp.c_str());
+     //  'iniModel'
+	if (!getline(is, tmp)) { throwEOFMsg("iniModel"); }
+	unsigned int iniModelStreamLength = atoi(tmp.c_str());
+	
+	stringstream iniModelStream;
+	tmp.resize(iniModelStreamLength);
+	is.read(&tmp[0], iniModelStreamLength);
+	iniModelStream << tmp;
+	
+	iniModel = dynamic_cast<CModel*>(
+			Serializable::createInstance<CModel>(iniModelStream));
 	++i;
 	
 	

@@ -19,7 +19,7 @@
 	
 	\brief 	Interface of an VDBEEGreedyAgentFactory to generate RL Agents.
 
-	\date 	2014-10-03
+	\date 	2014-10-09
 */
 // ===========================================================================
 /* final */ class dds::VDBEEGreedyAgentFactory : public dds::AgentFactory
@@ -47,16 +47,17 @@
 			\param[maxDelta_	The maximal value of delta.
 			\param[minIniEps_	The minimal value of the initial epsilon.
 			\param[maxIniEps_	The maximal value of the initial epsilon.
-			\param[minC_		The minimal initial value of a CModel
-							counter.
-			\param[maxC_		The maximal initial value of a CModel
-							counter.
 		*/
 		VDBEEGreedyAgentFactory(
 				double minSigma_, double maxSigma_,
 				double minDelta_, double maxDelta_,
-				double minIniEps_, double maxIniEps_,
-				double minC_, double maxC_);
+				double minIniEps_, double maxIniEps_);
+
+          
+          /**
+               \brief    Destructor.
+          */
+          ~VDBEEGreedyAgentFactory();
 
 		
 		// =================================================================
@@ -182,46 +183,10 @@
 		
 		
 		/**
-			\brief	The minimal and maximal initial values of a CModel
-					counter respectively.
+               \brief    The initial model used by the VDBEEGreedyAgent
+                         generated.
 		*/
-		double minC, maxC;
-		
-		
-		/**
-			\brief	The number of states.
-		*/
-		unsigned int nX;
-
-
-		/**
-			\brief	The number of actions.
-		*/
-		unsigned int nU;
-		
-		
-		/**
-			\brief	The initial state.
-		*/
-		int iniState;
-		
-		
-		/**
-			\brief	The type of rewards.
-		*/
-		RewardType rType;
-		
-		
-		/**
-			\brief	The list of rewrads means.
-		*/
-		std::vector<double> R;
-		
-		
-		/**
-			\brief	The list of rewards variances.
-		*/
-		std::vector<double> V;
+		CModel* iniModel;
 		
 		
 		/**

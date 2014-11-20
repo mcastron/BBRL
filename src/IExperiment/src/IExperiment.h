@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a RL Experiment.
 			
-	\date 	2013-08-13
+	\date 	2013-10-13
 */
 // ===========================================================================
 template<typename AgentType, typename MDPType, typename SimulationRecordType>
@@ -47,6 +47,7 @@ class IExperiment : public Serializable
 		
 		/**
 			\brief	Destructor.
+			          'mdpList' is freed.
 		*/
 		virtual ~IExperiment();
 

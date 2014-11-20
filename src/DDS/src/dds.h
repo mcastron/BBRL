@@ -18,7 +18,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2014-09-23
+	\date		2014-10-13
 */
 // ===========================================================================
 namespace dds
@@ -60,9 +60,10 @@ namespace dds
 	class EGreedyAgent;
 	class SoftMaxAgent;
 	class VDBEEGreedyAgent;
-	class OPPSDSAgent;
-	class OPPSCSAgent;
+	class FormulaAgent;
 	class BAMCPAgent;
+	class OPPSDSAgent;
+	class OPPSCSAgent;	
 	
 	class AgentFactory;
 	class EGreedyAgentFactory;

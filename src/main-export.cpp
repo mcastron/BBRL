@@ -22,7 +22,7 @@ using namespace utils;
 	
 	\author	Castronovo Michael
 
-	\date	2014-09-19
+	\date	2014-10-14
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -302,32 +302,25 @@ void writeLatexTable(ostream& os,
           unsigned int days, hours, minutes, seconds, milliseconds;
           splitTime(agentData.offlineTime, days, hours, minutes,
                     seconds, milliseconds);
-          
-          os << " & ";
-          if (days > 0) { os << "$" << days << "$d "; }
-          if ((days > 0) || (hours > 0))
-               os << "$" << hours << "$h ";
-          if ((days > 0) || (hours > 0) || (minutes > 0))
-               os << "$" << minutes << "$m ";
-          if ((days > 0) || (hours > 0) || (minutes > 0) || (seconds > 0))
-               os << "$" << seconds << "$s ";
-          os << "$" << setprecision(ceil(log10(milliseconds) + 2));
-          os << milliseconds << "$ms ";
+
+          os << " & $\\sim";
+          if      (days    > 0) { os << (days + 1)         << "$d ";  }
+          else if (hours   > 0) { os << (hours + 1)        << "$h ";  }
+          else if (minutes > 0) { os << (minutes + 1)      << "$m ";  }
+          else if (seconds > 0) { os << (seconds + 1)      << "$s ";  }
+          else                  { os << (milliseconds + 1) << "$ms "; }
 		
 		
           //   Write 'online time'
           splitTime(agentData.onlineTime, days, hours, minutes,
                     seconds, milliseconds);
 
-		os << " & ";
-          if (days > 0) { os << "$" << days << "$d "; }
-          if ((days > 0) || (hours > 0)) { os << "$" << hours << "$h "; }
-          if ((days > 0) || (hours > 0) || (minutes > 0))
-               os << "$" << minutes << "$m ";
-          if ((days > 0) || (hours > 0) || (minutes > 0) || (seconds > 0))
-               os << "$" << seconds << "$s ";
-          os << "$" << setprecision(ceil(log10(milliseconds) + 2));
-          os << milliseconds << "$ms ";
+		os << " & $\\sim";
+          if      (days    > 0) { os << (days + 1)         << "$d ";  }
+          else if (hours   > 0) { os << (hours + 1)        << "$h ";  }
+          else if (minutes > 0) { os << (minutes + 1)      << "$m ";  }
+          else if (seconds > 0) { os << (seconds + 1)      << "$s ";  }
+          else                  { os << (milliseconds + 1) << "$ms "; }
 		
 		
           //   Write 'score'

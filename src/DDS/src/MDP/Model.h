@@ -77,7 +77,15 @@ class dds::Model : public MDP
 		*/
 		virtual void update(
 			unsigned int x, unsigned int u, unsigned int y, double r) = 0;
+		
+		
+		/**
+			\brief	Return a clone of this Model.
 			
+			\return	A clone of this Model.
+		*/
+		virtual Model* clone() const = 0;
+		
 		
 		/**
 			\brief	Return the name of the class of this object.

@@ -32,13 +32,8 @@ dds::AgentFactory* dds::AgentFactory::parse(int argc, char* argv[])
           double minEps = atof(tmp[0].c_str());
           double maxEps = atof(tmp[1].c_str());
           
-          //   Get 'minC' and 'maxC'
-          tmp = parsing::getValues(argc, argv, "--counters", 2);
-          double minC = atof(tmp[0].c_str());
-          double maxC = atof(tmp[1].c_str());
-          
           //   Return
-          return new EGreedyAgentFactory(minEps, maxEps, minC, maxC);
+          return new EGreedyAgentFactory(minEps, maxEps);
      }
      
      if (agentFactoryClassName == "SoftMaxAgentFactory")
@@ -48,13 +43,8 @@ dds::AgentFactory* dds::AgentFactory::parse(int argc, char* argv[])
           double minTau = atof(tmp[0].c_str());
           double maxTau = atof(tmp[1].c_str());
           
-          //   Get 'minC' and 'maxC'
-          tmp = parsing::getValues(argc, argv, "--counters", 2);
-          double minC = atof(tmp[0].c_str());
-          double maxC = atof(tmp[1].c_str());
-          
           //   Return
-          return new SoftMaxAgentFactory(minTau, maxTau, minC, maxC);
+          return new SoftMaxAgentFactory(minTau, maxTau);
      }
      
      if (agentFactoryClassName == "VDBEEGreedyAgentFactory")
@@ -74,15 +64,10 @@ dds::AgentFactory* dds::AgentFactory::parse(int argc, char* argv[])
           double minIniEps = atof(tmp[0].c_str());
           double maxIniEps = atof(tmp[1].c_str());
           
-          //   Get 'minC' and 'maxC'
-          tmp = parsing::getValues(argc, argv, "--counters", 2);
-          double minC = atof(tmp[0].c_str());
-          double maxC = atof(tmp[1].c_str());
-          
           //   Return
           return new VDBEEGreedyAgentFactory(
                     minSigma, maxSigma, minDelta, maxDelta,
-                    minIniEps, maxIniEps, minC, maxC);
+                    minIniEps, maxIniEps);
      }
      
      throw parsing::ParsingException("--agent_factory");

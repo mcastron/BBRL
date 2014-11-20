@@ -64,6 +64,7 @@
 		
 		/**
 			\brief	Destructor.
+			          'iniModel' is freed.
 		*/
 		~VDBEEGreedyAgent();
 

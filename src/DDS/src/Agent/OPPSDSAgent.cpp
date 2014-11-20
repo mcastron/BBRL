@@ -45,6 +45,8 @@ OPPSDSAgent::OPPSDSAgent(unsigned int n_, double c_,
 OPPSDSAgent::~OPPSDSAgent()
 {
      if (agent) { delete agent; }
+     for (unsigned int i = 0; i < strategyList.size(); ++i)
+          if (strategyList[i]) { delete strategyList[i]; }
 }
 
 
@@ -266,6 +268,11 @@ void OPPSDSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 											throw (AgentException)
 {
      assert(agent == 0);
+
+
+     //   Offline learning for the agents
+     for (unsigned int i = 0; i < strategyList.size(); ++i)
+          strategyList[i]->learnOffline(mdpDistrib);
      
      
      //   Create a UCB1

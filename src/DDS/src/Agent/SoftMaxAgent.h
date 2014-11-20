@@ -61,6 +61,7 @@
 		
 		/**
 			\brief	Destructor.
+			          'iniModel' is freed.
 		*/
 		~SoftMaxAgent();
 

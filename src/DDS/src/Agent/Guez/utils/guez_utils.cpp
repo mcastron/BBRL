@@ -182,6 +182,45 @@ void guez_utils::sampleDirichlet(double* probs, const uint* params, uint nump, d
 	}
 	
 }
+//   TODO - ADDED
+/* 
+ * Generate a sample from the dirichlet distribution given
+ * the input parameters.
+ *
+ * References:
+ *      [1]  L. Devroye, "Non-Uniform Random Variate Generation", 
+ *      Springer-Verlag, 1986
+ */
+void guez_utils::sampleDirichlet(double* probs, const double* params, uint nump, double prior){
+	double gammaSum = 0;
+	double randGamma;
+	bool allZeros = true;
+  for (unsigned i = 0; i < nump; i++){
+    randGamma = rng.gamma(params[i]+prior, 1);
+		if(randGamma > 0)
+			allZeros = false;
+    probs[i] = randGamma;
+    gammaSum += randGamma;
+  }
+	if(allZeros)
+	{
+		//Handle special case, occurs when params are really small
+		//because of numerical approximation around 0
+		probs[rand() % nump] = 1;
+	}
+	else if(gammaSum < 1e-300){
+		for (unsigned i = 0; i < nump; i++)
+			probs[i] = 0;
+		probs[rand() % nump] = 1;
+  }
+	else{
+		//Normalize
+		for(size_t i=0;i<nump;++i)
+			probs[i] = probs[i] / gammaSum;
+	}
+	
+}
+//   TODO - ADDED
 /* 
  * Generate a sample from the dirichlet distribution given
  * the input parameters.

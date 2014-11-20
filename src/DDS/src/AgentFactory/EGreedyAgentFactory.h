@@ -19,14 +19,14 @@
 	
 	\brief 	Interface of an EGreedyAgentFactory to generate RL Agents.
 
-	\date 	2014-10-03
+	\date 	2014-10-09
 */
 // ===========================================================================
 /* final */ class dds::EGreedyAgentFactory : public dds::AgentFactory
 {		
 	public:
 		// =================================================================
-		//	Public Constructor
+		//	Public Constructor/Destructor
 		// =================================================================
 		/**
 			\brief	Constructor.
@@ -43,11 +43,14 @@
 			
 			\param[minEps_	The minimal value of epsilon.
 			\param[maxEps_	The maximal value of epsilon.
-			\param[minC_	The minimal initial value of a CModel counter.
-			\param[maxC_	The maximal initial value of a CModel counter.
 		*/
-		EGreedyAgentFactory(double minEps_, double maxEps_,
-						double minC_, double maxC_);
+		EGreedyAgentFactory(double minEps_, double maxEps_);
+		
+		
+		/**
+               \brief    Destructor.
+		*/
+		~EGreedyAgentFactory();
 		
 		
 		// =================================================================
@@ -145,60 +148,16 @@
 		//	Private attributes
 		// =================================================================
 		/**
-               \brief    The short name of the distribution used to initial
-                         this AgentFactory.
-		*/
-		std::string shortDistribName;
-		
-		
-		/**
 			\brief	The minimal and maximal values of epsilon
 					respectively.
 		*/
 		double minEps, maxEps;
-		
-		
-		/**
-			\brief	The minimal and maximal initial values of a CModel
-					counter respectively.
-		*/
-		double minC, maxC;
-		
-		
-		/**
-			\brief	The number of states.
-		*/
-		unsigned int nX;
 
-
-		/**
-			\brief	The number of actions.
-		*/
-		unsigned int nU;
-		
 		
 		/**
-			\brief	The initial state.
+               \brief    The initial model used by the EGreedyAgent generated.
 		*/
-		int iniState;
-		
-		
-		/**
-			\brief	The type of rewards.
-		*/
-		RewardType rType;
-		
-		
-		/**
-			\brief	The list of rewrads means.
-		*/
-		std::vector<double> R;
-		
-		
-		/**
-			\brief	The list of rewards variances.
-		*/
-		std::vector<double> V;
+		CModel* iniModel;
 		
 		
 		/**

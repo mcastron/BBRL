@@ -33,7 +33,8 @@ VDBEEGreedyAgent::VDBEEGreedyAgent(
 	stringstream sstr;
 	sstr << "VDBE e-Greedy (";
 	sstr << setprecision(ceil(log10(sigma) + 2)) << sigma << ", ";
-	sstr << setprecision(ceil(log10(delta) + 2)) << delta;
+	sstr << setprecision(ceil(log10(delta) + 2)) << delta << ", ";
+	sstr << setprecision(ceil(log10(iniEpsilon) + 2)) << iniEpsilon;
 	if (iniModel) { sstr << ", " << iniModel->getName() << ")"; }
 	else          { sstr << ", no model)";                      }
 	setName(sstr.str());
@@ -282,6 +283,7 @@ void VDBEEGreedyAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		sstr << "VDBE e-Greedy (";
 		sstr << setprecision(ceil(log10(sigma) + 2)) << sigma << ", ";
 		sstr << setprecision(ceil(log10(delta) + 2)) << delta << ", ";
+		sstr << setprecision(ceil(log10(iniEpsilon) + 2)) << iniEpsilon;
 		sstr << iniModel->getName() << ")";
 		setName(sstr.str());
 	}

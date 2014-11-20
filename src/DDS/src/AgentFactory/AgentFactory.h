@@ -14,7 +14,7 @@
 	
 	\brief 	Interface of an AgentFactory to generate RL Agents.
 
-	\date 	2014-09-18
+	\date 	2014-10-09
 */
 // ===========================================================================
 class dds::AgentFactory : public Serializable

@@ -40,7 +40,7 @@ EGreedyAgent::EGreedyAgent(double epsilon_, CModel* iniModel_) :
 EGreedyAgent::~EGreedyAgent()
 {
 	if (iniModel)	{ delete iniModel; }
-	if (cModel)	{ delete cModel; }
+	if (cModel)	{ delete cModel;   }
 }
 
 

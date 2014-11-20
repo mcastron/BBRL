@@ -16,7 +16,7 @@
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-09-18
+	\date 	2014-10-14
 */
 // ===========================================================================
 class dds::Agent : public IAgent

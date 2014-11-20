@@ -4,6 +4,7 @@
 
 #include "Agent.h"
 #include "Guez/MDPSimulator.h"
+#include "Guez/PCSamplerFactory.h"
 #include "Guez/planners/mcp/bamcp/bamcp.h"
 #include "Guez/samplers/FDMsamplerFactory.h"
 #include "../MDPDistribution/DirMultiDistribution.h"
@@ -23,7 +24,7 @@
 
                (based on Guez work)
 
-	\date 	2014-10-06
+	\date 	2014-10-11
 */
 // ===========================================================================
 /* final */ class dds::BAMCPAgent : public dds::Agent
@@ -168,12 +169,6 @@
 		   \brief    The current SamplerFactory (required by 'BAMCP').
 		*/
 		SamplerFactory* samplerFact;
-		
-		
-		/**
-		   \brief    The initial state of the MDPs to be played.
-		*/
-		int iniState;
 		
 		
 		/**

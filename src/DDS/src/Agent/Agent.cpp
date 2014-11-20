@@ -5,6 +5,7 @@
 #include "EGreedyAgent.h"
 #include "SoftMaxAgent.h"
 #include "VDBEEGreedyAgent.h"
+#include "FormulaAgent.h"
 #include "BAMCPAgent.h"
 #include "OPPSDSAgent.h"
 #include "OPPSCSAgent.h"
@@ -50,7 +51,7 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
      
      
      //   'agentFile' not provided
-     catch (parsing::ParsingException e)
+     catch (parsing::ParsingException& e)
      {     
           //   Get 'agent'
           if (agentClassName == RandomAgent::toString())
@@ -103,6 +104,16 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                return new VDBEEGreedyAgent(sigma, delta, iniEpsilon);
           }
           
+          if (agentClassName == FormulaAgent::toString())
+          {     
+               //   Get 'K'
+               string fStr = parsing::getValue(argc, argv, "--formula");
+               
+               
+               //   Return
+               return new FormulaAgent(new Formula(fStr));
+          }
+          
           if (agentClassName == BAMCPAgent::toString())
           {     
                //   Get 'K'
@@ -126,14 +137,9 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                double c = atof(tmp.c_str());
                
                
-               //   Get 'agentFactory'
-               AgentFactory* agentFactory = AgentFactory::parse(argc, argv);
-               assert(agentFactory);
-               
-               
-               //   Get 'nSamples'
-               tmp = parsing::getValue(argc, argv, "--n_samples");
-               unsigned int nSamples = atoi(tmp.c_str());
+               //   Get 'formulaVector'
+               FormulaVector* formulaVector = FormulaVector::parse(argc, argv);
+               assert(formulaVector);
                
                
                //   Get 'gamma'
@@ -151,25 +157,14 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                MDPDistribution* mdpDistrib = MDPDistribution::parse(argc, argv);
                assert(mdpDistrib);
                
-                    //   Initialize 'agentFactory'
-               agentFactory->init(mdpDistrib);
-               
                     //   Generate and store the strategies
-               vector<pair<double, double> > bounds
-                         = agentFactory->getBounds();
-               
                vector<Agent*> strategyList;
-               for (unsigned int i = 0; i < nSamples; ++i)
-               {
-                    vector<double> paramList;
-                    for (unsigned int j = 0; j < bounds.size(); ++j)
-                    {
-                         paramList.push_back(RandomGen::randRange_Uniform(
-                                   bounds[j].first, bounds[j].second));
-                    }               
+               for (unsigned int i = 0; i < formulaVector->size(); ++i)
+                    strategyList.push_back(
+                              new FormulaAgent((*formulaVector)[i]));
                     
-                    strategyList.push_back(agentFactory->get(paramList));
-               }
+                    //   Free 'formulaVector'
+               delete formulaVector;
                
                
                //   Return
@@ -207,9 +202,9 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                return new OPPSCSAgent(nDraws, c, agentFactory, gamma, T);
                
           }
-          
-          throw parsing::ParsingException("--agent");
      }
+     
+     throw parsing::ParsingException("--agent");
 }
 
 

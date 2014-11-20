@@ -18,7 +18,7 @@ using namespace dds;
 	          Used as a substitute for Guez's algorithms (cannot be used to
 	          actually simulate a MDP).
 
-	\date 	2014-09-15
+	\date 	2014-10-11
 */
 // ===========================================================================
 class MDPSimulator : public SIMULATOR
@@ -53,7 +53,7 @@ class MDPSimulator : public SIMULATOR
 		   RewardRange = *(maxList[0]);   
 		   
 		   T = 0;
-		   R = new double[nX*nU*nX];
+             R = new double[nX*nU*nX];
 		   for (unsigned int x = 0; x < nX; ++x)
 		        for (unsigned int u = 0; u < nU; ++u)
 		             for (unsigned int y = 0; y < nX; ++y)
@@ -94,7 +94,7 @@ class MDPSimulator : public SIMULATOR
 		   RewardRange = *(maxList[0]);
 		   
 		   T = 0;
-		   R = new double[nX*nU*nX];
+             R = new double[nX*nU*nX];
 		   for (unsigned int x = 0; x < nX; ++x)
 		        for (unsigned int u = 0; u < nU; ++u)
 		             for (unsigned int y = 0; y < nX; ++y)
@@ -134,7 +134,7 @@ class MDPSimulator : public SIMULATOR
                     
                     unsigned int y;
                     mdp->perform((unsigned int) action, y, reward);
-                    observation = (uint) y;              
+                    observation = (uint) y;         
      
                
                     return false;

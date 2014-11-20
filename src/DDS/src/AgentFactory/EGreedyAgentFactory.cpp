@@ -5,26 +5,27 @@ using namespace std;
 
 
 // ===========================================================================
-//	Public Constructor
+//	Public Constructor/Destructor
 // ===========================================================================
 dds::EGreedyAgentFactory::EGreedyAgentFactory(std::istream& is) :
-          AgentFactory()
+          AgentFactory(), iniModel(0)
 {
 	try							{ dDeserialize(is);	}
 	catch (SerializableException e)	{ deserialize(is);	}
 }
 
 
-dds::EGreedyAgentFactory::EGreedyAgentFactory(
-		double minEps_, double maxEps_, double minC_, double maxC_) :
-		     shortDistribName("no name"),
-			minEps(minEps_), maxEps(maxEps_), minC(minC_), maxC(maxC_)
+dds::EGreedyAgentFactory::EGreedyAgentFactory(double minEps_, double maxEps_) :
+          minEps(minEps_), maxEps(maxEps_), iniModel(0)
 {
 	assert((minEps >= 0.0) && (minEps <= 1.0) && (minEps < maxEps));
 	assert((maxEps >= 0.0) && (maxEps <= 1.0) && (maxEps > minEps));
+}
 
-	assert((minC >= 0.0) && (minC < maxC));
-	assert((maxC >= 0.0) && (maxC > minC));
+
+dds::EGreedyAgentFactory::~EGreedyAgentFactory()
+{
+     if (iniModel) { delete iniModel; }
 }
 
 
@@ -42,27 +43,25 @@ void dds::EGreedyAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 		const dds::DirMultiDistribution* dirDistrib = 
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
 		
-		shortDistribName = dirDistrib->getShortName();		
-		nX = dirDistrib->getNbStates();
-		nU = dirDistrib->getNbActions();
-		iniState = dirDistrib->getIniState();
-		R = dirDistrib->getR();
-		V = dirDistrib->getV();
-		
 		boundsList.clear();
 		splitAccList.clear();
 		
 		boundsList.push_back(pair<double, double>(minEps, maxEps));
 		splitAccList.push_back(0.01);
-		
-		for (unsigned int x = 0; x < nX; ++x)
-			for (unsigned int u = 0; u < nU; ++u)
-				for (unsigned int y = 0; y < nX; ++y)
-				{
-					boundsList.push_back(
-							pair<double, double>(minC, maxC));
-					splitAccList.push_back(1.0);
-				}
+
+
+          std::string shortDistribName = dirDistrib->getShortName();		
+		unsigned int nX = dirDistrib->getNbStates();
+		unsigned int nU = dirDistrib->getNbActions();
+		int iniState = dirDistrib->getIniState();
+		vector<double> N = dirDistrib->getTheta();
+		RewardType rType = dirDistrib->getRType();
+		vector<double> R = dirDistrib->getR();
+		vector<double> V = dirDistrib->getV();
+
+          if (iniModel) { delete iniModel; }
+          iniModel = new CModel(
+                    shortDistribName, nX, nU, iniState, N, rType, R, V);
 	}
 	
 	
@@ -80,17 +79,10 @@ void dds::EGreedyAgentFactory::init(const dds::MDPDistribution* mdpDistrib)
 dds::Agent* dds::EGreedyAgentFactory::get(const vector<double>& paramList)
 									const throw (AgentFactoryException)
 {
-	assert(paramList.size() == (1 + nX*nU*nX));
+	assert(paramList.size() == 1);
 	
-	
-	double epsilon = paramList[0];
-	vector<double> N;
-	for (unsigned int i = 1; i < paramList.size(); ++i)
-		N.push_back(round(paramList[i]));
-	
-	return (new EGreedyAgent(
-               epsilon,
-			new CModel(shortDistribName, nX, nU, iniState, N, rType, R, V)));
+
+	return (new EGreedyAgent(paramList[0], iniModel->clone()));
 }
 
 
@@ -100,7 +92,7 @@ void dds::EGreedyAgentFactory::serialize(ostream& os) const
 	
 	
 	os << EGreedyAgentFactory::toString() << "\n";
-	os << 4 << "\n";
+	os << 3 << "\n";
 	
 	
 	//  'minEps'
@@ -111,12 +103,14 @@ void dds::EGreedyAgentFactory::serialize(ostream& os) const
 	os << maxEps << "\n";
 	
 	
-	//  'minC'
-	os << minC << "\n";
+	//  'iniModel'
+	stringstream iniModelStream;
+	iniModel->serialize(iniModelStream);
 	
-	
-	//  'maxC'
-	os << maxC << "\n";
+	os << iniModelStream.str().length() << "\n";
+	copy(istreambuf_iterator<char>(iniModelStream),
+			istreambuf_iterator<char>(),
+			ostreambuf_iterator<char>(os));
 }
 
 
@@ -155,17 +149,19 @@ void dds::EGreedyAgentFactory::deserialize(istream& is)
 	if (!getline(is, tmp)) { throwEOFMsg("maxEps"); }
 	maxEps = atof(tmp.c_str());
 	++i;
-
-
-     //	'minC'
-	if (!getline(is, tmp)) { throwEOFMsg("minC"); }
-	minC = atof(tmp.c_str());
-	++i;
-
-
-     //	'maxC'
-	if (!getline(is, tmp)) { throwEOFMsg("maxC"); }
-	maxC = atof(tmp.c_str());
+	
+	
+	//  'iniModel'
+	if (!getline(is, tmp)) { throwEOFMsg("iniModel"); }
+	unsigned int iniModelStreamLength = atoi(tmp.c_str());
+	
+	stringstream iniModelStream;
+	tmp.resize(iniModelStreamLength);
+	is.read(&tmp[0], iniModelStreamLength);
+	iniModelStream << tmp;
+	
+	iniModel = dynamic_cast<CModel*>(
+			Serializable::createInstance<CModel>(iniModelStream));
 	++i;
 	
 	

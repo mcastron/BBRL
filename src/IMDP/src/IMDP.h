@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a RL MDP.
 			
-	\date 	2013-08-13
+	\date 	2013-10-13
 */
 // ===========================================================================
 class IMDP : public Serializable
@@ -27,7 +27,7 @@ class IMDP : public Serializable
 			
 			\param[name_	The name of this IMDP.
 		*/
-		IMDP(std::string name_ = "") : Serializable(), name(name_) {}
+		IMDP(std::string name_ = "no name") : Serializable(), name(name_) {}
 		
 		
 		/**

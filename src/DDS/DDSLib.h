@@ -8,6 +8,7 @@
 #include "src/Agent/SoftMaxAgent.h"
 #include "src/Agent/VDBEEGreedyAgent.h"
 #include "src/Agent/OPPSDSAgent.h"
+#include "src/Agent/OPPSCSAgent.h"
 
 #include "src/AgentFactory/AgentFactory.h"
 #include "src/AgentFactory/EGreedyAgentFactory.h"

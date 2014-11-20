@@ -25,7 +25,7 @@
 			For Offline learning, does not support another distribution
 			than 'DirMultiDistribution'.
 
-	\date 	2014-09-23
+	\date 	2014-10-13
 */
 // ===========================================================================
 /* final */ class dds::OPPSDSAgent : public dds::Agent
@@ -63,6 +63,7 @@
 		
 		/**
 			\brief	Destructor.
+			          'strategyList' is freed.
 		*/
 		~OPPSDSAgent();
 

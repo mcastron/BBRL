@@ -1,12 +1,3 @@
-
-/**
-	TODO
-		Changes from original in order to all several instances:
-			- Static elements moved into the instance
-			- VNODE::FreeAll() commented
-*/
-
-
 #pragma once
 
 /* BAMCP algorithm implementation
@@ -50,10 +41,7 @@ public:
 				double eps;
     };
 
-//    BAMCP(const SIMULATOR& simulator, const PARAMS& params,SamplerFactory& sampFact);
-//	TODO: ADDED
-	BAMCP(const SIMULATOR& simulator, const PARAMS& params,SamplerFactory& sampFact, std::vector<double> priorcountList = std::vector<double>());
-//
+    BAMCP(const SIMULATOR& simulator, const PARAMS& params,SamplerFactory& sampFact);
     ~BAMCP();
 
     int SelectAction(uint current_state);
@@ -71,13 +59,9 @@ public:
     void DisplayValue(int depth, std::ostream& ostr) const;
     void DisplayPolicy(int depth, std::ostream& ostr) const;
 
-    static void InitFastUCB(double exploration); // TODO: Disabled
+    static void InitFastUCB(double exploration);
 
-//	TODO - Modified
-	double QRoot(uint action);
-
-//private:
-//	TODO - Modified
+private:
 		uint* counts;
 		double* countsSum;
 		//Cached values
@@ -113,11 +97,8 @@ public:
     // Fast lookup table for UCB
     //static const int UCB_N = 10000, UCB_n = 100;
 //		static const int UCB_N = 10000, UCB_n = 5000;
-    /*TODO 	static double UCB[UCB_N][UCB_n];*/
-    //TODO:	ADDED
-//    std::vector<std::vector<double> > UCB;
-    //TODO:	ADDED
-    /*TODO 	static*/ bool InitialisedFastUCB;
+//    static double UCB[UCB_N][UCB_n];
+//    static bool InitialisedFastUCB;
 
     double FastUCB(int N, int n, double logN) const;
 

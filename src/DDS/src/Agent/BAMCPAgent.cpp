@@ -64,7 +64,7 @@ void BAMCPAgent::learnOnline(int x, int u, int y, double r)
 
 
 void BAMCPAgent::reset() throw (MDPException)
-{     
+{
      if (bamcp)          { delete bamcp;       bamcp       = 0; }
      if (simulator)      { delete simulator;   simulator   = 0; }
      if (samplerFact)    { delete samplerFact; samplerFact = 0; }
@@ -76,14 +76,10 @@ void BAMCPAgent::reset() throw (MDPException)
 	searchParamsBAMCP.RB 				= -1;
 	searchParamsBAMCP.eps 				= 0.5;
      
-     unsigned int s;
-     if (iniState == -1) { s = RandomGen::randIntRange_Uniform(0, (nX - 1)); }
-     else                { s = iniState;                                     }
-     
-     simulator = new MDPSimulator(s, nX, nU, R, getGamma());
-     samplerFact = new FDMsamplerFactory(0.0);
-     bamcp = new BAMCP(
-               *simulator, searchParamsBAMCP, *samplerFact, priorcountList);
+     unsigned int s = getMDP()->getCurrentState();     
+     simulator = new MDPSimulator(s, nX, nU, R, getGamma());     
+     samplerFact = new PCSamplerFactory(priorcountList);
+     bamcp = new BAMCP(*simulator, searchParamsBAMCP, *samplerFact);
 	
 	
 	//	Check integrity
@@ -99,14 +95,10 @@ void BAMCPAgent::serialize(ostream& os) const
 	
 	
 	os << BAMCPAgent::toString() << "\n";
-     os << 6 << "\n";
+     os << 5 << "\n";
 	
 	//  'K'
 	os << K << "\n";
-	
-	
-	//  'iniState'
-	os << iniState << "\n";
 	
 	
 	//  'nX'
@@ -171,12 +163,6 @@ void BAMCPAgent::deserialize(istream& is) throw (SerializableException)
 	//  'K'
 	if (!getline(is, tmp)) { throwEOFMsg("K"); }
 	K = atoi(tmp.c_str());
-	++i;
-
-
-	//  'iniState'
-	if (!getline(is, tmp)) { throwEOFMsg("iniState"); }
-	iniState = atoi(tmp.c_str());
 	++i;
 
 
@@ -263,13 +249,12 @@ void BAMCPAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 	{
 		const DirMultiDistribution* dirDistrib = 
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
-				
-		iniState = dirDistrib->getIniState();
+
 		nX = dirDistrib->getNbStates();
 		nU = dirDistrib->getNbActions();
 		R = dirDistrib->getR();
 		priorcountList = dirDistrib->getTheta();
-		
+
 		
 		stringstream sstr;
 		sstr << "BAMCP (" << K << ", ";

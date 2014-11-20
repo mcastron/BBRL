@@ -10,6 +10,7 @@
 #include "Agent/OPPSDSAgent.h"
 #include "Agent/OPPSCSAgent.h"
 #include "Agent/BAMCPAgent.h"
+#include "Agent/FormulaAgent.h"
 
 #include "AgentFactory/AgentFactory.h"
 #include "AgentFactory/EGreedyAgentFactory.h"
@@ -54,14 +55,17 @@ void dds::init()
 	Serializable::checkIn<VDBEEGreedyAgent>(
 			&Serializable::createInstance<VDBEEGreedyAgent>);
 
+     Serializable::checkIn<FormulaAgent>(
+			&Serializable::createInstance<FormulaAgent>);
+
+     Serializable::checkIn<BAMCPAgent>(
+			&Serializable::createInstance<BAMCPAgent>);
+
 	Serializable::checkIn<OPPSDSAgent>(
 			&Serializable::createInstance<OPPSDSAgent>);
 
 	Serializable::checkIn<OPPSCSAgent>(
 			&Serializable::createInstance<OPPSCSAgent>);
-
-	Serializable::checkIn<BAMCPAgent>(
-			&Serializable::createInstance<BAMCPAgent>);
 			
 			
 	//  AgentFactorys
@@ -116,15 +120,13 @@ dds::simulation::SimulationRecord dds::simulation::simulate(
 	dds::simulation::SimulationRecord simRec(gamma);
 	
 	
-	//	Reset the agent and the MDP
+	//	Reset the MDP
 	mdp->reset();
 	
 	
 	//	Set the MDP as 'unknown'
 	if (safeSim) { mdp->setUnknown(); }
-	
-	
-	vector<double> rewardList;
+ 
 	
 	//	Initialization	
 	unsigned int x = mdp->getCurrentState();
@@ -132,7 +134,6 @@ dds::simulation::SimulationRecord dds::simulation::simulate(
 	
 	
 	//	Simulation
-	double cGamma = 1.0;
 	for (unsigned int t = 0; t < T; ++t)
 	{
 		//	Retrieve the action to perform
@@ -155,11 +156,6 @@ dds::simulation::SimulationRecord dds::simulation::simulate(
 		
 		//	Update of the data
 		x = y;
-		rewardList.push_back(cGamma * r);
-		
-		
-		//	Update the current discount factor
-		cGamma *= gamma;
 	}
 	
 	

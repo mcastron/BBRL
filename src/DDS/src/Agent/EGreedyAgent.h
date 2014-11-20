@@ -60,6 +60,7 @@
 		
 		/**
 			\brief	Destructor.
+			          'iniModel' is freed.
 		*/
 		~EGreedyAgent();
 

@@ -19,7 +19,7 @@
 	
 	\brief 	Interface of an SoftMaxAgentFactory to generate RL Agents.
 
-	\date 	2014-10-03
+	\date 	2014-10-09
 */
 // ===========================================================================
 /* final */ class dds::SoftMaxAgentFactory : public dds::AgentFactory
@@ -43,13 +43,14 @@
 			
 			\param[minTau_		The minimal value of tau.
 			\param[maxTau_		The maximal value of tau.
-			\param[minC_		The minimal initial value of a CModel
-							counter.
-			\param[maxC_		The maximal initial value of a CModel
-							counter.
 		*/
-		SoftMaxAgentFactory(double minTau_, double maxTau_,
-						double minC_, double maxC_);
+		SoftMaxAgentFactory(double minTau_, double maxTau_);
+		
+		
+		/**
+               \brief    Destructor.
+		*/
+		~SoftMaxAgentFactory();
 		
 		
 		// =================================================================
@@ -147,60 +148,16 @@
 		//	Private attributes
 		// =================================================================
 		/**
-               \brief    The short name of the distribution used to initial
-                         this AgentFactory.
-		*/
-		std::string shortDistribName;
-		
-		
-		/**
 			\brief	The minimal and maximal values of tau respectively.
 		*/
 		double minTau, maxTau;
-		
-		
-		/**
-			\brief	The minimal and maximal initial values of a CModel
-					counter respectively.
-		*/
-		double minC, maxC;
-		
-		
-		/**
-			\brief	The number of states.
-		*/
-		unsigned int nX;
 
 
-		/**
-			\brief	The number of actions.
+          /**
+               \brief    The initial model used by the SoftMaxAgent generated.
 		*/
-		unsigned int nU;
-		
-		
-		/**
-			\brief	The initial state.
-		*/
-		int iniState;
-		
-		
-		/**
-			\brief	The type of rewards.
-		*/
-		RewardType rType;
-		
-		
-		/**
-			\brief	The list of rewrads means.
-		*/
-		std::vector<double> R;
-		
-		
-		/**
-			\brief	The list of rewards variances.
-		*/
-		std::vector<double> V;
-		
+		CModel* iniModel;
+
 		
 		/**
 			\brief	The list of bounds on each parameter.

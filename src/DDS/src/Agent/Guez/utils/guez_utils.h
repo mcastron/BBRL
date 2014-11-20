@@ -81,6 +81,9 @@ void setSeed(ulong _x);
 
 void sampleDirichlet(double* probs, double* params, uint nump);
 void sampleDirichlet(double* probs, const uint* params, uint nump, double prior);
+//   TODO - ADDED
+void sampleDirichlet(double* probs, const double* params, uint nump, double prior);
+//   TODO - ADDED
 
 #ifdef BOOST_FOUND
 void sampleDirichlet(double* probs,
