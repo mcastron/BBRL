@@ -1,0 +1,53 @@
+                              
+                              Command-line manual
+
+NAME
+     TinyBRL-export -- A tool for exporting results (written by Castronovo Michael)
+
+USAGE OVERVIEW
+     --help
+     
+     --latex
+          [
+               --agent
+                    "agent class name" 
+                    --agent_file
+               --experiment
+                    --experiment_file
+          ]*
+     --output
+
+     --matlab
+          [
+               --agent
+                    "agent class name"
+                    --agent_file
+               --experiment
+                    --experiment_file
+          ]*
+      --output
+    
+
+USAGE EXAMPLES
+     --- Latex export ---
+     
+          ./TinyBRL-export --latex \
+               --agent EGreedyAgent \
+               --experiment --experiment_file "data/results/UGC-exp[egreedy_agent(0.25)].dat.zz" \
+               --agent EGreedyAgent \
+               --experiment --experiment_file "data/results/OGC-exp[egreedy_agent(0.25)].dat.zz" \
+               --agent EGreedyAgent \
+               --experiment --experiment_file "data/results/PGC-exp[egreedy_agent(0.25)].dat.zz" \
+               --output "data/export/tables.tex"
+
+
+     --- Maltab export ---
+     
+          ./TinyBRL-export --matlab \
+               --agent EGreedyAgent \
+               --experiment --experiment_file "data/results/UGC-exp[egreedy_agent(0.25)].dat.zz" \
+               --agent EGreedyAgent \
+               --experiment --experiment_file "data/results/OGC-exp[egreedy_agent(0.25)].dat.zz" \
+               --agent EGreedyAgent \
+               --experiment --experiment_file "data/results/PGC-exp[egreedy_agent(0.25)].dat.zz" \
+               --output "data/export/doBarGraph.m"

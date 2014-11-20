@@ -1,0 +1,289 @@
+
+                              Command-line manual
+
+NAME
+     TinyBRL-DDS -- A bayesian reinforcement learning library
+                    (by Castronovo Michael)
+
+
+USAGE OVERVIEW 
+     --offline_learning                                        
+          --agent <string>                                     
+               "agent class name"
+                    --agent_file <string>                      
+               RandomAgent
+               OptimalAgent
+               EGreedyAgent
+                    --epsilon <double>                         
+               SoftMaxAgent
+                    --tau <double>
+               VDBEEGreedyAgent
+                    --sigma <double>
+                    --delta <double>
+                    --ini_epsilon <double>
+               BAMCPAgent
+                    --K <integer>
+               OPPSDSAgent
+                    --n_draws <integer>                        
+                    --c <double>
+                    --agent_factory <string>                   
+                         EGreedyAgentFactory
+                              --epsilon <double> <double>      
+                              --counters <double> <double>     
+                         SoftMaxAgentFactory
+                              --tau <double> <double>
+                              --counters <double> <double>     
+                         VDBEEGreedyAgentFactory
+                              --sigma <double> <double>
+                              --delta <double> <double>
+                              --ini_epsilon <double> <double>  
+                              --counters <double> <double>
+                    --n_samples <integer>                      
+                    --discount_factor <double>                 
+                    --horizon_limit <integer>
+                OPPSCSAgent
+                    --n_draws <integer>
+                    --c <double>
+                    --agent_factory <string>                   
+                         EGreedyAgentFactory
+                              --epsilon <double> <double>      
+                              --counters <double> <double>     
+                         SoftMaxAgentFactory
+                              --tau <double> <double>
+                              --counters <double> <double>     
+                         VDBEEGreedyAgentFactory
+                              --sigma <double> <double>
+                              --delta <double> <double>
+                              --ini_epsilon <double> <double>  
+                              --counters <double> <double>
+                    --discount_factor <double>                 
+                    --horizon_limit <integer>                  
+          --mdp_distribution <string>                          
+               "MDP distribution class name"
+                    --mdp_distribution_file <string>           
+          [--compress_output]
+          --output <string>                                    
+     
+     --new_experiment                                          
+          --name <string>
+          --mdp_distribution <string>                          
+               "MDP distribution class name"
+                    --mdp_distribution_file <string>           
+          --n_mdps <integer>                                   
+          --n_simulations_per_mdp <integer>                    
+          --discount_factor <double>                           
+          --horizon_limit <integer>                            
+          [--safe_simulations]
+          [--compress_output]
+          --output <string>                                    
+     
+     --run_experiment                                          
+          --experiment                                         
+               --experiment_file <string>                      
+          --agent <string>                                     
+               "agent class name"
+                    --agent_file <string>                     
+               RandomAgent
+               OptimalAgent
+          --n_threads <integer>                                   
+          [--compress_output]
+          --output <string> 
+          --refresh_frequency <integer>                          
+          --backup_frequency <integer>                           
+
+     --help
+
+
+
+OPTIONS DESCRIPTION
+     --agent <string>
+          The type of Agent to load among:
+               - RandomAgent
+               - OptimalAgent
+               - EGreedyAgent (parameters: --epsilon)
+               - SoftMaxAgent (parameters: --tau)
+               - VDBEEGreedyAgent (parameters: --sigma, --delta, --ini_epsilon)
+
+          Can either be followed by agent's parameters (if any) or by a file
+          (--agent_file)
+
+     --agent_factory <string>
+          The type of AgentFactory to load among:
+               - EGreedyAgentFactory (parameters: --epsilon, --counters)
+               - SoftMaxAgentFactory (parameters: --tau, --counters)
+               - VDBEEGreedyAgentFactory
+                 (parameters: --sigma, --delta, --ini_epsilon, --counters)
+
+     --agent_file <string>
+          The file containing the data of the Agent to load.
+
+     --backup_frequency <double>
+          The frequency of backup creation (in ms).
+
+     --c
+          (OPPSDSAgent & OPPSCSAgent parameter)
+          The constant to use in the UCB1 formula:
+               I_t(i) = mu_i + c * sqrt(ln(n_t) / n_i)
+
+     --compress_output
+          If specified, the output/backup files are compressed.
+
+     --counters <double> <double>
+          (EGreedyAgentFactory, SoftMaxAgentFactory and VDBEEGreedyAgent
+          parameter)
+          The agents defined by this AgentFactory uses a CounterModel,
+          estimating the probability matrix of the current MDP by a set of
+          counters (# of observations for each transition).
+          This parameter defines the minimal and maximal initial value of each
+          counter.
+
+     --delta <double>
+          (VDBEEGreedyAgent parameter)
+          Determine the influence of the selected action on the exploration
+          rate.
+
+     --delta <double> <double>
+          (VDBEEGreedyAgentFactory parameter)
+          The minimal and maximal value of parameter 'delta' of the
+          VDBEEGreedyAgents defined by this AgentFactory.
+
+     --discount_factor <double>
+          The discount factor.
+
+     --epsilon <double>
+          (EGreedyAgent parameter)
+          The probability for the Agent to choose the next action to perform
+          randomly.
+     
+     --epsilon <double> <double>
+          (EGreedyAgentFactory parameter)
+          The minimal and maximal value of parameter 'epsilon' of the
+          EGreedyAgents defined by this AgentFactory.
+
+     --experiment
+          Followed by the parameters of the Experiment to load.
+
+     --experiment_file <string>
+          The file containing the data of the Experiment to load.
+
+     --help
+          Display this help.
+
+     --horizon_limit <integer>
+          The horizon limit.
+
+     --ini_epsilon
+          (VDBEEGreedyAgent parameter)
+          The initial value of epsilon for each state-action pair.
+
+     --K
+          (BAMCPAgent parameter)
+          The number of nodes to expand at each time-step.
+
+     --mdp_distribution <string>
+          The type of MDP distribution to load among:
+               - DirMultiDistribution
+
+          Can either be followed by mdp distribution's parameters (if any) or
+          by a file (--mdp_distribution_file)
+     
+     --mdp_distribution_file <string>
+          The file containing the data of the MDP distribution to load.
+     
+     --n_draws <integer>
+          (OPPSDSAgent & OPPSCSAgent parameter)
+          The number of draws of the internal UCB1/UCT.
+          
+     --n_mdps <integer>
+          The number of MDPs to consider.
+     
+     --n_samples <integer>
+          (OPPSDSAgent parameter)
+          The number of agents to draw from the given agent factory
+          (used to build the strategy space to use).
+     
+     --n_simulations_per_mdp <integer>
+          The number of trajectories per MDP to consider.
+
+     --n_threads <integer>
+          The number of threads to use.
+
+     --name <string>
+          The name of the Experiment to create.
+
+     --new_experiment
+          New Experiment mode, where an Experiment is created.
+
+     --offline_learning
+          Offline Learning mode, where an Agent learns from a prior MDP
+          distribution.
+     
+     --output <string>
+          The output file.
+     
+     --refresh_frequency <integer>
+          The frequency of screen output refreshing (in ms).
+
+     --run_experiment
+          Run Experiment mode, where an Agent is tested on a set of MDPs
+          defined by an Experiment created previously.
+     
+     --sigma <double>
+          (VDBEEGreedyAgent parameter)
+          The inverse sensitivity.
+     
+     --sigma <double> <double>
+          (VDBEAgentFactory parameter)
+          The minimal and maximal value of parameter 'sigma' of the
+          VDBEEGreedyAgents defined by this AgentFactory.
+     
+     --safe_simulations
+          If set, the MDP is 'unknown', preventing the agent to access MDP data
+          (e.g.: the transition matrix).
+          
+     --tau
+          (SoftMaxAgent parameter)
+          The temperature, controlling smoothly the transition from a greedy
+          behaviour (tau -> 0) to a random behaviour (tau -> inf), where the
+          action which is the best according to the Agent is more likely to be
+          drawn.
+
+     --tau <double> <double>
+          (SoftMaxAgentFactory parameter)
+          The minimal and maximal value of parameter 'tau' of the
+          SoftMaxAgents defined by this AgentFactory.
+
+
+USAGE EXAMPLES
+     --- Offline Learning mode ---
+     
+          ./TinyBRL-DDS --offline_learning \
+               --agent EGreedyAgent --epsilon 0.25 \
+               --mdp_distribution "DirMultiDistribution" --mdp_distribution_file "data/distributions/UGC-distrib.dat" \
+               --output "data/agents/egreedy_agent(0.25).dat"
+ 
+     
+     --- New Experiment mode ---
+     
+          ./TinyBRL-DDS --new_experiment \
+               --name "UGC Experiment" \
+               --mdp_distribution "DirMultiDistribution" --mdp_distribution_file "data/distributions/UGC-distrib.dat" \
+               --n_mdps 50000 \
+               --n_simulations_per_mdp 1 \
+               --discount_factor 0.95 \
+               --horizon_limit 250 \
+               --safe_simulations \
+               --compress-output \
+               --output "data/experiments/UGC-exp.dat"
+
+     
+     --- Run Experiment ---     
+          ./TinyBRL-DDS --run_experiment \
+               --experiment --experiment_file "data/experiments/UGC-exp.dat.zz" \
+               --agent EGreedyAgent --agent_file "data/agents/egreedy_agent(0.25).dat" \
+               --n_threads 4 \
+               --compress-output \
+               --output "data/results/UGC-exp[egreedy_agent(0.25)].dat" \
+               --refresh_frequency 1000 \
+               --backup_frequency 15000
+
