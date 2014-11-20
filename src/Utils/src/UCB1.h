@@ -14,7 +14,7 @@
 	
 	\brief 	An interface to specialize for UCB1	
 	
-	\date 	2014-07-23
+	\date 	2014-10-15
 */
 // ===========================================================================
 class utils::UCB1
@@ -49,12 +49,16 @@ class utils::UCB1
 					The initialization draws (1 per arm) are part of 'n',
 					which means that if 'n' < 'nArms', the UCB1 won't
 					be initialized.
+					
+					If all arms have been discarded during the process,
+					it returns -1 instead.
 			
 			\param[n	The number of draws.
 			
-			\return	The index of the arm which has been drawn the most.
+			\return	The index of the arm which has been drawn the most or
+			          -1 if all arms have been discarded.
 		*/
-		unsigned int run(unsigned int n);
+		int run(unsigned int n);
 		
 		
 		/**
@@ -109,7 +113,8 @@ class utils::UCB1
 			
 			\param[i	The arm to draw.
 		*/
-		virtual double drawArm(unsigned int i) const = 0;
+		virtual double drawArm(unsigned int i) const
+                                                  throw (std::exception) = 0;
 
 
 	private:
@@ -139,6 +144,18 @@ class utils::UCB1
 			\brief	The number of draws for each arm.
 		*/
 		std::vector<unsigned int> nList;
+		
+		
+		/**
+               \brief    'discardFlags[i]' is true iff arm 'i' is discarded.
+		*/
+		std::vector<bool> discardFlags;
+		
+		
+		/**
+               \brief    The number of discarded arms.
+		*/
+		unsigned int nDiscardedArms;
 
 	
 		/**

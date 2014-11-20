@@ -38,14 +38,14 @@ SoftMaxAgent::SoftMaxAgent(double tau_, CModel* iniModel_) :
 SoftMaxAgent::~SoftMaxAgent()
 {
 	if (iniModel)	{ delete iniModel; }
-	if (cModel)	{ delete cModel; }
+	if (cModel)	{ delete cModel;   }
 }
 
 
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int SoftMaxAgent::getAction(int xt) const throw (MDPException)
+int SoftMaxAgent::getAction(int xt) const throw (AgentException)
 {
 	assert((xt >= 0) && (xt < (int) nX));
 	assert(Q.size() == (getMDP()->getNbStates() * getMDP()->getNbActions()));
@@ -71,7 +71,7 @@ int SoftMaxAgent::getAction(int xt) const throw (MDPException)
 
 
 void SoftMaxAgent::learnOnline(int x, int u, int y, double r)
-											throw (MDPException)
+											throw (AgentException)
 {
 	assert(cModel);
 	
@@ -80,7 +80,7 @@ void SoftMaxAgent::learnOnline(int x, int u, int y, double r)
 }
 
 
-void SoftMaxAgent::reset() throw (MDPException)
+void SoftMaxAgent::reset() throw (AgentException)
 {
 	nX = getMDP()->getNbStates();
 	nU = getMDP()->getNbActions();
@@ -94,6 +94,19 @@ void SoftMaxAgent::reset() throw (MDPException)
 	
 	
 	//	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
+void SoftMaxAgent::freeData()
+{
+     if (cModel) { delete cModel; cModel = 0; }
+     Q.clear();
+     
+     
+     //	Check integrity
 	#ifndef NDEBUG
 	checkIntegrity();
 	#endif
@@ -211,12 +224,11 @@ void SoftMaxAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 
 	
 	//	'DirMultiDistribution' case
-	try
-	{
-		const DirMultiDistribution* dirDistrib = 
+	const DirMultiDistribution* dirDistrib = 
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
-		
-		
+
+	if (dirDistrib)
+	{		
 		unsigned int nX = dirDistrib->getNbStates();
 		unsigned int nU = dirDistrib->getNbActions();
 		int iniState = dirDistrib->getIniState();
@@ -239,7 +251,7 @@ void SoftMaxAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 	
 	
 	//	Other cases
-	catch (bad_cast)
+	else
 	{
 		string msg;
 		msg += "Unsupported MDPDistribution for offline learning!\n";

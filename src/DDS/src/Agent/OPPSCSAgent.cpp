@@ -53,7 +53,7 @@ OPPSCSAgent::~OPPSCSAgent()
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int OPPSCSAgent::getAction(int xt) const throw (MDPException)
+int OPPSCSAgent::getAction(int xt) const throw (AgentException)
 {
 	assert(agent);
 
@@ -63,7 +63,7 @@ int OPPSCSAgent::getAction(int xt) const throw (MDPException)
 
 
 void OPPSCSAgent::learnOnline(int x, int u, int y, double r)
-											throw (MDPException)
+											throw (AgentException)
 {
 	assert(agent);
 	
@@ -72,13 +72,25 @@ void OPPSCSAgent::learnOnline(int x, int u, int y, double r)
 }
 
 
-void OPPSCSAgent::reset() throw (MDPException)
+void OPPSCSAgent::reset() throw (AgentException)
 {
 	if (agent)
 	{
 	    agent->setMDP(getMDP(), getGamma(), getT());
 	    agent->reset();
 	}
+	
+	
+	//	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
+void OPPSCSAgent::freeData()
+{
+	if (agent) { agent->freeData(); }
 	
 	
 	//	Check integrity
@@ -263,8 +275,13 @@ void OPPSCSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
      //   Build the discovered strategy
      agent = agentFactory->get(paramList);
      stringstream sstr;
-	sstr << "OPPS-CS (" << agent->getName() << ")";
-	setName(sstr.str());     
+	sstr << "OPPS-CS (" << agent->getName() << ", ";
+	sstr << sstr << mdpDistrib->getShortName() << ")";
+	setName(sstr.str());
+
+
+     //   Delete the AgentFactory
+     if (agentFactory) { delete agentFactory; agentFactory = 0; }
 	
 	
 	//	Check integrity

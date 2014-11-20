@@ -22,7 +22,7 @@ RandomAgent::RandomAgent() : Agent("Random Agent") {}
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int RandomAgent::getAction(int) const throw (MDPException)
+int RandomAgent::getAction(int) const throw (AgentException)
 {
 	//	Draw an random action
 	unsigned int nU = getMDP()->getNbActions();

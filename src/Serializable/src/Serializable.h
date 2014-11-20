@@ -49,7 +49,8 @@ class Serializable
 			\param[is	The 'istream' to use in order to initialize the
 					instance to create.
 					
-			\return	A pointer of type Serializable of the created instance.
+			\return	A pointer of type Serializable of the created
+			          instance.
 		*/
 		template<typename T>
 		static Serializable* createInstance(std::istream& is)
@@ -197,7 +198,8 @@ class Serializable
 			
 			\param[x	The instance to clone.
 					
-			\return	A pointer of type Serializable of the created instance.
+			\return	A pointer of type Serializable of the created
+			          instance.
 		*/
 		template<typename T>
 		T* cloneInstance(const T* x) const throw (SerializableException)

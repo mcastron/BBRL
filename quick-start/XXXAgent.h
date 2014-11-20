@@ -91,6 +91,14 @@
 					(called when this Agent is associated to a new MDP).
 		*/
 		void reset() throw (MDPException);
+		
+		
+		/**
+               \brief    Free unnecessary data.
+                         (called when this Agent has finished to interact
+                         with the current MDP).
+		*/
+		void freeData();
 
 
 		/**

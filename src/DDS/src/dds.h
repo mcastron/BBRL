@@ -18,7 +18,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2014-10-13
+	\date		2014-11-18
 */
 // ===========================================================================
 namespace dds
@@ -63,7 +63,13 @@ namespace dds
 	class FormulaAgent;
 	class BAMCPAgent;
 	class OPPSDSAgent;
-	class OPPSCSAgent;	
+	class OPPSCSAgent;
+
+     class FVariable;
+     class QVar;
+	class QMean;
+	class QSelf;
+	class QUniform;
 	
 	class AgentFactory;
 	class EGreedyAgentFactory;
@@ -129,7 +135,8 @@ namespace dds
 		simulation::SimulationRecord
 				simulate(	dds::Agent* agent, dds::MDP* mdp,
 						double gamma, unsigned int T,
-						bool safeSim = true);
+						bool safeSim = true)
+                                        throw (AgentException, MDPException);
 	}
 	
 	
@@ -205,7 +212,7 @@ namespace dds
           			
           			\param[i	The arm to draw.
           		*/
-				double drawArm(unsigned int i) const;
+				double drawArm(unsigned int i) const throw (std::exception);
 		};
 
           

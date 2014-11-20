@@ -56,7 +56,7 @@ VDBEEGreedyAgent::~VDBEEGreedyAgent()
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int VDBEEGreedyAgent::getAction(int xt) const throw (MDPException)
+int VDBEEGreedyAgent::getAction(int xt) const throw (AgentException)
 {
 	assert((xt >= 0) && (xt < (int) nX));
 	assert(Q.size() == (getMDP()->getNbStates() * getMDP()->getNbActions()));
@@ -85,7 +85,7 @@ int VDBEEGreedyAgent::getAction(int xt) const throw (MDPException)
 
 
 void VDBEEGreedyAgent::learnOnline(int x, int u, int y, double r)
-											throw (MDPException)
+											throw (AgentException)
 {
 	assert(cModel);
 	
@@ -104,7 +104,7 @@ void VDBEEGreedyAgent::learnOnline(int x, int u, int y, double r)
 }
 
 
-void VDBEEGreedyAgent::reset() throw (MDPException)
+void VDBEEGreedyAgent::reset() throw (AgentException)
 {
 	nX = getMDP()->getNbStates();
 	nU = getMDP()->getNbActions();
@@ -123,6 +123,19 @@ void VDBEEGreedyAgent::reset() throw (MDPException)
 	
 	
 	//	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
+void VDBEEGreedyAgent::freeData()
+{
+     if (cModel) { delete cModel; cModel = 0; }
+     Q.clear();
+     
+     
+     //	Check integrity
 	#ifndef NDEBUG
 	checkIntegrity();
 	#endif
@@ -260,12 +273,11 @@ void VDBEEGreedyAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 
 	
 	//	'DirMultiDistribution' case
-	try
-	{
-		const DirMultiDistribution* dirDistrib = 
+	const DirMultiDistribution* dirDistrib = 
 				dynamic_cast<const DirMultiDistribution*>(mdpDistrib);
-		
-		
+
+	if (dirDistrib)
+	{
 		unsigned int nX = dirDistrib->getNbStates();
 		unsigned int nU = dirDistrib->getNbActions();
 		int iniState = dirDistrib->getIniState();
@@ -290,7 +302,7 @@ void VDBEEGreedyAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 	
 	
 	//	Other cases
-	catch (bad_cast)
+	else
 	{
 		string msg;
 		msg += "Unsupported MDPDistribution for offline learning!\n";

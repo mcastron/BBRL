@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 
-#include "DDS/src/Agent/BAMCPAgent.h"
 #include "DDS/DDSLib.h"
 #include "Utils/UtilsLib.h"
 
@@ -12,6 +11,7 @@ using namespace std;
 using namespace dds;
 using namespace simulation;
 using namespace utils;
+using namespace utils::formula;
 
 
 // ===========================================================================
@@ -20,7 +20,7 @@ using namespace utils;
 	
 	\author	Castronovo Michael
 
-	\date	2014-10-14
+	\date	2014-10-16
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -352,10 +352,10 @@ void runExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
      string output = parsing::getValue(argc, argv, "--output");
 
      tmp = parsing::getValue(argc, argv, "--refresh_frequency");
-     unsigned int refreshFrequency = atoi(tmp.c_str());
+     unsigned int refreshFrequency = (1000.0 * atoi(tmp.c_str()));
      
      tmp = parsing::getValue(argc, argv, "--backup_frequency");
-     unsigned int backupFrequency = atoi(tmp.c_str());
+     unsigned int backupFrequency = (1000.0 * atoi(tmp.c_str()));
 
 
      assert(nThreads > 0);

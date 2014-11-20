@@ -53,7 +53,7 @@ OPPSDSAgent::~OPPSDSAgent()
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int OPPSDSAgent::getAction(int xt) const throw (MDPException)
+int OPPSDSAgent::getAction(int xt) const throw (AgentException)
 {
 	assert(agent);
 
@@ -63,7 +63,7 @@ int OPPSDSAgent::getAction(int xt) const throw (MDPException)
 
 
 void OPPSDSAgent::learnOnline(int x, int u, int y, double r)
-											throw (MDPException)
+											throw (AgentException)
 {
 	assert(agent);
 	
@@ -72,13 +72,25 @@ void OPPSDSAgent::learnOnline(int x, int u, int y, double r)
 }
 
 
-void OPPSDSAgent::reset() throw (MDPException)
+void OPPSDSAgent::reset() throw (AgentException)
 {
 	if (agent)
 	{
 	    agent->setMDP(getMDP(), getGamma(), getT());
 	    agent->reset();
 	}
+	
+	
+	//	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
+void OPPSDSAgent::freeData()
+{
+	if (agent) { agent->freeData(); }
 	
 	
 	//	Check integrity
@@ -283,12 +295,29 @@ void OPPSDSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
      int s = ucb1.run(n);
      
      
+     //   No agent found (the UCB1 discarded all submitted strategies)
+     if (s == -1)
+     {
+          string msg;
+          msg += "Unable to find a valid Agent in the considered set!\n";
+          
+          throw AgentException(msg.c_str());
+     }
+     
+     
      //   Retrieve the selected strategy
      agent = strategyList[s]->clone();
      stringstream sstr;
-	sstr << "OPPS-DS (" << agent->getName() << ")";
-	setName(sstr.str());     
+	sstr << "OPPS-DS (" << agent->getName() << ", ";
+	sstr << mdpDistrib->getShortName() << ")";
+	setName(sstr.str());
 	
+	
+	//  Delete all unused strategies
+	for (unsigned int i = 0; i < strategyList.size(); ++i)
+	    if (strategyList[i]) { delete strategyList[i]; }
+	strategyList.clear();
+
 	
 	//	Check integrity
 	#ifndef NDEBUG

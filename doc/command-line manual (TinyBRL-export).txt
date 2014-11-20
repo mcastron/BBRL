@@ -2,7 +2,9 @@
                               Command-line manual
 
 NAME
-     TinyBRL-export -- A tool for exporting results (written by Castronovo Michael)
+     TinyBRL-export -- A tool for exporting results (by Castronovo Michael)
+
+
 
 USAGE OVERVIEW
      --help

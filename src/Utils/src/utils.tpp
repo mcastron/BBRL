@@ -11,7 +11,7 @@ double utils::statistics::computeMean(const std::vector<T>& data)
 {
 	if (data.empty()) { return 0.0; }
 	
-	double sum;
+	double sum = 0.0;
 	for (unsigned int i = 0; i < data.size(); ++i) { sum += data[i]; }
 	
 	return (sum / (double) data.size());	
@@ -24,7 +24,7 @@ double utils::statistics::computeVariance(
 {
 	if (data.size() <= 1) { return 0.0; }
 
-	double sumDiff2;
+	double sumDiff2 = 0.0;
 	for (unsigned int i = 0; i < data.size(); ++i)
 	{
 		double tmp = (mean - data[i]);

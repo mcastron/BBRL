@@ -16,7 +16,7 @@
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-10-14
+	\date 	2014-10-16
 */
 // ===========================================================================
 class dds::Agent : public IAgent
@@ -91,7 +91,7 @@ class dds::Agent : public IAgent
 			\param[T		The horizon limit.
 		*/
 		void setMDP(const MDP* mdp_, double gamma_, unsigned int T_)
-											throw (MDPException);
+											throw (AgentException);
 		
 		
 		/**
@@ -102,7 +102,7 @@ class dds::Agent : public IAgent
 			
 			\return	The action to perform.
 		*/
-		virtual int getAction(int xt) const throw (MDPException) = 0;
+		virtual int getAction(int xt) const throw (AgentException) = 0;
 		
 		
 		/**
@@ -114,14 +114,22 @@ class dds::Agent : public IAgent
 			\param[r	The reward observed.
 		*/
 		virtual void learnOnline(int, int, int, double)
-											throw (MDPException) {}
+										throw (AgentException) {}
 		
 		
 		/**
 			\brief	Reset this agent.
 					(called when this Agent is associated to a new MDP).
 		*/
-		virtual void reset() throw (MDPException) {}
+		virtual void reset() throw (AgentException) {}
+		
+		
+		/**
+               \brief    Free unnecessary data.
+                         (called when this Agent has finished to interact
+                         with the current MDP).
+		*/
+		virtual void freeData() {}
 		
 		
 		/**

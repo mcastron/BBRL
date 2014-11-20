@@ -1,18 +1,20 @@
 
 #include "Agent/Guez/utils/guez_utils.h"
 
-#include "Agent/Agent.h"
 #include "Agent/RandomAgent.h"
 #include "Agent/OptimalAgent.h"
 #include "Agent/EGreedyAgent.h"
 #include "Agent/SoftMaxAgent.h"
 #include "Agent/VDBEEGreedyAgent.h"
+#include "Agent/FormulaAgent/FormulaAgent.h"
+#include "Agent/BAMCPAgent.h"
 #include "Agent/OPPSDSAgent.h"
 #include "Agent/OPPSCSAgent.h"
-#include "Agent/BAMCPAgent.h"
-#include "Agent/FormulaAgent.h"
 
-#include "AgentFactory/AgentFactory.h"
+#include "Agent/FormulaAgent/QMean.h"
+#include "Agent/FormulaAgent/QSelf.h"
+#include "Agent/FormulaAgent/QUniform.h"
+
 #include "AgentFactory/EGreedyAgentFactory.h"
 #include "AgentFactory/SoftMaxAgentFactory.h"
 #include "AgentFactory/VDBEEGreedyAgentFactory.h"
@@ -66,6 +68,17 @@ void dds::init()
 
 	Serializable::checkIn<OPPSCSAgent>(
 			&Serializable::createInstance<OPPSCSAgent>);
+
+
+     //   FVariables
+     Serializable::checkIn<QMean>(
+			&Serializable::createInstance<QMean>);
+
+     Serializable::checkIn<QSelf>(
+			&Serializable::createInstance<QSelf>);
+
+     Serializable::checkIn<QUniform>(
+			&Serializable::createInstance<QUniform>);
 			
 			
 	//  AgentFactorys
@@ -109,7 +122,7 @@ void dds::init()
 dds::simulation::SimulationRecord dds::simulation::simulate(
 		dds::Agent* agent, dds::MDP* mdp,
 		double gamma, unsigned int T,
-		bool safeSim)
+		bool safeSim) throw (AgentException, MDPException)
 {
 	assert(agent);
 	assert(mdp);
@@ -163,6 +176,10 @@ dds::simulation::SimulationRecord dds::simulation::simulate(
 	if (safeSim) { mdp->setKnown(); }
 	
 	
+	//   Free unnecessary data
+	agent->freeData();
+	
+	
 	//	Return
 	return simRec;
 }
@@ -186,12 +203,12 @@ dds::opps::UCB1::UCB1(
 }
 
 
-double dds::opps::UCB1::drawArm(unsigned int i) const
+double dds::opps::UCB1::drawArm(unsigned int i) const throw (std::exception)
 {
 	MDP* mdp = mdpDistrib->draw();
 	
 	dds::simulation::SimulationRecord simRec;
-	simRec = dds::simulation::simulate(strategyList[i], mdp, gamma, T);
+	simRec = dds::simulation::simulate(strategyList[i], mdp, gamma, T, false);
 	
 	delete mdp;
 	
@@ -222,7 +239,7 @@ double dds::opps::UCT::drawArm(
 	MDP* mdp = mdpDistrib->draw();
 		
 	dds::simulation::SimulationRecord simRec;
-	simRec = dds::simulation::simulate(agent, mdp, gamma, T);
+	simRec = dds::simulation::simulate(agent, mdp, gamma, T, false);
 	
 	delete agent;
 	delete mdp;

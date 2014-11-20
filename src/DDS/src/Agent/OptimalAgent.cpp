@@ -32,7 +32,7 @@ OptimalAgent::OptimalAgent(double uGamma_) :
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int OptimalAgent::getAction(int xt) const throw (MDPException)
+int OptimalAgent::getAction(int xt) const throw (AgentException)
 {	
 	assert((xt >= 0) && (xt < (int) nX));
 	assert(Q.size() == (getMDP()->getNbStates() * getMDP()->getNbActions()));
@@ -49,7 +49,7 @@ int OptimalAgent::getAction(int xt) const throw (MDPException)
 }
 
 
-void OptimalAgent::reset() throw (MDPException)
+void OptimalAgent::reset() throw (AgentException)
 {
 	nX = getMDP()->getNbStates();
 	nU = getMDP()->getNbActions();
@@ -60,6 +60,18 @@ void OptimalAgent::reset() throw (MDPException)
 	
 	
 	//	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
+void OptimalAgent::freeData()
+{
+     Q.clear();
+     
+     
+     //	Check integrity
 	#ifndef NDEBUG
 	checkIntegrity();
 	#endif

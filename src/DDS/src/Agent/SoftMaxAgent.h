@@ -24,7 +24,7 @@
 			For Offline learning, does not support another distribution
 			than 'DirMultiDistribution'.
 
-	\date 	2014-10-06
+	\date 	2014-10-16
 */
 // ===========================================================================
 /* final */ class dds::SoftMaxAgent : public dds::Agent
@@ -88,7 +88,7 @@
 			
 			\return	The action to perform.
 		*/
-		int getAction(int xt) const throw (MDPException);
+		int getAction(int xt) const throw (AgentException);
 		
 		
 		/**
@@ -99,14 +99,23 @@
 			\param[y	The state reached.
 			\param[r	The reward observed.
 		*/
-		void learnOnline(int x, int u, int y, double r) throw (MDPException);
+		void learnOnline(int x, int u, int y, double r)
+                                                       throw (AgentException);
 
 		
 		/**
 			\brief	Reset this agent.
 					(called when this Agent is associated to a new MDP).
 		*/
-		void reset() throw (MDPException);
+		void reset() throw (AgentException);
+
+
+          /**
+               \brief    Free unnecessary data.
+                         (called when this Agent has finished to interact
+                         with the current MDP).
+		*/
+		void freeData();
 
 
 		/**

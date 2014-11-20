@@ -5,7 +5,7 @@
 #include "EGreedyAgent.h"
 #include "SoftMaxAgent.h"
 #include "VDBEEGreedyAgent.h"
-#include "FormulaAgent.h"
+#include "FormulaAgent/FormulaAgent.h"
 #include "BAMCPAgent.h"
 #include "OPPSDSAgent.h"
 #include "OPPSCSAgent.h"
@@ -111,7 +111,7 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                
                
                //   Return
-               return new FormulaAgent(new Formula(fStr));
+               return new FormulaAgent(new utils::formula::Formula(fStr));
           }
           
           if (agentClassName == BAMCPAgent::toString())
@@ -230,7 +230,7 @@ void Agent::learnOffline(const MDPDistribution* mdpDistrib)
 
 
 void Agent::setMDP(const MDP* mdp_, double gamma_, unsigned int T_)
-											throw (MDPException)
+											throw (AgentException)
 {
 	//	Parameters check
 	assert(mdp_);

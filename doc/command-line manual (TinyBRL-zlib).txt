@@ -2,7 +2,9 @@
                               Command-line manual
 
 NAME
-     TinyBRL-zlib -- A simple compression/uncompression program based on zlib (written by Castronovo Michael)
+     TinyBRL-zlib -- A simple compression/uncompression program based on zlib (by Castronovo Michael)
+
+
 
 USAGE OVERVIEW
      --help
@@ -14,19 +16,22 @@ USAGE OVERVIEW
      --uncompress             (-d)
           "output file".zz
 
+
+
 USAGE EXAMPLES
-     COMPRESS
+     --- Compress ---
           
           ./TinyBRL-zlib --compress --compression_level "compression level" "file to compress"
           
-     COMPRESS (ABRIDGED)
+                         or
           
           ./TinyBRL-zlib -z  -cl "compression level" "file to compress"
-     
-     UNCOMPRESS
+
+
+     --- Uncompress ---
           
           ./TinyBRL-zlib --uncompress "file to uncompress"
      
-     UNCOMPRESS (ABRIDGED)
+                         or
      
           ./TinyBRL-zlib -d "file to uncompress"

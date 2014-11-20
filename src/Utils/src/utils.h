@@ -437,6 +437,38 @@ namespace utils
 	    */
 	    bool hasFlag(int argc, char* argv[], std::string opt);
 	}
+	
+	
+	/**
+          \brief	This namespace gathers several classes and functions
+                    concerning the manipulation of formulas.
+	*/
+	namespace formula
+	{
+	    class Token;
+	    class TokenException;
+	    
+	    class Constant;
+         class Variable;
+         
+         class AbsOp;
+         class LnOp;
+         class SqrtOp;
+         class InvOp;
+         class OppOp;
+         
+         class SubOp;
+         class DivOp;
+         
+         class AddOp;
+         class MulOp;
+         class MinOp;
+         class MaxOp;
+         class AvgOp;
+         	    
+	    class Formula;
+	    class FormulaException;
+	}
 }
 
 #include "utils.tpp"

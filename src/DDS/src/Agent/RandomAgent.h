@@ -18,7 +18,7 @@
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-08-13
+	\date 	2014-10-15
 */
 // ===========================================================================
 /* final */ class dds::RandomAgent : public dds::Agent
@@ -71,7 +71,7 @@
 			
 			\return	The action to perform.
 		*/
-		int getAction(int) const throw (MDPException);
+		int getAction(int) const throw (AgentException);
 
 		
 		/**

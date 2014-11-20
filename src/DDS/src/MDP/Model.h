@@ -36,14 +36,16 @@ class dds::Model : public MDP
 			\param[R			The list of rewards means.
 							(size: nX * nU * nX)
 			\param[V			The list of rewards variances
-							(size: nX * nU * nX or 0; if 0: no variance).
+							(size: nX * nU * nX or 0;
+							       if 0: no variance).
 		*/
 		Model(	std::string name,
 				unsigned int nX, unsigned int nU,
 				int iniState,
 				const std::vector<double>& P,
 				RewardType rType,
-				const std::vector<double>& R, const std::vector<double>& V);
+				const std::vector<double>& R,
+				const std::vector<double>& V);
 
 
 		/**

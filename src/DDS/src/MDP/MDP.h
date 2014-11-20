@@ -26,7 +26,7 @@ enum RewardType
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 			
-	\date 	2013-08-13
+	\date 	2013-10-15
 */
 // ===========================================================================
 class dds::MDP : public IMDP
@@ -477,7 +477,8 @@ class dds::MDP : public IMDP
 				methods to the function simulating a RL single trajectory.
 	*/
 	friend simulation::SimulationRecord simulation::simulate(
-			Agent*, MDP*, double, unsigned int, bool);
+			Agent*, MDP*, double, unsigned int, bool)
+                                        throw (AgentException, MDPException);
 };
 
 #endif

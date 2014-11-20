@@ -10,43 +10,63 @@ using namespace std;
 // ===========================================================================
 UCB1::UCB1(unsigned int nArms_, double c_) :
 		nArms(nArms_), c(c_),
-		muList(nArms), nList(nArms), nSum(0)
+		muList(nArms), nList(nArms), discardFlags(nArms),
+		nDiscardedArms(0), nSum(0)
 {
 	assert(nArms != 0);
 	
 	
-	for (unsigned int i = 0; i < nArms; ++i) { nList[i] = 0; }
+	for (unsigned int i = 0; i < nArms; ++i)
+	{
+	    muList[i] = 0.0;
+	    nList[i] = 0;
+	    discardFlags[i] = false;
+     }
 }
 
 
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-unsigned int UCB1::run(unsigned int n)
+int UCB1::run(unsigned int n)
 {
 	//	Initialization: draw each arm one time (if needed)
 	for (unsigned int i = 0; ((i < nArms) && (n > 0)); ++i)
 	{
 		if (nList[i] == 0)
 		{
-			muList[i]	= drawArm(i);
-			++nList[i];
-			++nSum;
-			--n;
+               try
+               {
+                    muList[i] = drawArm(i);
+     			++nList[i];
+                    ++nSum;
+                    --n;
+               }
+               
+               catch (std::exception& e)
+               {
+                    discardFlags[i] = true;
+                    ++nDiscardedArms;
+                    continue;
+               }
 		}
 	}
 
 
 	//	Convergence criteria: same arm drawn several times in a row
-	while (n > 0)
+	while ((n > 0) && (nDiscardedArms < nArms))
 	{
 		//	1.	Compute the 'score' associated to each arm with respect
 		//		to UCB1 formula
 		vector<double> ucbScoreList(nArms);
 		for (unsigned int i = 0; i < nArms; ++i)
 		{
-			ucbScoreList[i]
-				= (muList[i] + (c * sqrt(log(nSum) / nList[i])));
+               if (discardFlags[i]) { ucbScoreList[i] = -DBL_MAX; }
+               else
+               {
+                    ucbScoreList[i]
+                              = (muList[i] + (c * sqrt(log(nSum) / nList[i])));
+               }
 		}
 
 		
@@ -60,16 +80,29 @@ unsigned int UCB1::run(unsigned int n)
 		
 		
 		//	3.	Draw the selected arm and update the data
-		double drawScore = drawArm(s);
-		muList[s] *= ((double) nList[s] / (nList[s] + 1.0));
-		muList[s] += ((1.0 / (nList[s] + 1.0)) * drawScore);
-		++nList[s];
-		++nSum;
-		--n;
+		try
+		{
+               double drawScore = drawArm(s);
+               muList[s] *= ((double) nList[s] / (nList[s] + 1.0));
+               muList[s] += ((1.0 / (nList[s] + 1.0)) * drawScore);
+               ++nList[s];
+               ++nSum;
+               --n;
+		}
+
+		catch (std::exception& e)
+		{
+		   discardFlags[s] = true;
+		   ++nDiscardedArms;
+		   continue;
+          }
 	}
 	
-	
-	//	Return the most drawn arm
+     //   Return -1 if all arms have been discarded
+	if (nDiscardedArms >= nArms) { return -1; }
+
+
+	//	Return the most drawn arm else
 	vector<vector<unsigned int>::const_iterator> maxList;
 		maxList = utils::search::max<vector<unsigned int> >(
 				nList.begin(), nList.end());

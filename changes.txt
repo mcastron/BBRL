@@ -1,4 +1,25 @@
 
+1.2
+     - Switch 'MDPException' to 'AgentException' in Agents (and its derived
+       classes)
+     - Add 'AgentException' and 'MDPException' to 'dds::simulate()' function.
+     - Allow the UCB1 algorithm to discard any arm for which an std::exception
+       has been thrown when it has been drawn.
+     - Added an optional method 'freeData()' to the Agents. This method will be
+       called when the Agent has finished to interact with the current MDP,
+       offering the opportunity to free unnecessary data (useful when dealing
+       with OPPS-DS which has to keep an instance of all Agents of the set of
+       candidate strategies).
+     - Revision on error case in 'learningOffline_aux()' of several agents
+       (when an Agent only support Dirchlet distributions as a prior).
+     - Options '--backup_frequency' and '--refresh_frequency' are expressed in
+       seconds (it was in milliseconds previously).
+     - Move 'Formula' package into 'utils' package
+       ('Formula' is not serializable anymore).
+     - Minor change in agents' names for 'OPPSDSAgent' & 'OPPSCSAgent'.
+     - Split the variables used by 'FormulaAgent' in indepedent classes:
+       'QMean', 'QSelf', 'QUniform' (integrated in dds namespace).
+
 1.1
      - Remove 'counters' parameter for:
           EGreedyAgentFactory/SoftMaxAgentFactory/VDBEEGreedyAgentFactory.

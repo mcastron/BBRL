@@ -53,6 +53,18 @@ void XXXAgent::reset() throw (MDPException)
 }
 
 
+void XXXAgent::freeData()
+{
+	/* TODO - to implement (if needed) */
+	
+	
+	//	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
 void XXXAgent::serialize(ostream& os) const
 {
 	Agent::serialize(os);

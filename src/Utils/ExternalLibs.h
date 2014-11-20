@@ -11,6 +11,7 @@
 
 
 //   standard libraries
+#include <algorithm>
 #include <cassert>
 #include <cfloat>
 #include <climits>
@@ -19,6 +20,7 @@
 #include <cstring>
 #include <map>
 #include <pthread.h>
+#include <set>
 #include <stdexcept>
 #include <sstream>
 #include <string>

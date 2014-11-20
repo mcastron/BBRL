@@ -44,7 +44,7 @@ BAMCPAgent::~BAMCPAgent()
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int BAMCPAgent::getAction(int xt) const throw (MDPException)
+int BAMCPAgent::getAction(int xt) const throw (AgentException)
 {
 	assert(bamcp);
 	
@@ -54,7 +54,7 @@ int BAMCPAgent::getAction(int xt) const throw (MDPException)
 
 
 void BAMCPAgent::learnOnline(int x, int u, int y, double r)
-											throw (MDPException)
+											throw (AgentException)
 {
      assert(bamcp);
      
@@ -63,11 +63,11 @@ void BAMCPAgent::learnOnline(int x, int u, int y, double r)
 }
 
 
-void BAMCPAgent::reset() throw (MDPException)
+void BAMCPAgent::reset() throw (AgentException)
 {
-     if (bamcp)          { delete bamcp;       bamcp       = 0; }
-     if (simulator)      { delete simulator;   simulator   = 0; }
-     if (samplerFact)    { delete samplerFact; samplerFact = 0; }
+     if (bamcp)          { delete bamcp;       }
+     if (simulator)      { delete simulator;   }
+     if (samplerFact)    { delete samplerFact; }
      
      BAMCP::PARAMS searchParamsBAMCP;
      searchParamsBAMCP.MaxDepth 			= getT();
@@ -77,12 +77,26 @@ void BAMCPAgent::reset() throw (MDPException)
 	searchParamsBAMCP.eps 				= 0.5;
      
      unsigned int s = getMDP()->getCurrentState();     
-     simulator = new MDPSimulator(s, nX, nU, R, getGamma());     
-     samplerFact = new PCSamplerFactory(priorcountList);
-     bamcp = new BAMCP(*simulator, searchParamsBAMCP, *samplerFact);
+     simulator      = new MDPSimulator(s, nX, nU, R, getGamma());     
+     samplerFact    = new PCSamplerFactory(priorcountList);
+     bamcp          = new BAMCP(*simulator, searchParamsBAMCP, *samplerFact);
 	
 	
 	//	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
+void BAMCPAgent::freeData()
+{
+     if (bamcp)          { delete bamcp;       bamcp       = 0; }
+     if (simulator)      { delete simulator;   simulator   = 0; }
+     if (samplerFact)    { delete samplerFact; samplerFact = 0; }
+     
+     
+     //	Check integrity
 	#ifndef NDEBUG
 	checkIntegrity();
 	#endif
