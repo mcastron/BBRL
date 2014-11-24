@@ -6,17 +6,7 @@ NAME
 
 
 
-USAGE OVERVIEW 
-     --formula_set_generation
-          --n_variables <integer>
-          --tokens <integer> <string> ... <string>
-          --max_size <integer>
-          [--reduce
-               --n_points <integer>
-               --points_range <double> <double>]
-          [--compress_output]
-          --output <string>
-               
+USAGE OVERVIEW               
      --offline_learning                                        
           --agent <string>                                     
                "agent class name"
@@ -91,6 +81,15 @@ USAGE OVERVIEW
 
      --help
 
+     --formula_set_generation
+          --n_variables <integer>
+          --tokens <integer> <string> ... <string>
+          --max_size <integer>
+          [--reduce
+               --n_points <integer>
+               --points_range <double> <double>]
+          [--compress_output]
+          --output <string>
 
 
 OPTIONS DESCRIPTION
@@ -292,15 +291,6 @@ OPTIONS DESCRIPTION
 
 
 USAGE EXAMPLES
-     --- Formula set generation mode ---
-
-          ./TinyBRL-DDS --formula_set_generation \
-               --n_variables 3 \
-               --tokens 4 ADD2 42 AVG3 MUL2 \
-               --max_size 5 \
-               --reduce --n_points 1000 --points_range -100.0 100.0 \
-               --output "data/formula_sets/fset(3,4,5).dat"
-
 
      --- Offline Learning mode ---
      
@@ -328,9 +318,18 @@ USAGE EXAMPLES
           ./TinyBRL-DDS --run_experiment \
                --experiment --experiment_file "data/experiments/UGC-exp.dat.zz" \
                --agent EGreedyAgent --agent_file "data/agents/egreedy_agent(0.25).dat" \
-               --n_threads 4 \
+               --n_threads 1 \
                --compress_output \
                --output "data/results/UGC-exp[egreedy_agent(0.25)].dat" \
-               --refresh_frequency 1000 \
-               --backup_frequency 15000
+               --refresh_frequency 1 \
+               --backup_frequency 15
+
+     --- Formula set generation mode ---
+
+          ./TinyBRL-DDS --formula_set_generation \
+               --n_variables 3 \
+               --tokens 4 ADD2 42 AVG3 MUL2 \
+               --max_size 5 \
+               --reduce --n_points 1000 --points_range -100.0 100.0 \
+               --output "data/formula_sets/fset(3,4,5).dat"
 

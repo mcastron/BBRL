@@ -238,7 +238,8 @@ namespace utils
 		void sampleDirichlet(
 				const std::vector<double>& theta, std::vector<double>& P);
 		
-		std::vector<double> sampleDirichlet(const std::vector<double>& theta);
+		std::vector<double> sampleDirichlet(
+                    const std::vector<double>& theta);
 	}
 	
 	

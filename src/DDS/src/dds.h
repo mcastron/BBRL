@@ -212,7 +212,8 @@ namespace dds
           			
           			\param[i	The arm to draw.
           		*/
-				double drawArm(unsigned int i) const throw (std::exception);
+				double drawArm(unsigned int i) const
+                                                       throw (std::exception);
 		};
 
           
