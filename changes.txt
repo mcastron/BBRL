@@ -1,4 +1,7 @@
 
+1.2.1
+     - Minor change in ‘TinyBRL-DDS’ manual.
+
 1.2
      - Switch 'MDPException' to 'AgentException' in Agents (and its derived
        classes)
