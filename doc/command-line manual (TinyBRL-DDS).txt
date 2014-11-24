@@ -79,8 +79,6 @@ USAGE OVERVIEW
           --refresh_frequency <integer>                          
           --backup_frequency <integer>                           
 
-     --help
-
      --formula_set_generation
           --n_variables <integer>
           --tokens <integer> <string> ... <string>
@@ -90,6 +88,8 @@ USAGE OVERVIEW
                --points_range <double> <double>]
           [--compress_output]
           --output <string>
+
+     --help
 
 
 OPTIONS DESCRIPTION
@@ -323,6 +323,7 @@ USAGE EXAMPLES
                --output "data/results/UGC-exp[egreedy_agent(0.25)].dat" \
                --refresh_frequency 1 \
                --backup_frequency 15
+
 
      --- Formula set generation mode ---
 
