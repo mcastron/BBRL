@@ -1,8 +1,0 @@
-\select@language {english}
-\contentsline {section}{\numberline {1}Basic Usage}{1}{section.1}
-\contentsline {subsection}{\numberline {1.1}Overview}{1}{subsection.1.1}
-\contentsline {subsection}{\numberline {1.2}Examples}{1}{subsection.1.2}
-\contentsline {section}{\numberline {2}Fundamental Classes}{1}{section.2}
-\contentsline {section}{\numberline {3}Frequently Asked Questions}{1}{section.3}
-\contentsline {subsection}{\numberline {3.1}How to add a new Agent?}{1}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}How to add a new MDP distribution?}{1}{subsection.3.2}
