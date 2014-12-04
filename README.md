@@ -4,6 +4,7 @@ TinyBRL
 TinyBRL is a C++ open-source library for bayesian reinforcement learning.
 
 For more information about TinyBRL, visit the official wiki: http://www.montefiore.ulg.ac.be/~mcastron/tinybrl-wiki/index.php
+
 For more information about our work, visit our website http://www.montefiore.ulg.ac.be/~mcastron/ressources.html
 
 
