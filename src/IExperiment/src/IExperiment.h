@@ -74,7 +74,8 @@ class IExperiment : public Serializable
 			
 			\param[agent		The Agent to test.
 			\param[timeLimit	The time limit (in ms)
-							(0: perform all simulations without stopping)
+							(0: perform all simulations without
+							stopping)
 			\param[nThreads	The number of threads to use to perform
 							the simulations.
 		*/
