@@ -8,13 +8,14 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	QUniform
 	\author 	Castronovo Michael
 	
-	\brief 	QUniform(., .) variable for FormulaAgent.
+	\brief 	A variable for the FormulaAgent's, which represents a
+	          Q-function based on the 'uniform' model of a prior distribution.
 
-	\date 	2014-11-18
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::QUniform : public QVar

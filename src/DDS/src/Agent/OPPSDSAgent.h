@@ -13,11 +13,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	OPPSDSAgent
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of an e-greedy Agent to address MDP problems for:
+	\brief 	A RL agent which applies the OPPS meta-learning algorithm
+	          during its offline phase (discrete case).
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
@@ -25,7 +27,7 @@
 			For Offline learning, does not support another distribution
 			than 'DirMultiDistribution'.
 
-	\date 	2014-10-17
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::OPPSDSAgent : public dds::Agent

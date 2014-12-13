@@ -1,6 +1,7 @@
 
 #include "FormulaVector.h"
 
+using namespace dds;
 using namespace std;
 using namespace utils;
 using namespace utils::formula;

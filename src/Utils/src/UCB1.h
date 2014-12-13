@@ -8,13 +8,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	UCB1
 	\author 	Castronovo Michael
 	
-	\brief 	An interface to specialize for UCB1	
+     \brief    An interface to specialize for UCB1.
 	
-	\date 	2014-10-15
+	\date 	2014-12-13
 */
 // ===========================================================================
 class utils::UCB1

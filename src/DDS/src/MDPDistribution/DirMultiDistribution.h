@@ -6,12 +6,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	DirMultiDistribution
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of a Dirichlet Multinomial distribution generating
-			MDP problems for:
+	\brief 	A MDP distribution represented by a Dirichlet Multinomial
+	          distribution.
+			It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
@@ -25,7 +26,7 @@
 			The DM distribution can be updated. It consists to increment
 			the observation counters.
 
-	\date 	2014-10-03
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::DirMultiDistribution : public dds::MDPDistribution

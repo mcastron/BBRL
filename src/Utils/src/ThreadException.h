@@ -7,12 +7,12 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	ThreadException
 	\author 	Castronovo Michael
 	
 	\brief 	Exception.
-	\date 	2014-07-09
+	\date 	2014-12-13
 */
 // ===========================================================================
 class utils::ThreadException: public std::exception

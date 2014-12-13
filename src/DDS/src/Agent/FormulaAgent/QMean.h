@@ -8,13 +8,14 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	QMean
 	\author 	Castronovo Michael
 	
-	\brief 	QMean(., .) variable for FormulaAgent.
+	\brief 	A variable for the FormulaAgent's, which represents a
+	          Q-function based on the mean model of a prior distribution.
 
-	\date 	2014-11-18
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::QMean : public QVar

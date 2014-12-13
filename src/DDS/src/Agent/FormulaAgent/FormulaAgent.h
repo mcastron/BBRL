@@ -6,7 +6,6 @@
 #include "QMean.h"
 #include "QSelf.h"
 #include "QUniform.h"
-#include "FormulaVector.h"
 #include "../Agent.h"
 #include "../../MDP/CModel.h"
 #include "../../MDPDistribution/MDPDistribution.h"
@@ -16,12 +15,12 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	FormulaAgent
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of a FormulaAgent to address MDP problems
-	          for:
+	\brief 	A RL Agent following a policy parametrized by a formula.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
@@ -33,7 +32,7 @@
 		     !!! Only supports formulas with 3 variables !!!
 		     (will be more flexible in the future releases)
 
-	\date 	2014-10-16
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::FormulaAgent : public dds::Agent

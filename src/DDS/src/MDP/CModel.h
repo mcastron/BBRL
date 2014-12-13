@@ -6,18 +6,19 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	CModel
 	\author 	Castronovo Michael
 	
-	\brief 	A RL Model of a MDP for:
+	\brief 	A Model represented by a set of counters.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 			based on counters.
 			The reward function remains unchanged.
 			
-	\date 	2013-08-13
+	\date 	2013-12-13
 */
 // ===========================================================================
 /* final */ class dds::CModel : public dds::Model

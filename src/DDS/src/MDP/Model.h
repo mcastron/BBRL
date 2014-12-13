@@ -6,16 +6,17 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	Model
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of a RL Model of a MDP for:
+	\brief 	Interface of a model of a MDP.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 			
-	\date 	2013-08-13
+	\date 	2013-12-13
 */
 // ===========================================================================
 class dds::Model : public MDP

@@ -1,6 +1,8 @@
 
 #include "FVariableException.h"
 
+using namespace dds;
+
 
 // ===========================================================================
 //	Public Constructors/Destructors

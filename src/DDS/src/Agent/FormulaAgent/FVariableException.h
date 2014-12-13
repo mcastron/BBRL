@@ -2,19 +2,20 @@
 #ifndef FVARIABLEEXCEPTION_H
 #define FVARIABLEEXCEPTION_H
 
+#include "../../dds.h"
 #include "../../../ExternalLibs.h"
 
 
 // ===========================================================================
-/**
+/*
 	\class 	FVariableException
 	\author 	Castronovo Michael
 	
 	\brief 	Exception.
-	\date 	2014-11-13
+	\date 	2014-12-13
 */
 // ===========================================================================
-class FVariableException : public std::exception
+class dds::FVariableException : public std::exception
 {
 	public:
 		// =================================================================

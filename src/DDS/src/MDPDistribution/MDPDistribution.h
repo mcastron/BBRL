@@ -8,16 +8,17 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	MDPDistribution
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of an MDP distribution generating MDP problems for:
+     \brief 	Interface of a MDP distribution.
+               It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-10-03
+	\date 	2014-12-13
 */
 // ===========================================================================
 class dds::MDPDistribution : public IMDPDistribution

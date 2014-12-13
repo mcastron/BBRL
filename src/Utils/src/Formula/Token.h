@@ -8,13 +8,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	Token
 	\author 	Castronovo Michael
 	
 	\brief 	Defines a Token, an element composing a Formula.
 
-	\date 	2014-10-16
+	\date 	2014-12-13
 */
 // ===========================================================================
 class utils::formula::Token

@@ -13,13 +13,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	EGreedyAgentFactory
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of an EGreedyAgentFactory to generate RL Agents.
+	\brief 	An AgentFactory which generates EGreedyAgent's.
 
-	\date 	2014-10-09
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::EGreedyAgentFactory : public dds::AgentFactory

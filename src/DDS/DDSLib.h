@@ -8,6 +8,7 @@
 #include "src/Agent/SoftMaxAgent.h"
 #include "src/Agent/VDBEEGreedyAgent.h"
 #include "src/Agent/FormulaAgent/FormulaAgent.h"
+#include "src/Agent/FormulaAgent/FormulaVector.h"
 #include "src/Agent/BAMCPAgent.h"
 #include "src/Agent/OPPSDSAgent.h"
 #include "src/Agent/OPPSCSAgent.h"

@@ -7,12 +7,12 @@
 
 // ===========================================================================
 /**
-	\namespace	RLUtils
+	\namespace	rl_utils
 	\author 		Castronovo Michael
 	
 	\brief		This namespace defines useful templates for RL elements.
 								
-	\date		2014-07-08
+	\date		2014-12-13
 */
 // ===========================================================================
 namespace rl_utils

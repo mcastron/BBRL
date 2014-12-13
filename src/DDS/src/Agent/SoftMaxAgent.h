@@ -12,11 +12,12 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	SoftMaxAgent
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of a soft-max Agent to address MDP problems for:
+	\brief 	A RL Agent following a soft-max policy.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
@@ -24,7 +25,7 @@
 			For Offline learning, does not support another distribution
 			than 'DirMultiDistribution'.
 
-	\date 	2014-10-16
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::SoftMaxAgent : public dds::Agent

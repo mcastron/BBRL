@@ -2,20 +2,21 @@
 #ifndef FORMULAVECTOR_H
 #define FORMULAVECTOR_H
 
+#include "../../dds.h"
 #include "../../../ExternalLibs.h"
 
 
 // ===========================================================================
-/**
-	\class 	Formula
+/*
+	\class 	FormulaVector
 	\author 	Castronovo Michael
 	
 	\brief 	Defines a std::vector of formulas which also add serialization.
 
-	\date 	2014-10-16
+	\date 	2014-12-13
 */
 // ===========================================================================
-/* final */class FormulaVector : public Serializable,
+/* final */class dds::FormulaVector : public Serializable,
                                  public std::vector<utils::formula::Formula*>
 {		
 	public:

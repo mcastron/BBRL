@@ -9,16 +9,17 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	OptimalAgent
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of an Optimal Agent to address MDP problems for:
+	\brief 	A RL agent taking optimal decisions.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-10-15
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::OptimalAgent : public dds::Agent

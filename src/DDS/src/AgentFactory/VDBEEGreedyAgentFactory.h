@@ -13,13 +13,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	VDBEEGreedyAgentFactory
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of an VDBEEGreedyAgentFactory to generate RL Agents.
+	\brief 	An AgentFactory which generates VDBEEGreedyAgent's.
 
-	\date 	2014-10-09
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::VDBEEGreedyAgentFactory : public dds::AgentFactory

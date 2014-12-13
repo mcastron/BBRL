@@ -13,18 +13,19 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	BAMCPAgent
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of a BAMCP Agent to address MDP problems for:
+	\brief 	A RL Agent following a BAMCP policy.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
                (based on Guez work)
 
-	\date 	2014-10-15
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::BAMCPAgent : public dds::Agent

@@ -2,11 +2,12 @@
 #ifndef AGENTFACTORYEXCEPTION_H
 #define AGENTFACTORYEXCEPTION_H
 
+#include "../dds.h"
 #include "../../ExternalLibs.h"
 
 
 // ===========================================================================
-/**
+/*
 	\class 	AgentFactoryException
 	\author 	Castronovo Michael
 	
@@ -14,7 +15,7 @@
 	\date 	2014-07-16
 */
 // ===========================================================================
-class AgentFactoryException: public std::exception
+class dds::AgentFactoryException: public std::exception
 {
 	public:
 		// =================================================================

@@ -7,18 +7,17 @@
 
 // ===========================================================================
 /**
-	\namespace	DDS
+	\namespace	dds
 	\author 		Castronovo Michael
 	
-	\brief		DDS stands for:
-					- DISCRETE state space (int)
-					- DISCRETE action space (int)
-					- SINGLE reward (double)
+	\brief		A namespace gathering the tools and classes related to
+	               RL problems with Discrete state space, Discrete action
+	               space and Single reward.
 					
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2014-11-18
+	\date		2014-12-13
 */
 // ===========================================================================
 namespace dds
@@ -54,35 +53,209 @@ namespace dds
 	// ======================================================================
 	//	Classes
 	// ======================================================================
+	/**
+          \class    Agent
+          \brief    Interface of an RL agent to address MDPs.
+	*/
 	class Agent;
+	
+	
+	/**
+          \class    RandomAgent
+          \brief    A RL agent taking random decisions.
+	*/
 	class RandomAgent;
+	
+	
+	/**
+          \class    OptimalAgent
+          \brief 	A RL agent taking optimal decisions.
+	*/
 	class OptimalAgent;
+
+
+	/**
+	     \class    EGreedyAgent
+	     \brief 	A RL Agent following an e-greedy policy.
+	*/
 	class EGreedyAgent;
+
+
+     /**
+          \class    SoftMaxAgent
+          \brief 	A RL Agent following a soft-max policy.
+     */
 	class SoftMaxAgent;
+	
+	
+	/**
+          \class    VDBEEGreedyAgent
+          \brief 	A RL Agent following an vdbe e-greedy policy.
+	*/
 	class VDBEEGreedyAgent;
+	
+	
+	/**
+	     \class    FormulaAgent
+          \brief 	A RL Agent following a policy parametrized by a formula.
+	*/
 	class FormulaAgent;
+	
+	
+	/**
+          \class    FormulaVector
+          \brief 	Defines a std::vector of formulas which also add
+                    serialization.
+	*/
+	class FormulaVector;
+	
+	
+	/**
+          \class    BAMCPAgent
+          \brief 	A RL Agent following a BAMCP policy.
+	*/
 	class BAMCPAgent;
+	
+	
+	/**
+	     \class    OPPSDSAgent
+	     \brief 	A RL agent which applies the OPPS meta-learning algorithm
+	               during its offline phase (discrete case).
+	*/
 	class OPPSDSAgent;
+	
+	
+	/**
+	     \class    OPPSCSAgent
+	     \brief 	A RL agent which applies the OPPS meta-learning algorithm
+	               during its offline phase (continuous case).
+	*/
 	class OPPSCSAgent;
 
+
+     /**
+          \class    FVariable
+          \brief 	Represent a variable for the FormulaAgent's.
+     */
      class FVariable;
+     
+     
+     /**
+          \class    FVariableException
+          \brief    Exception.
+     */
+     class FVariableException;
+     
+     
+     /**
+          \class    QVar
+          \brief 	A variable for the FormulaAgent's, which represents a
+	               Q-function model-based variable for FormulaAgent.
+     */
      class QVar;
+     
+     
+     /**
+          \class    QMean
+          \brief 	A variable for the FormulaAgent's, which represents a
+	               Q-function based on the mean model of a prior distribution.
+     */
 	class QMean;
+	
+	
+	/**
+          \class    QSelf
+          \brief 	A variable for the FormulaAgent's, which represents a
+	               Q-function based on the 'self' model of a prior
+	               distribution.
+     */
 	class QSelf;
+	
+	
+	/**
+          \class    QUniform
+          \brief 	A variable for the FormulaAgent's, which represents a
+	               Q-function based on the 'uniform' model of a prior
+	               distribution.
+     */
 	class QUniform;
 	
+	
+	/**
+          \class    AgentFactory
+          \brief    Interface of an AgentFactory to generate RL Agents.
+	*/
 	class AgentFactory;
+	
+	
+	/**
+          \class    AgentFactoryException
+          \brief    Exception.
+	*/
+	class AgentFactoryException;
+	
+	
+	/**
+          \class    EGreedyAgentFactory
+          \brief 	An AgentFactory which generates EGreedyAgent's.
+	*/
 	class EGreedyAgentFactory;
+	
+	
+	/**
+          \class    SoftMaxAgentFactory
+          \brief 	An AgentFactory which generates SoftMaxAgent's.
+	*/
 	class SoftMaxAgentFactory;
+	
+	
+	/**
+          \class    VDBEEGreedyAgentFactory
+          \brief 	An AgentFactory which generates VDBEEGreedyAgent's.
+	*/
 	class VDBEEGreedyAgentFactory;
 	
+	
+	/**
+          \class    MDP
+          \brief 	Represent a MDP problem.
+	*/
 	class MDP;
+	
+	
+	/**
+          \class    MDPDistribution
+          \brief 	Interface of a MDP distribution.
+	*/
 	class MDPDistribution;
+	
+	
+	/**
+          \class    DirMultiDistribution
+          \brief 	A MDP distribution represented by a Dirichlet Multinomial
+	               distribution.
+	*/
 	class DirMultiDistribution;
 	
-	class Model;
-	class CModel;
 	
+	/**
+          \class    Model
+          \brief 	Interface of a model of a MDP.
+	*/
+	class Model;
+	
+	
+	/**
+          \class    CModel
+          \brief 	A Model represented by a set of counters.
+	*/
+	class CModel;
+
+     
+     /**
+          \class    Experiment
+          \brief 	Represent a RL experiment.
+     */
 	class Experiment;
 
 

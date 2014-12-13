@@ -7,7 +7,7 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	Chrono
 	\author 	Castronovo Michael
 	
@@ -15,7 +15,7 @@
 			The implementation depends on POSIX.
 			(more specifically, it requires 'gettimeofday()' function)	
 	
-	\date 	2014-06-25
+	\date 	2014-12-13
 */
 // ===========================================================================
 class utils::Chrono

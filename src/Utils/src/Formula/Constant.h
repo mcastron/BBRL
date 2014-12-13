@@ -8,13 +8,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	Constant
 	\author 	Castronovo Michael
 	
-	\brief 	A constant value.
+	\brief 	A Token representing a constant value.
 	
-	\date 	2014-10-16
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */class utils::formula::Constant : public Token

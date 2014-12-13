@@ -13,13 +13,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	SoftMaxAgentFactory
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of an SoftMaxAgentFactory to generate RL Agents.
+	\brief 	An AgentFactory which generates SoftMaxAgent's.
 
-	\date 	2014-10-09
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::SoftMaxAgentFactory : public dds::AgentFactory

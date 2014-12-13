@@ -7,16 +7,17 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	Agent
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of an Agent to address MDP problems for:
+	\brief 	Interface of an RL agent to address MDPs.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-10-16
+	\date 	2014-12-13
 */
 // ===========================================================================
 class dds::Agent : public IAgent

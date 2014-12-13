@@ -17,16 +17,17 @@ enum RewardType
 
 
 // ===========================================================================
-/**
+/*
 	\class 	MDP
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of a RL MDP problem for:
+	\brief 	Interface of a MDP problem.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 			
-	\date 	2013-10-15
+	\date 	2013-12-13
 */
 // ===========================================================================
 class dds::MDP : public IMDP

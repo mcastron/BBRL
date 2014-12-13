@@ -8,13 +8,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	Variable
 	\author 	Castronovo Michael
 	
-	\brief 	A Variable value.
+	\brief 	A Token representing a variable value.
 	
-	\date 	2014-10-16
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */class utils::formula::Variable : public utils::formula::Token

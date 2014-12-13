@@ -10,13 +10,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	FVariable
 	\author 	Castronovo Michael
 	
-	\brief 	Variable for FormulaAgent.
+	\brief 	Represent a variable for the FormulaAgent's.
 
-	\date 	2014-11-18
+	\date 	2014-12-13
 */
 // ===========================================================================
 class dds::FVariable : public Serializable

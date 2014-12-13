@@ -6,6 +6,7 @@
 #include "SoftMaxAgent.h"
 #include "VDBEEGreedyAgent.h"
 #include "FormulaAgent/FormulaAgent.h"
+#include "FormulaAgent/FormulaVector.h"
 #include "BAMCPAgent.h"
 #include "OPPSDSAgent.h"
 #include "OPPSCSAgent.h"
@@ -111,7 +112,7 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                
                
                //   Return
-               return new FormulaAgent(new utils::formula::Formula(fStr));
+               return new FormulaAgent(new formula::Formula(fStr));
           }
           
           if (agentClassName == BAMCPAgent::toString())

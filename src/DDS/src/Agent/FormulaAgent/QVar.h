@@ -8,16 +8,18 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	QVar
 	\author 	Castronovo Michael
 	
-	\brief 	Q-function model-based variable for FormulaAgent.
+	\brief 	A variable for the FormulaAgent's, which represents a
+	          Q-function model-based variable for FormulaAgent.
+
 	          This base class is used to define everything to manage such
 	          a variable except how the initial model is computed from a
 	          MDP distribution.
 
-	\date 	2014-11-18
+	\date 	2014-12-13
 */
 // ===========================================================================
 class dds::QVar : public FVariable

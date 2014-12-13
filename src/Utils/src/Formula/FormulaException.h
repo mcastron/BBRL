@@ -7,12 +7,12 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	FormulaException
 	\author 	Castronovo Michael
 	
 	\brief 	Exception.
-	\date 	2014-10-12
+	\date 	2014-12-13
 */
 // ===========================================================================
 class utils::formula::FormulaException: public std::exception

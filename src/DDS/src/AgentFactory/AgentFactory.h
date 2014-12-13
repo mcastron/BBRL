@@ -8,13 +8,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	AgentFactory
 	\author 	Castronovo Michael
 	
 	\brief 	Interface of an AgentFactory to generate RL Agents.
 
-	\date 	2014-10-09
+	\date 	2014-12-13
 */
 // ===========================================================================
 class dds::AgentFactory : public Serializable

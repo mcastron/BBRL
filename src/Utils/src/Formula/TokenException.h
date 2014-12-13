@@ -7,12 +7,12 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	TokenException
 	\author 	Castronovo Michael
 	
 	\brief 	Exception.
-	\date 	2014-10-16
+	\date 	2014-12-13
 */
 // ===========================================================================
 class utils::formula::TokenException: public std::exception

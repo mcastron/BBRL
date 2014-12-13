@@ -9,16 +9,17 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	Experiment
 	\author 	Castronovo Michael
 	
-	\brief 	A RL Experiment to address MDP problems for:
+	\brief 	Represent a RL experiment.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-10-13
+	\date 	2014-12-13
 */
 // ===========================================================================
 /* final */ class dds::Experiment :

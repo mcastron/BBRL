@@ -1,6 +1,8 @@
 
 #include "AgentFactoryException.h"
 
+using namespace dds;
+
 
 // ===========================================================================
 //	Public Constructors/Destructors

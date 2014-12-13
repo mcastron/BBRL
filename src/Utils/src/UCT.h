@@ -8,13 +8,13 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	UCT
 	\author 	Castronovo Michael
 	
-	\brief 	An interface to specialize for UCT	
+	\brief 	An interface to specialize for UCT.
 	
-	\date 	2014-07-23
+	\date 	2014-12-13
 */
 // ===========================================================================
 class utils::UCT

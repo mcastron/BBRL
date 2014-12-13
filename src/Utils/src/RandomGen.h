@@ -11,12 +11,12 @@
 
 
 // ===========================================================================
-/**
+/*
 	\class 	RandomGen
 	\author 	Castronovo Michael
 	
 	\brief 	A generator of random numbers.
-	\date 	2014-05-18
+	\date 	2014-12-13
 */
 // ===========================================================================
 class utils::RandomGen

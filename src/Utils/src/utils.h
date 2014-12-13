@@ -7,12 +7,12 @@
 
 // ===========================================================================
 /**
-	\namespace	Utils
+	\namespace	utils
 	\author 		Castronovo Michael
 	
 	\brief		A collection of general tools.
 	
-	\date		2014-09-19
+	\date		2014-12-13
 */
 // ===========================================================================
 namespace utils
@@ -20,11 +20,45 @@ namespace utils
 	// ======================================================================
 	//	Classes
 	// ======================================================================
+	/**
+          \class    Chrono
+          \brief    A chronometer to measure the wall time elapsed.
+	*/
 	class Chrono;
+	
+	
+	/**
+          \class    RandomGen
+          \brief    A generator of random numbers.
+	*/
 	class RandomGen;
+	
+	
+	/**
+          \class    Thread
+          \brief 	A C++ handler for pthreads.	
+	*/
 	class Thread;
+	
+	
+	/**
+          \class    ThreadException
+          \brief    Exception
+	*/
 	class ThreadException;
+	
+	
+	/**
+	    \class    UCB1
+	    \brief    An interface to specialize for UCB1.
+	*/
 	class UCB1;
+	
+	
+	/**
+	    \class    UCT
+	    \brief    An interface to specialize for UCT.
+	*/
 	class UCT;
 	
 	
@@ -348,6 +382,10 @@ namespace utils
 	*/
 	namespace parsing
 	{
+	    /**
+	         \class    ParsingException
+	         \brief    Exception
+	    */
 	    class ParsingException: public std::exception
          {
           	public:
@@ -446,28 +484,130 @@ namespace utils
 	*/
 	namespace formula
 	{
+	    /**
+	         \class    Token
+	         \brief    Interface of a token, an element of a formula.
+	    */
 	    class Token;
+	    
+	    
+	    /**
+	         \class    TokenException
+	         \brief    Exception
+	    */
 	    class TokenException;
 	    
+	    
+	    /**
+	         \class    Constant
+	         \brief    A Token representing a constant value.
+	    */
 	    class Constant;
+	    
+	    
+	    /**
+	         \class    Variable
+	         \brief    A Token representing a variable value.
+	    */
          class Variable;
          
+         
+         /**
+               \class    AbsOp
+               \brief    A Token representing an operator (absolute value).
+         */
          class AbsOp;
+         
+         
+         /**
+               \class    LnOp
+               \brief    A Token representing an operator (logarithm).
+         */
          class LnOp;
+         
+         
+         /**
+               \class    SqrtOp
+               \brief    A Token representing an operator (square root).
+         */
          class SqrtOp;
+         
+         
+         /**
+               \class    InvOp
+               \brief    A Token representing an operator (inverse).
+         */
          class InvOp;
+         
+         
+         /**
+               \class    OppOp
+               \brief    A Token representing an operator (opposite).
+         */
          class OppOp;
          
+         
+         /**
+               \class    SubOp
+               \brief    A Token representing an operator (subtraction).
+         */
          class SubOp;
+         
+         
+         /**
+               \class    DivOp
+               \brief    A Token representing an operator (division).
+         */
          class DivOp;
          
+         
+         /**
+               \class    AddOp
+               \brief    A Token representing an operator (addition).
+         */
          class AddOp;
+         
+         
+         /**
+               \class    MulOp
+               \brief    A Token representing an operator (multiplication).
+         */
          class MulOp;
+         
+         
+         /**
+               \class    MinOp
+               \brief    A Token representing an operator (minimum).
+         */
          class MinOp;
+         
+         
+         /**
+               \class    MaxOp
+               \brief    A Token representing an operator (maximum).
+         */
          class MaxOp;
+         
+         
+         /**
+               \class    AvgOp
+               \brief    A Token representing an operator (average value).
+         */
          class AvgOp;
-         	    
+         
+         
+         /**
+               \class    Formula
+               \brief    Defines a Formula through a set of tokens, interpreted
+                         in RPN notation.
+         */
 	    class Formula;
+	    
+	    
+	    /**
+               \class    FormulaException
+               \brief    Exception
+	    */
 	    class FormulaException;
 	}
 }
