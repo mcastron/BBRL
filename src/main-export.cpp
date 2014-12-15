@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <string>
 #include <time.h>
@@ -22,7 +23,7 @@ using namespace utils;
 	
 	\author	Castronovo Michael
 
-	\date	2014-12-13
+	\date	2014-12-15
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -45,10 +46,13 @@ class AgentData
 void help();
 void latex(int argc, char* argv[]) throw (parsing::ParsingException);
 void matlab(int argc, char* argv[]) throw (parsing::ParsingException);
+void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException);
 void writeLatexTable(ostream& os,
                      string expName, vector<AgentData>& agentDataList);
 void writeMatlabFunction(ostream& os, string functionName,
                          vector<AgentData>& agentDataList);
+void writeGnuplotScript(ostream& osDat, ostream& osGP,
+                        vector<AgentData>& agentDataList);
 void splitTime(double t,
                unsigned int& days, unsigned int& hours, unsigned int& minutes,
                unsigned int& seconds, unsigned int& milliseconds);
@@ -64,18 +68,20 @@ int main(int argc, char *argv[])
      
      //   Parsing and execution
 	    //   1.   Get the right mode
-    bool modeIsHelp   = parsing::hasFlag(argc, argv, "--help");
-    bool modeIsLatex  = parsing::hasFlag(argc, argv, "--latex");
-    bool modeIsMatlab = parsing::hasFlag(argc, argv, "--matlab");
+    bool modeIsHelp    = parsing::hasFlag(argc, argv, "--help");
+    bool modeIsLatex   = parsing::hasFlag(argc, argv, "--latex");
+    bool modeIsMatlab  = parsing::hasFlag(argc, argv, "--matlab");
+    bool modeIsGnuplot = parsing::hasFlag(argc, argv, "--gnuplot");
 	    
 	    
 	    //   2.   Launch the selected mode
      try
 	{
-	    if      (modeIsHelp)   { help();             }
-	    else if (modeIsLatex)  { latex(argc, argv);  }
-	    else if (modeIsMatlab) { matlab(argc, argv); }
-	    else                           { cout << "No mode selected!\n"; }
+	    if      (modeIsHelp)    { help();              }
+	    else if (modeIsLatex)   { latex(argc, argv);   }
+	    else if (modeIsMatlab)  { matlab(argc, argv);  }
+	    else if (modeIsGnuplot) { gnuplot(argc, argv); }
+	    else                    { cout << "No mode selected!\n"; }
 	}
 	
 	catch (parsing::ParsingException e)
@@ -281,6 +287,91 @@ void matlab(int argc, char* argv[]) throw (parsing::ParsingException)
 }
 
 
+void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException)
+{
+     vector<AgentData> agentDataList;
+
+     //   1.   Parse the Agents
+     int iAgent = 0;
+     while (iAgent < (argc - 1))
+     {
+          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
+               ++iAgent;
+   
+          int argcBis = 2;
+          char** argvBis = new char*[argc];
+          argvBis[0] = argv[0];
+          argvBis[1] = argv[iAgent++];
+
+          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
+          {               
+               argvBis[argcBis] = argv[iAgent];
+               ++iAgent;
+               ++argcBis;
+          }
+          
+          Agent* agent = Agent::parse(argcBis, argvBis);
+          delete[] argvBis;
+          
+          AgentData agentData;
+          agentData.name = agent->getName();
+          agentData.offlineTime = agent->getOfflineTime();
+          agentDataList.push_back(agentData);
+          
+          delete agent;
+     }
+     
+     
+     //   2.   Parse the Experiments
+     int iExp = 0, nExp = 0;
+     while (iExp < (argc - 1))
+     {
+          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
+               ++iExp;
+          
+          int argcBis = 2;
+          char** argvBis = new char*[argc];
+          argvBis[0] = argv[0];
+          argvBis[1] = argv[iExp++];
+          
+          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
+               argvBis[argcBis++] = argv[iExp++];
+          
+          Experiment* exp = Experiment::parse(argcBis, argvBis);         
+          delete argvBis;
+          
+          agentDataList[nExp].expName = (exp->getName());
+          agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
+                    / (double) exp->getNbOfMDPs());
+          
+          vector<double> dsrList = exp->computeDSRList();
+			pair<double, double> CI95
+					= statistics::computeCI95<double>(dsrList);
+                    
+          agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
+          agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
+          ++nExp;
+          
+          delete exp;
+     }
+     
+     
+     //   3.   Get 'output'
+     string outputDat = parsing::getValue(argc, argv, "--output-dat");
+     string outputGP  = parsing::getValue(argc, argv, "--output-gp");
+     
+     
+     //   4.   Run	
+	ofstream osDat(outputDat.c_str());
+	ofstream osGP(outputGP.c_str());
+	
+     writeGnuplotScript(osDat, osGP, agentDataList);
+     
+	osDat.close();
+	osGP.close();
+}
+
+
 void writeLatexTable(ostream& os,
                      string expName, vector<AgentData>& agentDataList)
 {
@@ -418,6 +509,78 @@ void writeMatlabFunction(ostream& os, string functionName,
 		os << "\'" << agentNameList[i] << "\', ";
 	os << "\'" << agentNameList.back() << "\');\n";
 	os << "\tlegend(\'Location\', \'NorthEastOutside\');\n";
+}
+
+
+void writeGnuplotScript(ostream& osDat, ostream& osGP,
+                         vector<AgentData>& agentDataList)
+{
+	set<string> expNameList, agentNameList;
+	for (unsigned int i = 0; i < agentDataList.size(); ++i)
+	{
+	    expNameList.insert(agentDataList[i].expName);
+	    agentNameList.insert(agentDataList[i].name);
+	}
+	
+	
+	//  Data file
+	osDat << "Experiments";
+	set<string>::iterator itA  = agentNameList.begin();
+	set<string>::iterator endA = agentNameList.end();
+	for (; itA != endA; ++itA) { osDat << "\t\"" << *itA << "\""; }
+	osDat << "\n";
+	
+	set<string>::iterator itE  = expNameList.begin();
+	set<string>::iterator endE = expNameList.end();
+	for (; itE != endE; ++itE)
+	{
+	    osDat << "\"" << *itE << "\"";
+	    
+	    itA  = agentNameList.begin();
+	    endA = agentNameList.end();
+	    for (; itA != endA; ++itA)
+	         for (unsigned int i = 0; i < agentDataList.size(); ++i)
+	         {
+	              string name = agentDataList[i].name;
+	              string expName = agentDataList[i].expName;
+	              
+	              if ((name == *itA) && (expName == *itE))
+	              {
+	                   osDat << "\t" << agentDataList[i].mean;
+	                   break;
+	              }
+	         }
+	    osDat << "\n";
+	}
+	
+	
+	//  GP file
+	osGP << "set terminal postscript eps ";
+	osGP << "enhanced solid color font 'Helvetica,10'\n";
+     osGP << "set output output\n";
+     osGP << "set yrange [0:*]\n";
+     osGP << "set xlabel \"Experiments\"\n";
+     osGP << "set ylabel \"Score\"\n";
+     osGP << "\n";
+     osGP << "set xtics border nomirror\n";
+     osGP << "set ytics border nomirror\n";
+     osGP << "\n";
+     osGP << "set style fill pattern\n";
+     osGP << "set style data histogram\n";
+     osGP << "set style histogram clustered gap 1.5\n";
+     osGP << "set style fill solid 1.25 border -1\n";
+     osGP << "set boxwidth 0.9 relative\n";
+     osGP << "set key outside\n";
+     osGP << "\n";
+     osGP << "\n";
+     osGP << "plot ";
+     for (unsigned int i = 1; i <= agentNameList.size(); ++i)
+     {
+          if (i != 1) { osGP << ", \\\n\t"; }
+          osGP << "input u " << (i + 1) << ":xtic(1) ";
+          osGP << "title columnheader fs solid";
+     }
+     osGP << "\n";
 }
 
 
