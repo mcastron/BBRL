@@ -17,7 +17,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2014-12-13
+	\date		2014-12-17
 */
 // ===========================================================================
 namespace dds
@@ -115,6 +115,13 @@ namespace dds
           \brief 	A RL Agent following a BAMCP policy.
 	*/
 	class BAMCPAgent;
+	
+	
+	/**
+          \class    BFS3Agent
+          \brief 	A RL Agent following a BFS3 policy.
+	*/
+	class BFS3Agent;
 	
 	
 	/**

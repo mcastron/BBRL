@@ -17,11 +17,12 @@ BAMCPAgent::BAMCPAgent(std::istream& is) :
 }
 
 
-BAMCPAgent::BAMCPAgent(unsigned int K_) :
-          K(K_), bamcp(0), simulator(0), samplerFact(0)
+BAMCPAgent::BAMCPAgent(unsigned int K_, unsigned int D_) :
+          K(K_), D(D_), bamcp(0), simulator(0), samplerFact(0)
 {
      stringstream sstr;
 	sstr << "BAMCP (" << K;
+	if (D > 0) { sstr << ", " << D; }
 	sstr << ", no model)";
 	setName(sstr.str());
      
@@ -70,7 +71,7 @@ void BAMCPAgent::reset() throw (AgentException)
      if (samplerFact)    { delete samplerFact; }
      
      BAMCP::PARAMS searchParamsBAMCP;
-     searchParamsBAMCP.MaxDepth 			= getT();
+     searchParamsBAMCP.MaxDepth 			= ((D == 0) ? getT() : D);
 	searchParamsBAMCP.NumSimulations 		= K;
 	searchParamsBAMCP.ExplorationConstant 	= 3.0;
 	searchParamsBAMCP.RB 				= -1;
@@ -271,8 +272,9 @@ void BAMCPAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 
 		
 		stringstream sstr;
-		sstr << "BAMCP (" << K << ", ";
-		sstr << dirDistrib->getShortName() << ")";
+		sstr << "BAMCP (" << K;
+		if (D > 0) { sstr << ", " << D; }
+		sstr << ", " << dirDistrib->getShortName() << ")";
 		setName(sstr.str());
 	}
 	

@@ -25,6 +25,11 @@ USAGE OVERVIEW
                     --formula <string>
                BAMCPAgent
                     --K <integer>
+                    [--D <integer>]
+               BFS3Agent
+                    --K <integer>
+                    --C <integer>
+                    [--D <integer>]
                OPPSDSAgent
                     --n_draws <integer>                        
                     --c <double>
@@ -101,7 +106,9 @@ OPTIONS DESCRIPTION
                - SoftMaxAgent (parameters: --tau)
                - VDBEEGreedyAgent (parameters: --sigma, --delta, --ini_epsilon)
                - FormulaAgent (parameters: --formula)
-               - BAMCPAgent (parameters: --K)
+               - BAMCPAgent (parameters: --K [--D])
+               - BFS3Agent (parameters: --K --C [--D])
+               - OPPSDSAgent (parameters: --n_draws, --c, --formula_set --discount_factor --horizon_limit)
                - OPPSCSAgent (parameters: --n_draws, --c, --agent_factory, --discount_factor --horizon_limit)
 
           Can either be followed by agent's parameters (if any) or by a file
@@ -125,8 +132,16 @@ OPTIONS DESCRIPTION
           The constant to use in the UCB1 formula:
                I_t(i) = mu_i + c * sqrt(ln(n_t) / n_i)
 
+     --C <integer>
+          (BFS3Agent parameter)
+          The branching factor.
+
      --compress_output
           If specified, the output/backup files are compressed.
+
+     --D <integer>
+          (BAMCPAgent & BFS3Agent parameter)
+          The maximal depth.
 
      --delta <double>
           (VDBEEGreedyAgent parameter)

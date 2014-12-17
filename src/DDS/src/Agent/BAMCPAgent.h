@@ -6,7 +6,6 @@
 #include "Guez/MDPSimulator.h"
 #include "Guez/PCSamplerFactory.h"
 #include "Guez/planners/mcp/bamcp/bamcp.h"
-#include "Guez/samplers/FDMsamplerFactory.h"
 #include "../MDPDistribution/DirMultiDistribution.h"
 #include "../dds.h"
 #include "../../ExternalLibs.h"
@@ -25,7 +24,7 @@
 
                (based on Guez work)
 
-	\date 	2014-12-13
+	\date 	2014-12-17
 */
 // ===========================================================================
 /* final */ class dds::BAMCPAgent : public dds::Agent
@@ -49,8 +48,10 @@
 			
 			\param[K_        The number of nodes to insert to the BAMCP
 			                 tree at each time-step.
+               \param[D_        The maximal depth.
+                                (default: horizon limit)
 		*/
-		BAMCPAgent(unsigned int K_);
+		BAMCPAgent(unsigned int K_, unsigned int D_ = 0);
 		
 		
 		/**
@@ -161,6 +162,13 @@
 		             at each time-step.
 		*/
 		unsigned int K;
+		
+		
+		/**
+               \brief    The maximal depth.
+                         (0: horizon limit)
+		*/
+		unsigned int D;
 		
 		
 		/**

@@ -8,6 +8,7 @@
 #include "Agent/VDBEEGreedyAgent.h"
 #include "Agent/FormulaAgent/FormulaAgent.h"
 #include "Agent/BAMCPAgent.h"
+#include "Agent/BFS3Agent.h"
 #include "Agent/OPPSDSAgent.h"
 #include "Agent/OPPSCSAgent.h"
 
@@ -62,6 +63,9 @@ void dds::init()
 
      Serializable::checkIn<BAMCPAgent>(
 			&Serializable::createInstance<BAMCPAgent>);
+
+     Serializable::checkIn<BFS3Agent>(
+			&Serializable::createInstance<BFS3Agent>);
 
 	Serializable::checkIn<OPPSDSAgent>(
 			&Serializable::createInstance<OPPSDSAgent>);
