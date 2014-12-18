@@ -33,6 +33,8 @@ USAGE OVERVIEW
                SBOSSAgent
                     --K <integer>
                     --delta <double>
+               BEBAgent
+                    --beta <double>
                OPPSDSAgent
                     --n_draws <integer>                        
                     --c <double>
@@ -112,6 +114,7 @@ OPTIONS DESCRIPTION
                - BAMCPAgent (parameters: --K [--D])
                - BFS3Agent (parameters: --K --C [--D])
                - SBOSSAgent (parameters: --K --delta)
+               - BEBAgent (parameters: --beta)
                - OPPSDSAgent (parameters: --n_draws, --c, --formula_set --discount_factor --horizon_limit)
                - OPPSCSAgent (parameters: --n_draws, --c, --agent_factory, --discount_factor --horizon_limit)
 
@@ -130,6 +133,10 @@ OPTIONS DESCRIPTION
 
      --backup_frequency <double>
           The frequency of backup creation (in s).
+
+     --beta
+          (BEBAgent parameter)
+          The bonus parameter.
 
      --c <double>
           (OPPSDSAgent & OPPSCSAgent parameter)

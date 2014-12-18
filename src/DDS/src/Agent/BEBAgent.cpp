@@ -1,5 +1,5 @@
 
-#include "SBOSSAgent.h"
+#include "BEBAgent.h"
 
 using namespace std;
 using namespace dds;
@@ -9,19 +9,19 @@ using namespace utils;
 // ===========================================================================
 //	Public Constructors/Destructor
 // ===========================================================================
-SBOSSAgent::SBOSSAgent(std::istream& is) :
-          Agent(), sboss(0), simulator(0), samplerFact(0)
+BEBAgent::BEBAgent(std::istream& is) :
+          Agent(), beb(0), simulator(0), samplerFact(0)
 {
 	try							{ dDeserialize(is);	}
 	catch (SerializableException e)	{ deserialize(is);	}
 }
 
 
-SBOSSAgent::SBOSSAgent(unsigned int K_, double delta_) :
-          K(K_), delta(delta_), sboss(0), simulator(0), samplerFact(0)
+BEBAgent::BEBAgent(double beta_) :
+          beta(beta_), beb(0), simulator(0), samplerFact(0)
 {
      stringstream sstr;
-	sstr << "SBOSS (" << K << ", " << delta;
+	sstr << "BEB (" << beta;
 	sstr << ", no model)";
 	setName(sstr.str());
      
@@ -33,9 +33,9 @@ SBOSSAgent::SBOSSAgent(unsigned int K_, double delta_) :
 }
 
 
-SBOSSAgent::~SBOSSAgent()
+BEBAgent::~BEBAgent()
 {
-     if (sboss)          { delete sboss;       }
+     if (beb)            { delete beb;         }
      if (simulator)      { delete simulator;   }
      if (samplerFact)    { delete samplerFact; }
 }
@@ -44,40 +44,39 @@ SBOSSAgent::~SBOSSAgent()
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int SBOSSAgent::getAction(int xt) const throw (AgentException)
+int BEBAgent::getAction(int xt) const throw (AgentException)
 {
-	assert(sboss);
+	assert(beb);
 
 
-	return sboss->SelectAction(xt);
+	return beb->SelectAction(xt);
 }
 
 
-void SBOSSAgent::learnOnline(int x, int u, int y, double r)
+void BEBAgent::learnOnline(int x, int u, int y, double r)
 											throw (AgentException)
 {
-     assert(sboss);
+     assert(beb);
      
      
-	sboss->Update(x, u, y, r);
+	beb->Update(x, u, y, r);
 }
 
 
-void SBOSSAgent::reset() throw (AgentException)
+void BEBAgent::reset() throw (AgentException)
 {
-     if (sboss)          { delete sboss;       }
+     if (beb)            { delete beb;         }
      if (simulator)      { delete simulator;   }
      if (samplerFact)    { delete samplerFact; }
      
-     SBOSS::PARAMS searchParamsSBOSS;
-	searchParamsSBOSS.K = K;
-	searchParamsSBOSS.delta = delta;
+     BEB::PARAMS searchParamsBEB;
+	searchParamsBEB.b = beta;
 	
      
      unsigned int s = getMDP()->getCurrentState();     
      simulator      = new MDPSimulator(s, nX, nU, R, getGamma());     
      samplerFact    = new PCSamplerFactory(priorcountList);
-     sboss = new SBOSS(*simulator, searchParamsSBOSS, *samplerFact);
+     beb = new BEB(*simulator, searchParamsBEB, *samplerFact);
 	
 	
 	//	Check integrity
@@ -87,9 +86,9 @@ void SBOSSAgent::reset() throw (AgentException)
 }
 
 
-void SBOSSAgent::freeData()
+void BEBAgent::freeData()
 {
-     if (sboss)          { delete sboss;       sboss       = 0; }
+     if (beb)            { delete beb;         beb         = 0; }
      if (simulator)      { delete simulator;   simulator   = 0; }
      if (samplerFact)    { delete samplerFact; samplerFact = 0; }
      
@@ -101,21 +100,17 @@ void SBOSSAgent::freeData()
 }
 
 
-void SBOSSAgent::serialize(ostream& os) const
+void BEBAgent::serialize(ostream& os) const
 {
 	Agent::serialize(os);
 	
 	
-	os << SBOSSAgent::toString() << "\n";
-     os << 6 << "\n";
+	os << BEBAgent::toString() << "\n";
+     os << 5 << "\n";
 
 
-	//  'K'
-	os << K << "\n";
-
-
-	//  'delta'
-	os << delta << "\n";
+	//  'beta'
+	os << beta << "\n";
 	
 	
 	//  'nX'
@@ -153,7 +148,7 @@ void SBOSSAgent::serialize(ostream& os) const
 }
 
 
-void SBOSSAgent::deserialize(istream& is) throw (SerializableException)
+void BEBAgent::deserialize(istream& is) throw (SerializableException)
 {
 	Agent::deserialize(is);
 	
@@ -163,7 +158,7 @@ void SBOSSAgent::deserialize(istream& is) throw (SerializableException)
 	//	Class name check
 	if (!getline(is, tmp)) { throwEOFMsg("class name"); }
 	string className = tmp;
-	if (className != SBOSSAgent::toString())
+	if (className != BEBAgent::toString())
 	{
 		string msg = "Error with 'class name'.\n";
 		throw SerializableException(msg);
@@ -177,15 +172,9 @@ void SBOSSAgent::deserialize(istream& is) throw (SerializableException)
 	int i = 0;
 
 
-	//  'K'
-	if (!getline(is, tmp)) { throwEOFMsg("K"); }
-	K = atoi(tmp.c_str());
-	++i;
-
-
-	//  'delta'
-	if (!getline(is, tmp)) { throwEOFMsg("delta"); }
-	delta = atof(tmp.c_str());
+	//  'beta'
+	if (!getline(is, tmp)) { throwEOFMsg("beta"); }
+	beta = atof(tmp.c_str());
 	++i;
 
 
@@ -240,8 +229,8 @@ void SBOSSAgent::deserialize(istream& is) throw (SerializableException)
 	++i;
      
      
-     //   'SBOSS', 'simulator' and 'samplerFact'
-     if (sboss)       { delete sboss;       sboss       = 0; }
+     //   'BEB', 'simulator' and 'samplerFact'
+     if (beb)         { delete beb;         beb         = 0; }
      if (simulator)   { delete simulator;   simulator   = 0; }
      if (samplerFact) { delete samplerFact; samplerFact = 0; }
      
@@ -264,7 +253,7 @@ void SBOSSAgent::deserialize(istream& is) throw (SerializableException)
 // ===========================================================================
 //	Private methods
 // ===========================================================================
-void SBOSSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
+void BEBAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 											throw (AgentException)
 {
 	//	'DirMultiDistribution' case
@@ -278,7 +267,7 @@ void SBOSSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		R = dirDistrib->getR();
 		priorcountList = dirDistrib->getTheta();		
 		stringstream sstr;
-		sstr << "SBOSS (" << K << ", " << delta;
+		sstr << "BEB (" << beta;
 		sstr << ", " << dirDistrib->getShortName() << ")";
 		setName(sstr.str());
 	}
@@ -302,9 +291,8 @@ void SBOSSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 
 
 #ifndef NDEBUG
-void SBOSSAgent::checkIntegrity() const
+void BEBAgent::checkIntegrity() const
 {
-	assert(K > 0);
-	assert(delta > 0.0);
+	assert(beta > 0.0);
 }
 #endif

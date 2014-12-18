@@ -20,7 +20,7 @@ using namespace utils::formula;
 	
 	\author	Castronovo Michael
 
-	\date	2014-12-13
+	\date	2014-12-18
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -364,11 +364,12 @@ void runExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
      
      //   Special case for agents based on A. Guez implementation
      if (((agent->getClassName() == BAMCPAgent::toString())
-               || (agent->getClassName() == BFS3Agent::toString()))
+               || (agent->getClassName() == BFS3Agent::toString())
+               || (agent->getClassName() == SBOSSAgent::toString())
+               || (agent->getClassName() == BEBAgent::toString()))
                && (nThreads > 1))
      {
-          cout << "\n\tCannot use a '" << BAMCPAgent::toString();
-          cout << "' agent with more than one thread!\n";
+          cout << "\n\tCannot use this agent with more than one thread!\n";
           return;
      }          
      //

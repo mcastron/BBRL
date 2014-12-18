@@ -10,6 +10,7 @@
 #include "Agent/BAMCPAgent.h"
 #include "Agent/BFS3Agent.h"
 #include "Agent/SBOSSAgent.h"
+#include "Agent/BEBAgent.h"
 #include "Agent/OPPSDSAgent.h"
 #include "Agent/OPPSCSAgent.h"
 
@@ -70,6 +71,9 @@ void dds::init()
 
      Serializable::checkIn<SBOSSAgent>(
 			&Serializable::createInstance<SBOSSAgent>);
+
+     Serializable::checkIn<BEBAgent>(
+			&Serializable::createInstance<BEBAgent>);
 
 	Serializable::checkIn<OPPSDSAgent>(
 			&Serializable::createInstance<OPPSDSAgent>);

@@ -10,6 +10,7 @@
 #include "BAMCPAgent.h"
 #include "BFS3Agent.h"
 #include "SBOSSAgent.h"
+#include "BEBAgent.h"
 #include "OPPSDSAgent.h"
 #include "OPPSCSAgent.h"
 
@@ -183,6 +184,17 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
 
                //   Return
                return new SBOSSAgent(K, delta);
+          }
+          
+          if (agentClassName == BEBAgent::toString())
+          {     
+               //   Get 'beta'
+               string tmp = parsing::getValue(argc, argv, "--beta");
+               double beta = atof(tmp.c_str());
+
+
+               //   Return
+               return new BEBAgent(beta);
           }
           
           if (agentClassName == OPPSDSAgent::toString())

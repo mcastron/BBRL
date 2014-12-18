@@ -12,6 +12,7 @@
 #include "src/Agent/BAMCPAgent.h"
 #include "src/Agent/BFS3Agent.h"
 #include "src/Agent/SBOSSAgent.h"
+#include "src/Agent/BEBAgent.h"
 #include "src/Agent/OPPSDSAgent.h"
 #include "src/Agent/OPPSCSAgent.h"
 

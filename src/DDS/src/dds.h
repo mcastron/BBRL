@@ -17,7 +17,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2014-12-17
+	\date		2014-12-18
 */
 // ===========================================================================
 namespace dds
@@ -129,6 +129,13 @@ namespace dds
           \brief 	A RL Agent following a SBOSS policy.
 	*/
 	class SBOSSAgent;
+	
+	
+	/**
+          \class    BEBAgent
+          \brief 	A RL Agent following a BEB policy.
+	*/
+	class BEBAgent;
 	
 	
 	/**
