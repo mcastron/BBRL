@@ -9,6 +9,7 @@
 #include "FormulaAgent/FormulaVector.h"
 #include "BAMCPAgent.h"
 #include "BFS3Agent.h"
+#include "SBOSSAgent.h"
 #include "OPPSDSAgent.h"
 #include "OPPSCSAgent.h"
 
@@ -166,6 +167,22 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                {
                     return new BFS3Agent(K, C);
                }
+          }
+          
+          if (agentClassName == SBOSSAgent::toString())
+          {     
+               //   Get 'K'
+               string tmp = parsing::getValue(argc, argv, "--K");
+               unsigned int K = atoi(tmp.c_str());
+
+
+               //   Get 'delta'
+               tmp = parsing::getValue(argc, argv, "--C");
+               double delta = atof(tmp.c_str());
+
+
+               //   Return
+               return new SBOSSAgent(K, delta);
           }
           
           if (agentClassName == OPPSDSAgent::toString())

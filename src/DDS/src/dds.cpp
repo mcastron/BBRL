@@ -9,6 +9,7 @@
 #include "Agent/FormulaAgent/FormulaAgent.h"
 #include "Agent/BAMCPAgent.h"
 #include "Agent/BFS3Agent.h"
+#include "Agent/SBOSSAgent.h"
 #include "Agent/OPPSDSAgent.h"
 #include "Agent/OPPSCSAgent.h"
 
@@ -66,6 +67,9 @@ void dds::init()
 
      Serializable::checkIn<BFS3Agent>(
 			&Serializable::createInstance<BFS3Agent>);
+
+     Serializable::checkIn<SBOSSAgent>(
+			&Serializable::createInstance<SBOSSAgent>);
 
 	Serializable::checkIn<OPPSDSAgent>(
 			&Serializable::createInstance<OPPSDSAgent>);

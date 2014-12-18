@@ -86,8 +86,7 @@ namespace MDPutils{
 		//	TODO - Modified
 //		double Q[S][A];
 		std::vector<std::vector<double> > Q(S);
-		for (unsigned int i = 0; i < Q.size(); ++i)
-			Q[i].resize(S);
+		for (unsigned int i = 0; i < Q.size(); ++i) { Q[i].resize(A); }
 		//
 
 		size_t ll,aa;

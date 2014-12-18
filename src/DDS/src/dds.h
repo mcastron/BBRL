@@ -125,6 +125,13 @@ namespace dds
 	
 	
 	/**
+          \class    SBOSSAgent
+          \brief 	A RL Agent following a SBOSS policy.
+	*/
+	class SBOSSAgent;
+	
+	
+	/**
 	     \class    OPPSDSAgent
 	     \brief 	A RL agent which applies the OPPS meta-learning algorithm
 	               during its offline phase (discrete case).

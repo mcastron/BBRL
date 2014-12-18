@@ -30,6 +30,9 @@ USAGE OVERVIEW
                     --K <integer>
                     --C <integer>
                     [--D <integer>]
+               SBOSSAgent
+                    --K <integer>
+                    --delta <double>
                OPPSDSAgent
                     --n_draws <integer>                        
                     --c <double>
@@ -108,6 +111,7 @@ OPTIONS DESCRIPTION
                - FormulaAgent (parameters: --formula)
                - BAMCPAgent (parameters: --K [--D])
                - BFS3Agent (parameters: --K --C [--D])
+               - SBOSSAgent (parameters: --K --delta)
                - OPPSDSAgent (parameters: --n_draws, --c, --formula_set --discount_factor --horizon_limit)
                - OPPSCSAgent (parameters: --n_draws, --c, --agent_factory, --discount_factor --horizon_limit)
 
@@ -153,6 +157,10 @@ OPTIONS DESCRIPTION
           The minimal and maximal value of parameter 'delta' of the
           VDBEEGreedyAgents defined by this AgentFactory.
 
+     --delta <double>
+          (SBOSSAgent parameter)
+          The maximal threshold for resampling.
+
      --discount_factor <double>
           The discount factor.
 
@@ -192,8 +200,12 @@ OPTIONS DESCRIPTION
           The initial value of epsilon for each state-action pair.
 
      --K <integer>
-          (BAMCPAgent parameter)
+          (BAMCPAgent & BFS3Agent parameter)
           The number of nodes to expand at each time-step.
+
+     --K <integer>
+          (SBOSSAgent parameter)
+          The number of model samples to take for each state-action pair.
 
      --max_size <integer>
           The maximal size of a formula (= the maximal number of tokens to

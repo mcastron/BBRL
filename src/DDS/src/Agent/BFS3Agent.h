@@ -24,7 +24,7 @@
 
                (based on Guez work)
 
-	\date 	2014-12-17
+	\date 	2014-12-18
 */
 // ===========================================================================
 /* final */ class dds::BFS3Agent : public dds::Agent

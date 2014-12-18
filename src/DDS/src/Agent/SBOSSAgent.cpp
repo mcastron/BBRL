@@ -1,5 +1,5 @@
 
-#include "BFS3Agent.h"
+#include "SBOSSAgent.h"
 
 using namespace std;
 using namespace dds;
@@ -9,20 +9,19 @@ using namespace utils;
 // ===========================================================================
 //	Public Constructors/Destructor
 // ===========================================================================
-BFS3Agent::BFS3Agent(std::istream& is) :
-          Agent(), bfs3(0), simulator(0), samplerFact(0)
+SBOSSAgent::SBOSSAgent(std::istream& is) :
+          Agent(), sboss(0), simulator(0), samplerFact(0)
 {
 	try							{ dDeserialize(is);	}
 	catch (SerializableException e)	{ deserialize(is);	}
 }
 
 
-BFS3Agent::BFS3Agent(unsigned int K_, unsigned int C_, unsigned int D_) :
-          K(K_), C(C_), D(D_), bfs3(0), simulator(0), samplerFact(0)
+SBOSSAgent::SBOSSAgent(unsigned int K_, double delta_) :
+          K(K_), delta(delta_), sboss(0), simulator(0), samplerFact(0)
 {
      stringstream sstr;
-	sstr << "BFS3 (" << K << ", " << C;
-	if (D > 0) { sstr << ", " << D; }
+	sstr << "SBOSS (" << K << ", " << delta;
 	sstr << ", no model)";
 	setName(sstr.str());
      
@@ -34,9 +33,9 @@ BFS3Agent::BFS3Agent(unsigned int K_, unsigned int C_, unsigned int D_) :
 }
 
 
-BFS3Agent::~BFS3Agent()
+SBOSSAgent::~SBOSSAgent()
 {
-     if (bfs3)           { delete bfs3;        }
+     if (sboss)          { delete sboss;       }
      if (simulator)      { delete simulator;   }
      if (samplerFact)    { delete samplerFact; }
 }
@@ -45,44 +44,40 @@ BFS3Agent::~BFS3Agent()
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int BFS3Agent::getAction(int xt) const throw (AgentException)
+int SBOSSAgent::getAction(int xt) const throw (AgentException)
 {
-	assert(bfs3);
-	
-	
-	return bfs3->SelectAction(xt);
+	assert(sboss);
+
+
+	return sboss->SelectAction(xt);
 }
 
 
-void BFS3Agent::learnOnline(int x, int u, int y, double r)
+void SBOSSAgent::learnOnline(int x, int u, int y, double r)
 											throw (AgentException)
 {
-     assert(bfs3);
+     assert(sboss);
      
      
-	bfs3->Update(x, u, y, r);
+	sboss->Update(x, u, y, r);
 }
 
 
-void BFS3Agent::reset() throw (AgentException)
+void SBOSSAgent::reset() throw (AgentException)
 {
-     if (bfs3)           { delete bfs3;        }
+     if (sboss)          { delete sboss;       }
      if (simulator)      { delete simulator;   }
      if (samplerFact)    { delete samplerFact; }
      
-     BFS3::PARAMS searchParamsBFS3;
-	searchParamsBFS3.D = ((D == 0) ? getT() : D);
-	searchParamsBFS3.Vmin = 0;	
-	searchParamsBFS3.Vmax = (maxR / (1.0 - getGamma()));
-	searchParamsBFS3.C = C;
-	searchParamsBFS3.N = std::max(1, (int) (K / searchParamsBFS3.C));
-	searchParamsBFS3.gamma = getGamma();
+     SBOSS::PARAMS searchParamsSBOSS;
+	searchParamsSBOSS.K = K;
+	searchParamsSBOSS.delta = delta;
 	
      
      unsigned int s = getMDP()->getCurrentState();     
      simulator      = new MDPSimulator(s, nX, nU, R, getGamma());     
      samplerFact    = new PCSamplerFactory(priorcountList);
-     bfs3           = new BFS3(*simulator, searchParamsBFS3, *samplerFact);
+     sboss = new SBOSS(*simulator, searchParamsSBOSS, *samplerFact);
 	
 	
 	//	Check integrity
@@ -92,9 +87,9 @@ void BFS3Agent::reset() throw (AgentException)
 }
 
 
-void BFS3Agent::freeData()
+void SBOSSAgent::freeData()
 {
-     if (bfs3)           { delete bfs3;        bfs3        = 0; }
+     if (sboss)          { delete sboss;       sboss       = 0; }
      if (simulator)      { delete simulator;   simulator   = 0; }
      if (samplerFact)    { delete samplerFact; samplerFact = 0; }
      
@@ -106,29 +101,21 @@ void BFS3Agent::freeData()
 }
 
 
-void BFS3Agent::serialize(ostream& os) const
+void SBOSSAgent::serialize(ostream& os) const
 {
 	Agent::serialize(os);
 	
 	
-	os << BFS3Agent::toString() << "\n";
-     os << 8 << "\n";
+	os << SBOSSAgent::toString() << "\n";
+     os << 6 << "\n";
 
 
 	//  'K'
 	os << K << "\n";
 
 
-	//  'C'
-	os << C << "\n";
-
-
-	//  'D'
-	os << D << "\n";
-
-
-	//  'maxR'
-	os << maxR << "\n";
+	//  'delta'
+	os << delta << "\n";
 	
 	
 	//  'nX'
@@ -166,7 +153,7 @@ void BFS3Agent::serialize(ostream& os) const
 }
 
 
-void BFS3Agent::deserialize(istream& is) throw (SerializableException)
+void SBOSSAgent::deserialize(istream& is) throw (SerializableException)
 {
 	Agent::deserialize(is);
 	
@@ -176,7 +163,7 @@ void BFS3Agent::deserialize(istream& is) throw (SerializableException)
 	//	Class name check
 	if (!getline(is, tmp)) { throwEOFMsg("class name"); }
 	string className = tmp;
-	if (className != BFS3Agent::toString())
+	if (className != SBOSSAgent::toString())
 	{
 		string msg = "Error with 'class name'.\n";
 		throw SerializableException(msg);
@@ -196,21 +183,9 @@ void BFS3Agent::deserialize(istream& is) throw (SerializableException)
 	++i;
 
 
-	//  'C'
-	if (!getline(is, tmp)) { throwEOFMsg("C"); }
-	C = atoi(tmp.c_str());
-	++i;
-
-
-	//  'D'
-	if (!getline(is, tmp)) { throwEOFMsg("D"); }
-	D = atoi(tmp.c_str());
-	++i;
-
-
-	//  'maxR'
-	if (!getline(is, tmp)) { throwEOFMsg("maxR"); }
-	maxR = atof(tmp.c_str());
+	//  'delta'
+	if (!getline(is, tmp)) { throwEOFMsg("delta"); }
+	delta = atoi(tmp.c_str());
 	++i;
 
 
@@ -266,7 +241,7 @@ void BFS3Agent::deserialize(istream& is) throw (SerializableException)
      
      
      //   'BFS3', 'simulator' and 'samplerFact'
-     if (bfs3)        { delete bfs3;       bfs3         = 0; }
+     if (sboss)       { delete sboss;       sboss       = 0; }
      if (simulator)   { delete simulator;   simulator   = 0; }
      if (samplerFact) { delete samplerFact; samplerFact = 0; }
      
@@ -289,7 +264,7 @@ void BFS3Agent::deserialize(istream& is) throw (SerializableException)
 // ===========================================================================
 //	Private methods
 // ===========================================================================
-void BFS3Agent::learnOffline_aux(const MDPDistribution* mdpDistrib)
+void SBOSSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 											throw (AgentException)
 {
 	//	'DirMultiDistribution' case
@@ -301,12 +276,9 @@ void BFS3Agent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		nX = dirDistrib->getNbStates();
 		nU = dirDistrib->getNbActions();
 		R = dirDistrib->getR();
-		priorcountList = dirDistrib->getTheta();
-	     maxR = *(search::max<vector<double> >(R.begin(), R.end())[0]);
-		
+		priorcountList = dirDistrib->getTheta();		
 		stringstream sstr;
-		sstr << "BFS3 (" << K << ", " << C;
-		if (D > 0) { sstr << ", " << D; }
+		sstr << "SBOSS (" << K << ", " << delta;
 		sstr << ", " << dirDistrib->getShortName() << ")";
 		setName(sstr.str());
 	}
@@ -330,9 +302,9 @@ void BFS3Agent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 
 
 #ifndef NDEBUG
-void BFS3Agent::checkIntegrity() const
+void SBOSSAgent::checkIntegrity() const
 {
 	assert(K > 0);
-	assert(C > 0);
+	assert(delta > 0.0);
 }
 #endif

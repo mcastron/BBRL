@@ -1,11 +1,11 @@
 
-#ifndef BAMCPAGENT_H
-#define BAMCPAGENT_H
+#ifndef SBOSSAGENT_H
+#define SBOSSAGENT_H
 
 #include "Agent.h"
 #include "Guez/MDPSimulator.h"
 #include "Guez/PCSamplerFactory.h"
-#include "Guez/planners/mcp/bamcp/bamcp.h"
+#include "Guez/planners/boss/sboss/sboss.h"
 #include "../MDPDistribution/DirMultiDistribution.h"
 #include "../dds.h"
 #include "../../ExternalLibs.h"
@@ -13,10 +13,10 @@
 
 // ===========================================================================
 /*
-	\class 	BAMCPAgent
+	\class 	SBOSSAgent
 	\author 	Castronovo Michael
 	
-	\brief 	A RL Agent following a BAMCP policy.
+	\brief 	A RL Agent following a SBOSS policy.
 	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
@@ -27,7 +27,7 @@
 	\date 	2014-12-18
 */
 // ===========================================================================
-/* final */ class dds::BAMCPAgent : public dds::Agent
+/* final */ class dds::SBOSSAgent : public dds::Agent
 {		
 	public:
 		// =================================================================
@@ -37,27 +37,26 @@
 			\brief	Constructor.
 			
 			\param[is	The 'ifstream' containting the data representing
-					the BAMCPAgent to load.
+					the SBOSSAgent to load.
 					(can either be compressed or uncompressed)
 		*/
-		BAMCPAgent(std::istream& is);
+		SBOSSAgent(std::istream& is);
 
 
 		/**
 			\brief           Constructor.
 			
-			\param[K_        The number of nodes to insert to the BAMCP
-			                 tree at each time-step.
-               \param[D_        The maximal depth.
-                                (default: horizon limit)
+			\param[K_        The number of model samples to take for each
+                                state-action pair.
+               \param[delta_    The maximal threshold for resampling.
 		*/
-		BAMCPAgent(unsigned int K_, unsigned int D_ = 0);
+		SBOSSAgent(unsigned int K_, double delta_);
 		
 		
 		/**
 			\brief	Destructor.
 		*/
-		~BAMCPAgent();
+		~SBOSSAgent();
 
 
 		// =================================================================
@@ -70,7 +69,7 @@
 		*/
 		static std::string toString()
 		{
-		   return "BAMCPAgent";
+		   return "SBOSSAgent";
 		}
 
 
@@ -122,7 +121,7 @@
 		*/
 		Agent* clone() const
 		{
-			return cloneInstance<BAMCPAgent>(this);
+			return cloneInstance<SBOSSAgent>(this);
 		}
 		
 		
@@ -132,7 +131,7 @@
 			
 			\return	The name of the class of this object.
 		*/
-		std::string getClassName() const { return BAMCPAgent::toString(); }
+		std::string getClassName() const { return SBOSSAgent::toString(); }
 
 		
 		/**
@@ -158,57 +157,56 @@
 		//	Private attributes
 		// =================================================================	
 		/**
-		   \brief    The number of nodes to insert to the BAMCP tree
-		             at each time-step.
+               \brief    The number of model samples to take for each
+                         state-action pair.
 		*/
 		unsigned int K;
 		
 		
 		/**
-               \brief    The maximal depth.
-                         (0: horizon limit)
+               \brief    The maximal threshold for resampling.
 		*/
-		unsigned int D;
+		double delta;
 		
 		
 		/**
-		   \brief    The BAMCP algorithm (implemented by Guez).
+               \brief    The BFS3 algorithm (implemented by Guez).
 		*/
-		BAMCP* bamcp;
+		SBOSS* sboss;
 		
 		
 		/**
-		   \brief    A Simulator (required by 'BAMCP').
+               \brief    A Simulator (required by 'BFS3').
 		*/
 		SIMULATOR* simulator;
 
 
 		/**
-		   \brief    The current SamplerFactory (required by 'BAMCP').
+               \brief    The current SamplerFactory (required by 'BFS3').
 		*/
 		SamplerFactory* samplerFact;
 		
 		
 		/**
-		   \brief    The number of states of the MDPs to be played.
+               \brief    The number of states of the MDPs to be played.
 		*/
 		unsigned int nX;
 		
 		
 		/**
-		   \brief    The number of actions of the MDPs to be played.
+               \brief    The number of actions of the MDPs to be played.
 		*/
 		unsigned int nU;
 		
 		
 		/**
-		   \brief    The reward function of the MDPs to be played.
+               \brief    The reward function of the MDPs to be played.
 		*/
 		std::vector<double> R;
 		
 		
 		/**
-		   \brief    The list of prior observations for each transition.
+               \brief    The list of prior observations for each transition.
 		*/
 		vector<double> priorcountList;
 		

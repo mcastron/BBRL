@@ -110,10 +110,15 @@ void BAMCPAgent::serialize(ostream& os) const
 	
 	
 	os << BAMCPAgent::toString() << "\n";
-     os << 5 << "\n";
-	
+     os << 6 << "\n";
+
+
 	//  'K'
 	os << K << "\n";
+
+
+	//  'D'
+	os << D << "\n";
 	
 	
 	//  'nX'
@@ -178,6 +183,12 @@ void BAMCPAgent::deserialize(istream& is) throw (SerializableException)
 	//  'K'
 	if (!getline(is, tmp)) { throwEOFMsg("K"); }
 	K = atoi(tmp.c_str());
+	++i;
+
+
+	//  'D'
+	if (!getline(is, tmp)) { throwEOFMsg("D"); }
+	D = atoi(tmp.c_str());
 	++i;
 
 
