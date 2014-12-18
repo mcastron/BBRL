@@ -362,8 +362,9 @@ void runExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
      assert(output != "");
      
      
-     //   Special case for BAMCPAgent
-     if ((agent->getClassName() == BAMCPAgent::toString())
+     //   Special case for agents based on A. Guez implementation
+     if (((agent->getClassName() == BAMCPAgent::toString())
+               || (agent->getClassName() == BFS3Agent::toString()))
                && (nThreads > 1))
      {
           cout << "\n\tCannot use a '" << BAMCPAgent::toString();
