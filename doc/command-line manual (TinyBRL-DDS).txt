@@ -37,7 +37,7 @@ USAGE OVERVIEW
                          --formula_set_file <string>
                     --discount_factor <double>                 
                     --horizon_limit <integer>
-                OPPSCSAgent
+               OPPSCSAgent
                     --n_draws <integer>
                     --c <double>
                     --agent_factory <string>                   
