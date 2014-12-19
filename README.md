@@ -3,6 +3,14 @@ TinyBRL
 
 TinyBRL is a C++ open-source library for bayesian reinforcement learning. For more information, you can visit the official [wiki](http://www.montefiore.ulg.ac.be/~mcastron/tinybrl-wiki/index.php) or our [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
 
+1.3
+ - Added support of gnuplot output in 'main-export.cpp'.
+ - Updated the documentation file of 'TinyBRL-export'.
+ - Updated the documentation file of 'TinyBRL-DDS'.
+ - Added 'BFS3Agent’, 'SBOSSAgent' and ‘BEBAgent’.
+ - Added parameter '--D' for BAMCPAgent.
+ - Corrected bug in 'MDPUtils::valueIteration()' (wrong call of ‘resize()’ for vector 'Q').
+
 1.2.3
  - Moved 'FormulaVector' in 'utils::formula'.
  - Minor changes in headers' comments to fit Doxygen syntax.
