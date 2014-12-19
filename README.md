@@ -1,6 +1,6 @@
 TinyBRL
 =======
-![alt tag](https://travis-ci.org/mcastron/TinyBRL.svg)![alt tag](https://coveralls.io/repos/mcastron/TinyBRL/badge.png)
+![alt tag](https://travis-ci.org/mcastron/TinyBRL.svg)[![Coverage Status](https://img.shields.io/coveralls/mcastron/TinyBRL.svg)](https://coveralls.io/r/mcastron/TinyBRL)
 
 TinyBRL is a C++ open-source library for bayesian reinforcement learning. For more information, you can visit the official [wiki](http://www.montefiore.ulg.ac.be/~mcastron/tinybrl-wiki/index.php) or our [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
 
