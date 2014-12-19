@@ -9,3 +9,6 @@ before_install:
  - sudo apt-get install cmake
 
 script: cmake ./ && make
+
+after_success: coveralls
+
