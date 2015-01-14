@@ -1,3 +1,4 @@
+// in 'custom.cpp'
 
 #include <assert.h>
 #include <fstream>
@@ -9,18 +10,13 @@
 #include "Utils/UtilsLib.h"
 
 using namespace std;
-using namespace dds;
-using namespace dds::simulation;
-using namespace utils;
 
 
-int main(int, char* argv[])
+int main(int, char*[])
 {
      dds::init();
      
      
-     /* YOUR CODE HERE */
-
      //   Return
      return 0;
 }

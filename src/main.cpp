@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sys/stat.h>
 
 #include "DDS/DDSLib.h"
 #include "Utils/UtilsLib.h"
@@ -20,12 +21,18 @@ using namespace utils::formula;
 	
 	\author	Castronovo Michael
 
-	\date	2014-12-18
+	\date	2015-01-14
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
 //   Extra functions
 // ---------------------------------------------------------------------------
+inline bool fileExists(const std::string& name)
+{
+     struct stat buffer;   
+     return (stat (name.c_str(), &buffer) == 0);
+}
+
 void help();
 void formulaVGen(int argc, char* argv[])     throw (parsing::ParsingException);
 void offlineLearning(int argc, char* argv[]) throw (parsing::ParsingException);
@@ -125,11 +132,19 @@ void formulaVGen(int argc, char* argv[]) throw (parsing::ParsingException)
      //   3.   Get 'compressOutput' and 'output'
      bool compressOutput = parsing::hasFlag(argc, argv, "--compress_output");
      string output = parsing::getValue(argc, argv, "--output");
-     
+          
+     if (fileExists(output + (compressOutput ? ".zz" : "")))
+     {
+          cout << "\n\tThe file \"";
+          cout << (output + (compressOutput ? ".zz" : ""));
+          cout << "\" already exists!\n\n";
+          return;
+     }
+
      
      //   4.   Build the set of tokens
      set<Token*, Token::pComp> tokenSet;
-      try
+     try
      {          
           //   Variables
           for (unsigned int i = 0; i < nVar; ++i)
@@ -219,6 +234,14 @@ void offlineLearning(int argc, char* argv[]) throw (parsing::ParsingException)
      string output = parsing::getValue(argc, argv, "--output");     
      assert(output != "");
      
+     if (fileExists(output + (compressOutput ? ".zz" : "")))
+     {
+          cout << "\n\tThe file \"";
+          cout << (output + (compressOutput ? ".zz" : ""));
+          cout << "\" already exists!\n\n";
+          return;
+     }
+     
      
      //   4.   Run
 	cout << "\n";
@@ -281,6 +304,14 @@ void newExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
      
      string output = parsing::getValue(argc, argv, "--output");
      
+     if (fileExists(output + (compressOutput ? ".zz" : "")))
+     {
+          cout << "\n\tThe file \"";
+          cout << (output + (compressOutput ? ".zz" : ""));
+          cout << "\" already exists!\n\n";
+          return;
+     }
+     
      
      assert(nMdps > 0);
      assert(nSimulationsPerMdp > 0);
@@ -334,7 +365,41 @@ void newExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
 void runExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
 {
      //   1.   Get 'experiment'
-     Experiment* experiment = Experiment::parse(argc, argv);
+     Experiment* experiment = 0;
+     
+          //   Backup case
+     bool compressOutput = parsing::hasFlag(argc, argv, "--compress_output");     
+     string output = parsing::getValue(argc, argv, "--output");
+     
+     if (fileExists(output + ".bak" + (compressOutput ? ".zz" : "")))
+     {
+          int argcBis = 4;
+          char* argvBis[4];
+          string str;
+          
+          argvBis[0] = argv[0];
+          
+          str = "--experiment";
+          argvBis[1] = new char[str.size() + 1];
+          std::copy(str.begin(), str.end(), argvBis[1]);
+          argvBis[1][str.size()] = '\0';
+          
+          str = "--experiment_file";
+          argvBis[2] = new char[str.size() + 1];
+          std::copy(str.begin(), str.end(), argvBis[2]);
+          argvBis[2][str.size()] = '\0';
+          
+          str = (output + ".bak" + (compressOutput ? ".zz" : ""));
+          argvBis[3] = new char[str.size() + 1];
+          std::copy(str.begin(), str.end(), argvBis[3]);
+          argvBis[3][str.size()] = '\0';
+
+          experiment = Experiment::parse(argcBis, argvBis);
+     }
+
+          //   Other case
+     else { experiment = Experiment::parse(argc, argv); }
+
      assert(experiment);
      
      
@@ -347,9 +412,6 @@ void runExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
      //        'refresh_frequency', 'backup_frequency'     
      string tmp = parsing::getValue(argc, argv, "--n_threads");
      unsigned int nThreads = atoi(tmp.c_str());
-     
-     bool compressOutput = parsing::hasFlag(argc, argv, "--compress_output");     
-     string output = parsing::getValue(argc, argv, "--output");
 
      tmp = parsing::getValue(argc, argv, "--refresh_frequency");
      unsigned int refreshFrequency = (1000.0 * atoi(tmp.c_str()));
@@ -360,6 +422,14 @@ void runExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
 
      assert(nThreads > 0);
      assert(output != "");
+     
+     if (fileExists(output + (compressOutput ? ".zz" : "")))
+     {
+          cout << "\n\tThe file \"";
+          cout << (output + (compressOutput ? ".zz" : ""));
+          cout << "\" already exists!\n\n";
+          return;
+     }
      
      
      //   Special case for agents based on A. Guez implementation
