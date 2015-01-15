@@ -36,17 +36,30 @@ class utils::Chrono
 		//	Public methods
 		// =================================================================
 		/**
-			\brief	Restart this Chrono.
+               \brief    Pause this Chrono.
 		*/
-		void restart();
+		void pause();
 		
 		
 		/**
-			\brief	Return the time elapsed (in ms) since the last call
-					of 'start()'.
+               \brief    Resume this Chrono.
+		*/
+		void resume();
+
+
+		/**
+			\brief	     Restart this Chrono.
+			
+			\param[paused_ True if this Chrono must be paused right after
+			               being restarted, false else.
+		*/
+		void restart(bool paused_ = false);
+		
+		
+		/**
+			\brief	Return the time elapsed (in ms).
 					
-			\return	The time elapsed (in ms) since the last call of
-					'start()'.
+			\return	The time elapsed (in ms).
 		*/
 		double get();
 
@@ -55,7 +68,32 @@ class utils::Chrono
 		// =================================================================
 		//	Private attributes
 		// =================================================================
+		/**
+               \brief    True if this Chrono is paused, false else.
+		*/
+		bool paused;
+		
+		
+		/**
+               \brief    The time elapsed.
+		*/
+		double timeElapsed;
+		
+		
+		/**
+               \brief    The time stamp of the last moment this Chrono has been
+                         started for the last time.
+          */
 		struct timeval startClock;
+		
+		
+		// =================================================================
+          //   Private methods
+		// =================================================================
+		/**
+               \brief    Update the time elapsed.
+		*/
+		void update();
 };
 
 #endif

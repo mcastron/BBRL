@@ -1,6 +1,6 @@
 
 // ---------------------------------------------------------------------------
-//	'experiment' namespace
+//	'rl_utils::simulation' namespace
 // ---------------------------------------------------------------------------
 // ===========================================================================
 //	Classes methods
@@ -50,17 +50,7 @@ double rl_utils::simulation::SimulationRecord<XType, UType, RType>::
 {
 	
 	double tGamma = ((gamma > 0.0) && (gamma <= 1.0)) ? gamma : simGamma;
-	
-	double dsr = 0.0;
-	double cGamma = 1.0;
-	std::vector<double> rewardList = getRewardList();
-	for (unsigned int i = 0; i < rewardList.size(); ++i)
-	{
-		dsr += (cGamma * rewardList[i]);
-		cGamma *= tGamma;
-	}
-	
-	return dsr;
+	return rl_utils::simulation::computeDSR(getRewardList(), tGamma);
 }
 
 
@@ -128,7 +118,7 @@ void rl_utils::simulation::SimulationRecord<XType, UType, RType>::
 	for (unsigned int j = 0; j < transitionListSize; ++j)
 	{
 		if (!getline(is, tmp, '\t')) {
-		   cout << j << " " << transitionListSize << "\n";
+		   std::cout << j << " " << transitionListSize << "\n";
 		   throwEOFMsg("transitionList (x)"); }
 		XType x = atof(tmp.c_str());
 		++i;

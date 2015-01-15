@@ -45,6 +45,7 @@ add_subdirectory(src/IAgent)
 add_subdirectory(src/IMDP)
 add_subdirectory(src/IMDPDistribution)
 add_subdirectory(src/IExperiment)
+add_subdirectory(src/RLUtils)
 add_subdirectory(src/Serializable)
 add_subdirectory(src/Utils)
 
@@ -67,6 +68,7 @@ target_link_libraries(TinyBRL-DDS
 					IMDP
 					IMDPDistribution
 					IExperiment
+					RLUtils
 					Serializable
 					Utils)		#	uses Boost 1.52 if possible.
 
@@ -76,6 +78,7 @@ target_link_libraries(TinyBRL-custom
 					IMDP
 					IMDPDistribution
 					IExperiment
+					RLUtils
 					Serializable
 					Utils)		#	uses Boost 1.52 if possible.
 
@@ -87,5 +90,6 @@ target_link_libraries(TinyBRL-export
 					IMDP
 					IMDPDistribution
 					IExperiment
+					RLUtils
 					Serializable
 					Utils)

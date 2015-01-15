@@ -72,6 +72,7 @@ USAGE OVERVIEW
           --discount_factor <double>                           
           --horizon_limit <integer>                            
           [--safe_simulations]
+          [--save_trajectories]
           [--compress_output]
           --output <string>                                    
      
@@ -279,6 +280,14 @@ OPTIONS DESCRIPTION
           Run Experiment mode, where an Agent is tested on a set of MDPs
           defined by an Experiment created previously.
      
+     --safe_simulations
+          If set, the MDP is 'unknown', preventing the agent to access MDP data
+          (e.g.: the transition matrix).
+
+     --save_trajectories
+          If set, the created experiment will not save the complete trajectories
+          of the agents tested on it (only the rewards will remain).
+
      --sigma <double>
           (VDBEEGreedyAgent parameter)
           The inverse sensitivity.
@@ -287,10 +296,6 @@ OPTIONS DESCRIPTION
           (VDBEAgentFactory parameter)
           The minimal and maximal value of parameter 'sigma' of the
           VDBEEGreedyAgents defined by this AgentFactory.
-     
-     --safe_simulations
-          If set, the MDP is 'unknown', preventing the agent to access MDP data
-          (e.g.: the transition matrix).
           
      --tau
           (SoftMaxAgent parameter)

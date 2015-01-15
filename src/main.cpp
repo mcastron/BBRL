@@ -299,6 +299,7 @@ void newExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
      tmp = parsing::getValue(argc, argv, "--horizon_limit");
      unsigned int horizonLimit = atoi(tmp.c_str());
 
+     bool saveTraj = parsing::hasFlag(argc, argv, "--save_trajectories");
      bool safeSimulations = parsing::hasFlag(argc, argv, "--safe_simulations");
      bool compressOutput = parsing::hasFlag(argc, argv, "--compress_output");
      
@@ -331,7 +332,7 @@ void newExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
 	
 	Experiment* experiment(
 		new Experiment(name, mdpList, nSimulationsPerMdp,
-		discountFactor, horizonLimit, safeSimulations));
+		discountFactor, horizonLimit, safeSimulations, saveTraj));
 		
 	cout << "done! (in " << newTime.get() << "ms)\n";
 	

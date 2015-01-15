@@ -11,10 +11,11 @@ template<typename AgentType, typename MDPType, typename SimulationRecordType>
 IExperiment<AgentType, MDPType, SimulationRecordType>::
 		IExperiment(	string name_,
 					vector<MDPType*>& mdpList_,
-					unsigned int nbSimPerMDP_) :
+					unsigned int nbSimPerMDP_,
+					bool saveTraj_) :
 						Serializable(),
 						mdpList(mdpList_), nbSimPerMDP(nbSimPerMDP_),
-						timeElapsed(0.0), nextMDP(0),
+						timeElapsed(0.0), saveTraj(saveTraj_), nextMDP(0),
 						name(name_)
 {
 	assert(!mdpList.empty());
@@ -22,8 +23,9 @@ IExperiment<AgentType, MDPType, SimulationRecordType>::
 	assert(nbSimPerMDP > 0);
 	
 	
-	//	'simRecList'
-	simRecList.resize(mdpList.size()*nbSimPerMDP);
+	//	'simRecList' & 'rList'
+	if (saveTraj) { simRecList.resize(mdpList.size()*nbSimPerMDP); }
+     else          { rList.resize(mdpList.size()*nbSimPerMDP);      }
 	
 	
 	//	Clear
@@ -65,16 +67,28 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 	if (nbThreads == 1)
 	{
 	     //	Perform the simulations
-	     chrono.restart();
+	     chrono.restart(true);
 	     
 	     while (nextMDP < mdpList.size())
 	     {
 			for (unsigned int i = 0; i < nbSimPerMDP; ++i)
 			{
-				//	Simulate
-				simRecList[nbSimPerMDP*nextMDP + i]
-						= new SimulationRecordType(
+                    //   Simulate
+                    SimulationRecordType* simRec
+                              = new SimulationRecordType(
 								simulate(agent, mdpList[nextMDP]));
+
+                    //   Save the results
+                    if (saveTraj)
+                         simRecList[nbSimPerMDP*nextMDP + i] = simRec;
+                    
+                    else
+                    {
+                         rList[nbSimPerMDP*nextMDP + i]
+                                   = simRec->getRewardList();
+
+                         delete simRec;
+                    }
 				
 				//	Check integrity
 				#ifndef NDEBUG
@@ -151,6 +165,8 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::clear()
 	for (unsigned int i = 0; i < simRecList.size(); ++i)
 		if (simRecList[i]) { delete simRecList[i]; simRecList[i] = 0; }
 
+     for (unsigned int i = 0; i < rList.size(); ++i) { rList[i].clear(); }
+
 	nextMDP = 0;
 	pthread_mutex_init(&m_nextMDP, NULL);
 }
@@ -164,10 +180,30 @@ vector<double> IExperiment<AgentType, MDPType, SimulationRecordType>::
 
 	
 	vector<double> dsrList;
-	for (unsigned int i = 0; i < simRecList.size(); ++i)
+	
+	if (saveTraj)
 	{
-		if (simRecList[i])
-			dsrList.push_back(simRecList[i]->computeDSR(gamma));
+     	for (unsigned int i = 0; i < simRecList.size(); ++i)
+     	{
+     		if (simRecList[i])
+     			dsrList.push_back(simRecList[i]->computeDSR(gamma));
+     	}
+	}
+	
+	else
+	{
+          for (unsigned int i = 0; i < rList.size(); ++i)
+          {
+               if (!rList[i].empty())
+               {
+                    double tGamma =
+                              ((gamma > 0.0) && (gamma <= 1.0)) ?
+                                        gamma : getSimGamma();
+
+                    dsrList.push_back(
+                         rl_utils::simulation::computeDSR(rList[i], tGamma));
+               }
+          }
 	}
 	
 	return dsrList;
@@ -182,7 +218,7 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 	
 	
 	os << IExperiment::toString() << "\n";
-	os << (6 + mdpList.size() + simRecList.size()) << "\n";
+	os << (8 + mdpList.size() + simRecList.size()) << "\n";
 	
 	
 	//	'name'
@@ -208,6 +244,10 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 	os << timeElapsed << "\n";
 	
 	
+	//  'saveTraj'
+	os << (saveTraj ? 1 : 0) << "\n";
+
+	
 	//	'simRecList'
 	os << simRecList.size() << "\n";
 	for (unsigned int i = 0; i < simRecList.size(); ++i)
@@ -220,6 +260,16 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 		copy(istreambuf_iterator<char>(simRecStream),
 			istreambuf_iterator<char>(),
 			ostreambuf_iterator<char>(os));
+	}
+	
+	
+	//  'rList'
+	os << rList.size() << "\n";
+	for (unsigned int i = 0; i < rList.size(); ++i)
+	{
+	    os << rList[i].size() << "\n";
+	    for (unsigned int j = 0; j < rList[i].size(); ++j)
+	         os << rList[i][j] << "\n";
 	}
 	
 	
@@ -298,7 +348,17 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 	++i;
 
 
+     //   'saveTraj'
+     if (!getline(is, tmp)) { throwEOFMsg("saveTraj"); }
+	saveTraj = (atoi(tmp.c_str()) != 0);
+	++i;
+
+
 	//	'simRecList'
+	for (unsigned int j = 0; j < simRecList.size(); ++j)
+	    if (simRecList[j]) { delete simRecList[j]; }
+     simRecList.clear();
+	
 	if (!getline(is, tmp)) { throwEOFMsg("simRecList"); }
 	unsigned int simRecListSize = atoi(tmp.c_str());
 	++i;
@@ -326,6 +386,28 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 					simRecStream)));
 		++i;
 	}
+
+
+	//  'rList'	
+	rList.clear();
+	if (!getline(is, tmp)) { throwEOFMsg("rList"); }
+	unsigned int rListSize = atoi(tmp.c_str());
+	
+     for (unsigned int j = 0; j < rListSize; ++j)
+     {
+          if (!getline(is, tmp)) { throwEOFMsg("rList"); }
+          unsigned int rListJSize = atoi(tmp.c_str());
+          
+          rList.push_back(std::vector<double>());
+          for (unsigned int k = 0; k < rListJSize; ++k)
+          {
+               if (!getline(is, tmp)) { throwEOFMsg("rList"); }
+               double r = atof(tmp.c_str());
+               
+               rList.back().push_back(r);
+          }
+     }
+	++i;
 	
 	
 	//	'nextMDP'
@@ -359,9 +441,12 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 {
 	assert(!mdpList.empty());
 	for (unsigned int i = 0; i < mdpList.size(); ++i) { assert(mdpList[i]); }
+	
 	assert(nbSimPerMDP > 0);
 	assert(timeElapsed >= 0.0);
-	assert(simRecList.size() == mdpList.size()*nbSimPerMDP);
+	
+	assert(saveTraj  && simRecList.size() == mdpList.size()*nbSimPerMDP);
+	assert(!saveTraj && rList.size()      == mdpList.size()*nbSimPerMDP);
 }
 #endif
 
@@ -373,36 +458,47 @@ template<typename AgentType, typename MDPType, typename SimulationRecordType>
 void* IExperiment<AgentType, MDPType, SimulationRecordType>::
 		SimulationThread::run()
 {	
-	for (;;)
-	{
-		//	Reserve the MDPs to simulate
-		pthread_mutex_lock(&(exp->m_nextMDP));
-		
-			//	No more simulation to perform
-		if (exp->nextMDP >= exp->mdpList.size())
-		{
-			pthread_mutex_unlock(&(exp->m_nextMDP));
-			break;
-		}
-		unsigned int t = (exp->nextMDP++);
-		
-		pthread_mutex_unlock(&(exp->m_nextMDP));		
-		
-		
-		//	Perform the simulations
-		for (unsigned int i = 0; i < exp->nbSimPerMDP; ++i)
-		{
-			exp->simRecList[exp->nbSimPerMDP*t + i]
-				= new SimulationRecordType(
-					exp->simulate(	exp->copyAgentList[ID],
-								exp->mdpList[t]));
-		}
-		
-		
-		//	Time limit check
-		if ((exp->timeLimit > 0)
-				&& ((exp->chrono).get() >= exp->timeLimit)) { break; }
-	}
-	
-	return 0;
+     for (;;)
+     {
+          //	Reserve the MDPs to simulate
+          pthread_mutex_lock(&(exp->m_nextMDP));
+          
+          //	No more simulation to perform
+          if (exp->nextMDP >= exp->mdpList.size())
+          {
+               pthread_mutex_unlock(&(exp->m_nextMDP));
+               break;
+          }
+          unsigned int t = (exp->nextMDP++);
+          
+          pthread_mutex_unlock(&(exp->m_nextMDP));		
+          
+          
+          //	Perform the simulations
+          for (unsigned int i = 0; i < exp->nbSimPerMDP; ++i)
+          {
+               SimulationRecordType* simRec
+                         = new SimulationRecordType(
+                                   exp->simulate(exp->copyAgentList[ID],
+                                   exp->mdpList[t]));
+               
+               if (exp->saveTraj)
+                    exp->simRecList[exp->nbSimPerMDP*t + i] = simRec;
+               
+               else
+               {
+                    exp->rList[exp->nbSimPerMDP*t + i]
+                              = simRec->getRewardList();
+
+                    delete simRec;
+               }
+          }
+          
+          
+          //	Time limit check
+          if ((exp->timeLimit > 0)
+                    && ((exp->chrono).get() >= exp->timeLimit)) { break; }
+     }
+     
+     return 0;
 }

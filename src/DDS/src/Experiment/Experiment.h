@@ -19,7 +19,7 @@
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2014-12-13
+	\date 	2015-01-14
 */
 // ===========================================================================
 /* final */ class dds::Experiment :
@@ -53,11 +53,13 @@
 			\param[safeSim_	If true, the MDP is 'unknown', preventing
 							the agent to access MDP data
 							(e.g.: the transition matrix).
+               \param[saveTraj_	True if the complete trajectories must be
+			                    saved.
 		*/
 		Experiment(	std::string name,
 					std::vector<MDP*>& mdpList, unsigned int nbSimPerMDP,
 					double simGamma_, unsigned int T_,
-					bool safeSim_ = false);
+					bool safeSim_ = false, bool saveTraj = false);
 		
 		
 		/**
@@ -158,6 +160,15 @@
 		{
 			return simulation::simulate(agent, mdp, simGamma, T, safeSim);
 		}
+		
+		
+		/**
+               \brief    Return the discount factor used during the
+                         simulations.
+
+               \return   The discount factor used during the simulations.
+		*/
+		double getSimGamma() const { return simGamma; }
 		
 		
 		#ifndef NDEBUG

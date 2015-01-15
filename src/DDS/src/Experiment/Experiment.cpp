@@ -20,10 +20,11 @@ Experiment::Experiment(std::istream& is) :
 Experiment::Experiment(	string name, vector<MDP*>& mdpList,
 					unsigned int nbSimPerMDP,
 					double simGamma_,
-					unsigned int T_, bool safeSim_) :
+					unsigned int T_, bool safeSim_, bool saveTraj) :
 						IExperiment<	Agent, MDP,
 									simulation::SimulationRecord>(
-										name, mdpList, nbSimPerMDP),
+										name, mdpList,
+										nbSimPerMDP, saveTraj),
 						simGamma(simGamma_), T(T_), safeSim(safeSim_)
 {
 	assert((simGamma > 0.0) && (simGamma <= 1.0));

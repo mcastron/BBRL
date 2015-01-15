@@ -12,7 +12,7 @@
 	
 	\brief		This namespace defines useful templates for RL elements.
 								
-	\date		2014-12-13
+	\date		2015-01-14
 */
 // ===========================================================================
 namespace rl_utils
@@ -244,6 +244,21 @@ namespace rl_utils
 				std::vector<Transition<XType, UType, RType> >
 						transitionList;
 		};
+
+
+		// =================================================================
+          //   Functions
+		// =================================================================
+		/**
+			\brief	Compute and return the sum of rewards
+					observed during this simulation, discounted
+					by 'gamma' (in ]0; 1]).
+					
+			\return	The sum of reward observed during the
+					simulation, discounted by 'gamma'
+					(in ]0; 1]).
+		*/
+		double computeDSR(const std::vector<double>& rewardList, double gamma);
 	}
 }
 

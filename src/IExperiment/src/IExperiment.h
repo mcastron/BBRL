@@ -1,7 +1,7 @@
 
 #ifndef IEXPERIMENT_H
 #define IEXPERIMENT_H
-
+#include <unistd.h>
 #include "ExperimentException.h"
 #include "../ExternalLibs.h"
 
@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a RL Experiment.
 			
-	\date 	2013-10-13
+	\date 	2015-01-14
 */
 // ===========================================================================
 template<typename AgentType, typename MDPType, typename SimulationRecordType>
@@ -39,10 +39,13 @@ class IExperiment : public Serializable
 			\param[name_		The name of this Experiment.
 			\param[mdpList_	The test MDPs.
 			\param[nbSimPerMDP_	The number of simulations per MDP.
+			\param[saveTraj_	True if the complete trajectories must be
+			                    saved.
 		*/
 		IExperiment(	std::string name_,
 					std::vector<MDPType*>& mdpList_,
-					unsigned int nbSimPerMDP_);
+					unsigned int nbSimPerMDP_,
+					bool saveTraj_);
 		
 		
 		/**
@@ -122,9 +125,13 @@ class IExperiment : public Serializable
 			\brief	Compute and return the list of discounted sum of
 					rewards of the simulations discounted by 'gamma'
 					(in ]0; 1]).
+
 					If 'gamma' is not provided (or invalid), the discount
 					factor used during the simulations will be used
 					instead.
+					
+					'gamma' has to be provided if you have not saved
+					the trajectories.
 			
 			\return	The list of discounted sum of rewards of the
 					simulations, discounted by 'gamma' (in ]0; 1]).
@@ -135,6 +142,7 @@ class IExperiment : public Serializable
 		/**
 			\brief	Return the list of SimulationRecords from the
 					last call of 'run()'.
+					(empty if vector if the trajectories haven't be saved).
 					
 			\return	The list of Simulation Records from the last call of 
 					'run()'.
@@ -142,6 +150,18 @@ class IExperiment : public Serializable
 		std::vector<SimulationRecordType*> getSimRecList() const
 		{
 			return simRecList;
+		}
+		
+		
+		/**
+			\brief	Return the list of rewards observed for each test.
+					(empty if vector if the trajectories has been saved).
+					
+			\return	The list of rewards observed for each test.
+		*/
+		std::vector<std::vector<double> > getRList() const
+		{
+			return rList;
 		}
 
 		
@@ -207,9 +227,24 @@ class IExperiment : public Serializable
 		
 		
 		/**
-			\brief	The list of SimulationRecords osbserved.
+               \brief    True if the complete trajectories are saved, false
+                         else.
+		*/
+		bool saveTraj;
+
+
+		/**
+			\brief	The list of SimulationRecords observed.
+			          (empty & unused if 'saveTraj' is false)
 		*/
 		std::vector<SimulationRecordType*> simRecList;
+		
+		
+		/**
+               \brief    The list of rewards observed.
+                         (empty & unused if 'saveTraj' is true)
+		*/
+		std::vector<std::vector<double> > rList;
 		
 		
 		/**
@@ -252,6 +287,15 @@ class IExperiment : public Serializable
 		// =================================================================
 		//	Protected methods
 		// =================================================================
+		/**
+               \brief    Return the discount factor used during the
+                         simulations.
+
+               \return   The discount factor used during the simulations.
+		*/
+		virtual double getSimGamma() const = 0;
+		
+		
 		/**
 			\brief		Perform a single simulation.
 			

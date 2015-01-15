@@ -7,4 +7,4 @@ file(
 )
 
 add_library(IExperiment ${lib_files})
-target_link_libraries(IExperiment Serializable)
+target_link_libraries(IExperiment RLUtils Serializable)
