@@ -245,7 +245,7 @@ dds::opps::UCT::UCT(
 
 
 double dds::opps::UCT::drawArm(
-		const vector<double>& paramList) const
+		const vector<double>& paramList) const throw (std::exception)
 {
 	Agent* agent = agentFactory->get(paramList);
 	MDP* mdp = mdpDistrib->draw();
