@@ -8,7 +8,7 @@ using namespace std;
 //	Public Constructor
 // ===========================================================================
 dds::VDBEEGreedyAgentFactory::VDBEEGreedyAgentFactory(std::istream& is) :
-          AgentFactory()
+          AgentFactory(), iniModel(0)
 {
 	try							{ dDeserialize(is);	}
 	catch (SerializableException e)	{ deserialize(is);	}
@@ -21,7 +21,8 @@ dds::VDBEEGreedyAgentFactory::VDBEEGreedyAgentFactory(
 		double minIniEps_, double maxIniEps_) :
 			minSigma(minSigma_), maxSigma(maxSigma_),
 			minDelta(minDelta_), maxDelta(maxDelta_),
-			minIniEps(minIniEps_), maxIniEps(maxIniEps_)
+			minIniEps(minIniEps_), maxIniEps(maxIniEps_),
+			iniModel(0)
 {
 	assert((minSigma > 0.0) && (minSigma < maxSigma));
 	assert((maxSigma > 0.0) && (maxSigma > minSigma));
@@ -113,7 +114,7 @@ void dds::VDBEEGreedyAgentFactory::serialize(ostream& os) const
 	
 	
 	os << VDBEEGreedyAgentFactory::toString() << "\n";
-	os << 7 << "\n";
+	os << 6 << "\n";
 	
 	
 	//  'minSigma'
@@ -138,16 +139,6 @@ void dds::VDBEEGreedyAgentFactory::serialize(ostream& os) const
 	
 	//  'maxIniEps'
 	os << maxIniEps << "\n";
-	
-	
-	//  'iniModel'
-	stringstream iniModelStream;
-	iniModel->serialize(iniModelStream);
-	
-	os << iniModelStream.str().length() << "\n";
-	copy(istreambuf_iterator<char>(iniModelStream),
-			istreambuf_iterator<char>(),
-			ostreambuf_iterator<char>(os));
 }
 
 
@@ -213,17 +204,7 @@ void dds::VDBEEGreedyAgentFactory::deserialize(istream& is)
 
 
      //  'iniModel'
-	if (!getline(is, tmp)) { throwEOFMsg("iniModel"); }
-	unsigned int iniModelStreamLength = atoi(tmp.c_str());
-	
-	stringstream iniModelStream;
-	tmp.resize(iniModelStreamLength);
-	is.read(&tmp[0], iniModelStreamLength);
-	iniModelStream << tmp;
-	
-	iniModel = dynamic_cast<CModel*>(
-			Serializable::createInstance<CModel>(iniModelStream));
-	++i;
+	if (iniModel) { delete iniModel; iniModel = 0; }
 	
 	
 	//	Number of parameters check

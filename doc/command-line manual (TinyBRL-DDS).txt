@@ -23,6 +23,7 @@ USAGE OVERVIEW
                     --ini_epsilon <double>
                FormulaAgent
                     --formula <string>
+                    --variables <integer> <string> ... <string>
                BAMCPAgent
                     --K <integer>
                     [--D <integer>]
@@ -40,6 +41,7 @@ USAGE OVERVIEW
                     --c <double>
                     --formula_set
                          --formula_set_file <string>
+                    --variables <integer> <string> ... <string>
                     --discount_factor <double>                 
                     --horizon_limit <integer>
                OPPSCSAgent
@@ -53,7 +55,10 @@ USAGE OVERVIEW
                          VDBEEGreedyAgentFactory
                               --sigma <double> <double>
                               --delta <double> <double>
-                              --ini_epsilon <double> <double>  
+                              --ini_epsilon <double> <double>
+                         FormulaAgentFactory
+                              --weights <double> <double>
+                              --variables <integer> <string> ... <string> 
                     --discount_factor <double>                 
                     --horizon_limit <integer>               
           --mdp_distribution <string>                          
@@ -111,13 +116,13 @@ OPTIONS DESCRIPTION
                - EGreedyAgent (parameters: --epsilon)
                - SoftMaxAgent (parameters: --tau)
                - VDBEEGreedyAgent (parameters: --sigma, --delta, --ini_epsilon)
-               - FormulaAgent (parameters: --formula)
+               - FormulaAgent (parameters: --formula, --variables)
                - BAMCPAgent (parameters: --K [--D])
                - BFS3Agent (parameters: --K --C [--D])
                - SBOSSAgent (parameters: --K --delta)
                - BEBAgent (parameters: --beta)
-               - OPPSDSAgent (parameters: --n_draws, --c, --formula_set --discount_factor --horizon_limit)
-               - OPPSCSAgent (parameters: --n_draws, --c, --agent_factory, --discount_factor --horizon_limit)
+               - OPPSDSAgent (parameters: --n_draws, --c, --formula_set, --variables, --discount_factor, --horizon_limit)
+               - OPPSCSAgent (parameters: --n_draws, --c, --agent_factory, --discount_factor, --horizon_limit)
 
           Can either be followed by agent's parameters (if any) or by a file
           (--agent_file)
@@ -327,7 +332,28 @@ OPTIONS DESCRIPTION
                MAX<integer> -->  The maximum             (<integer> operand(s))
                AVG<integer> -->  The average             (<integer> operand(s))
 
+     --variables <integer> <string> ... <string>
+          (FormulaAgent, OPPSDSAgent and FormulaAgentFactory parameter)
+          Defines the set of variables to be used in the formula(s). The first
+          integer is the number of variables entered. The following variables
+          are supported:
+               QMean        --> Represents the Q-function based on the mean
+                                model of a prior distribution.
+               QSelf        --> Represents the Q-function based on the 'self'
+                                model of a prior distribution (each state is
+                                only reachable from itself).
+               QUniform     --> Represents the Q-function based on the 'uniform'
+                                model of a prior distribution (each state is
+                                reachable from the other states).
 
+          e.g.: --variables 2 "QUniform" "QMean"
+                         ==>  X0 represents "QUniform"; X1 represents "QMean".
+
+     --weights <double> <double>
+          The minimal and maximal value of the weights of the FormulaAgents
+          defined by this AgentFactory.
+          
+     
 
 USAGE EXAMPLES
 

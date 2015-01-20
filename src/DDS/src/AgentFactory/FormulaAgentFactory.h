@@ -1,12 +1,10 @@
 
-#ifndef VDBEEGREEDYAGENTFACTORY_H
-#define VDBEEGREEDYAGENTFACTORY_H
+#ifndef FORMULAAGENTFACTORY_H
+#define FORMULAAGENTFACTORY_H
 
 #include "AgentFactory.h"
 
-#include "../Agent/VDBEEGreedyAgent.h"
-#include "../MDP/CModel.h"
-#include "../MDPDistribution/DirMultiDistribution.h"
+#include "../Agent/FormulaAgent/FormulaAgent.h"
 
 #include "../dds.h"
 #include "../../ExternalLibs.h"
@@ -14,54 +12,52 @@
 
 // ===========================================================================
 /*
-	\class 	VDBEEGreedyAgentFactory
+	\class 	FormulaAgentFactory
 	\author 	Castronovo Michael
 	
-	\brief 	An AgentFactory which generates VDBEEGreedyAgent's.
-	
+	\brief 	An AgentFactory which generates FormulaAgent's,
+	          where the variables are combined with a polynomial.
+	          (e.g.: W0*X0 + W1*X1 + ... + WN*XN)
+	          
 	          'init()' must be called after this AgentFactory has been
 	          deserialized.
 
 	\date 	2015-01-20
 */
 // ===========================================================================
-/* final */ class dds::VDBEEGreedyAgentFactory : public dds::AgentFactory
+/* final */ class dds::FormulaAgentFactory : public dds::AgentFactory
 {		
 	public:
 		// =================================================================
-		//	Public Constructor
+		//	Public Constructor/Destructor
 		// =================================================================
 		/**
 			\brief	Constructor.
 			
 			\param[is	The 'ifstream' containting the data representing
-					the VDBEEGreedyAgentFactory to load.
+					the FormulaAgentFactory to load.
 					(can either be compressed or uncompressed)
 		*/
-		VDBEEGreedyAgentFactory(std::istream& is);
+		FormulaAgentFactory(std::istream& is);
 		
 		
 		/**
-			\brief		Constructor.
+			\brief		     Constructor.
 			
-			\param[minSigma_	The minimal value of sigma.
-			\param[maxSigma_	The maximal value of sigma.
-			\param[minDelta_	The minimal value of delta.
-			\param[maxDelta_	The maximal value of delta.
-			\param[minIniEps_	The minimal value of the initial epsilon.
-			\param[maxIniEps_	The maximal value of the initial epsilon.
+			\param[minW_	     The minimal value of the weights.
+			\param[maxW_	     The maximal value of the weights.
+			\param[accW_        The accuracy of the value of the weights.
+			\param[varNameList_ The list of variables' names.
 		*/
-		VDBEEGreedyAgentFactory(
-				double minSigma_, double maxSigma_,
-				double minDelta_, double maxDelta_,
-				double minIniEps_, double maxIniEps_);
-
-          
-          /**
+		FormulaAgentFactory(double minW_, double maxW_, double accW_,
+		                    std::vector<std::string>& varNameList_);
+		
+		
+		/**
                \brief    Destructor.
-          */
-          ~VDBEEGreedyAgentFactory();
-
+		*/
+		~FormulaAgentFactory() {}
+		
 		
 		// =================================================================
 		//	Public static methods
@@ -71,7 +67,7 @@
 			
 			\return	The string representation of this class name.
 		*/
-		static std::string toString() { return "VDBEEGreedyAgentFactory"; }
+		static std::string toString() { return "FormulaAgentFactory"; }
 
 		
 		// =================================================================
@@ -83,8 +79,8 @@
 							
 							Must be called after this AgentFactory has
 							been deserialized.
-			
-			\param[mdpDistrib	A MDP distribution.
+
+               \param[mdpDistrib	A MDP distribution.
 		*/
 		void init(const MDPDistribution* mdpDistrib)
 									throw (AgentFactoryException);
@@ -124,9 +120,9 @@
 		{
 			return splitAccList;
 		}
-
-
-          /**
+		
+		
+		/**
 			\brief	Return the name of the class of this object.
 					This method should be overloaded by any derived class.
 			
@@ -134,7 +130,7 @@
 		*/
 		std::string getClassName() const
 		{
-		   return VDBEEGreedyAgentFactory::toString();
+		   return FormulaAgentFactory::toString();
 		}
 
 		
@@ -161,38 +157,29 @@
 		//	Private attributes
 		// =================================================================
 		/**
-               \brief    The short name of the distribution used to initial
-                         this AgentFactory.
-		*/
-		std::string shortDistribName;
-
-		
-		/**
-			\brief	The minimal and maximal values of sigma
+			\brief	The minimal and maximal values of the weights
 					respectively.
 		*/
-		double minSigma, maxSigma;
-
-
-		/**
-			\brief	The minimal and maximal values of delta
-					respectively.
-		*/
-		double minDelta, maxDelta;
+		double minW, maxW;
 		
 		
 		/**
-			\brief	The minimal and maximal values of the initial epsilon
-					respectively.
+               \brief    The accuracy on the values of the weights.
 		*/
-		double minIniEps, maxIniEps;
+		double accW;
 		
 		
 		/**
-               \brief    The initial model used by the VDBEEGreedyAgent
-                         generated.
+               \brief   The list of variables' names.
 		*/
-		CModel* iniModel;
+		std::vector<std::string> varNameList;
+		
+		
+		/**
+               \brief    The MDP distribution used for initializing this
+                         FormulaAgentFactory.
+		*/
+		const MDPDistribution* mdpDistrib;
 		
 		
 		/**

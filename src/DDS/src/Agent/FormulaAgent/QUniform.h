@@ -13,9 +13,10 @@
 	\author 	Castronovo Michael
 	
 	\brief 	A variable for the FormulaAgent's, which represents a
-	          Q-function based on the 'uniform' model of a prior distribution.
+	          Q-function based on the 'uniform' model of a prior distribution
+	          (each state is reachable from the other states).
 
-	\date 	2014-12-13
+	\date 	2015-01-19
 */
 // ===========================================================================
 /* final */ class dds::QUniform : public QVar

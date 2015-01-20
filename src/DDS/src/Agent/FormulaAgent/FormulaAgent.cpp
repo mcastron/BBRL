@@ -17,13 +17,15 @@ FormulaAgent::FormulaAgent(std::istream& is) : Agent(), f(0)
 }
 
 
-FormulaAgent::FormulaAgent(Formula* f_) : f(f_)
+FormulaAgent::FormulaAgent(Formula* f_, const vector<string>& varNameList_) :
+          f(f_), varNameList(varNameList_)
 {
      assert(f_);
      
      
-     setName("Formula agent(" + f->getRPNStr() +")");     
-     
+     setName("Formula agent(" + f->getRPNStr() + ")");     
+
+
      //	Check integrity
 	#ifndef NDEBUG
 	checkIntegrity();
@@ -117,11 +119,17 @@ void FormulaAgent::serialize(ostream& os) const
 	
 	
 	os << FormulaAgent::toString() << "\n";
-	os << 2 << "\n";
+	os << 3 << "\n";
 	
 	
      //   'f'
 	os << f->getRPNStr() << "\n";
+     
+     
+     //   'varNameList'
+     os << varNameList.size() << "\n";
+     for (unsigned int i = 0; i < varNameList.size(); ++i)
+          os << varNameList[i] << "\n";
      
      
      //   'varList'
@@ -178,6 +186,20 @@ void FormulaAgent::deserialize(istream& is) throw (SerializableException)
 	++i;
 	
 	
+	//  'varNameList'
+     varNameList.clear();
+
+	if (!getline(is, tmp)) { throwEOFMsg("varNameList"); }
+     unsigned int varNameListSize = atoi(tmp.c_str());
+     
+	for (unsigned int i = 0; i < varNameListSize; ++i)
+	{
+	     if (!getline(is, tmp)) { throwEOFMsg("varNameList"); }
+	     varNameList.push_back(tmp);
+	}
+	++i;
+	
+	
 	//  'varList'
 	for (unsigned int i = 0; i < varList.size(); ++i)
 	    if (varList[i]) { delete varList[i]; }
@@ -188,14 +210,14 @@ void FormulaAgent::deserialize(istream& is) throw (SerializableException)
      
 	for (unsigned int i = 0; i < varListSize; ++i)
 	{
-	     if (!getline(is, tmp)) { throwEOFMsg("var"); }
+	     if (!getline(is, tmp)) { throwEOFMsg("varList"); }
 	     bool hasVar = (atoi(tmp.c_str()) != 0);
 	     if (!hasVar) { varList.push_back(0); continue; }
 	     
 	     string varClassStr;
-	     if (!getline(is, varClassStr)) { throwEOFMsg("var"); }
+	     if (!getline(is, varClassStr)) { throwEOFMsg("varList"); }
 	     
-          if (!getline(is, tmp)) { throwEOFMsg("var"); }
+          if (!getline(is, tmp)) { throwEOFMsg("varList"); }
           unsigned int varStreamLength = atoi(tmp.c_str());
           
           stringstream varStream;
@@ -230,16 +252,30 @@ void FormulaAgent::deserialize(istream& is) throw (SerializableException)
 void FormulaAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 											throw (AgentException)
 {
-     if (f && f->isVarUsed(0)) { varList.push_back(new QMean());    }
-     else                      { varList.push_back(0);              }
+     //   Error case
+     if (varNameList.size() < (f->getMaxRank() + 1))
+     {
+          string msg;
+          msg += "Too few variables defined to use this formula:\n";
+          msg += "\t'" + f->getRPNStr() + "'\n";
+     }
      
-     if (f && f->isVarUsed(1)) { varList.push_back(new QUniform()); }
-     else                      { varList.push_back(0);              }
+     
+     //   Add the variables
+     try
+     {
+          for (unsigned int i = 0; i < varNameList.size(); ++i)
+          {    
+               if (f->isVarUsed(i))
+                    varList.push_back(FVariable::getFVariable(varNameList[i]));
+     
+               else { varList.push_back(0); }
+          }
+     }
+     catch (FVariableException& e) { throw AgentException(e.what()); }
+     
 
-     if (f && f->isVarUsed(2)) { varList.push_back(new QSelf());    }
-     else                      { varList.push_back(0);              }
-
-
+     //   Init the variables
      for (unsigned int i = 0; i < varList.size(); ++i)
           if (varList[i]) { varList[i]->init(mdpDistrib); }
 

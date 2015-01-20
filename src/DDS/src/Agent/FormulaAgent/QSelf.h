@@ -13,9 +13,10 @@
 	\author 	Castronovo Michael
 	
 	\brief 	A variable for the FormulaAgent's, which represents a
-	          Q-function based on the 'self' model of a prior distribution.
+	          Q-function based on the 'self' model of a prior distribution
+	          (each state is only reachable from itself).
 
-	\date 	2014-12-13
+	\date 	2015-01-19
 */
 // ===========================================================================
 /* final */ class dds::QSelf : public QVar

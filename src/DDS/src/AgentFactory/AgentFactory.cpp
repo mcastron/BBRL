@@ -3,6 +3,7 @@
 #include "EGreedyAgentFactory.h"
 #include "SoftMaxAgentFactory.h"
 #include "VDBEEGreedyAgentFactory.h"
+#include "FormulaAgentFactory.h"
 
 using namespace utils;
 
@@ -68,6 +69,26 @@ dds::AgentFactory* dds::AgentFactory::parse(int argc, char* argv[])
           return new VDBEEGreedyAgentFactory(
                     minSigma, maxSigma, minDelta, maxDelta,
                     minIniEps, maxIniEps);
+     }
+     
+     if (agentFactoryClassName == "FormulaAgentFactory")
+     {
+          //   Get 'minW', 'maxW' & 'accW'
+          vector<string> tmp = parsing::getValues(argc, argv, "--weights", 2);
+          double minW = atof(tmp[0].c_str());
+          double maxW = atof(tmp[1].c_str());
+          
+          //   Get 'varNameList'
+          string tmp2 = parsing::getValue(argc, argv, "--variables");
+          unsigned int nVar = atoi(tmp2.c_str());
+          
+          vector<string> varNameList
+                    = parsing::getValues(argc, argv, "--variables", (nVar + 1));                                              
+          varNameList.erase(varNameList.begin());
+          
+          
+          //   Return
+          return new FormulaAgentFactory(minW, maxW, 0.01, varNameList);
      }
      
      throw parsing::ParsingException("--agent_factory");

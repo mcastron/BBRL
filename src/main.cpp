@@ -21,7 +21,7 @@ using namespace utils::formula;
 	
 	\author	Castronovo Michael
 
-	\date	2015-01-14
+	\date	2015-01-20
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -35,16 +35,18 @@ inline bool fileExists(const std::string& name)
 
 void help();
 void formulaVGen(int argc, char* argv[])     throw (parsing::ParsingException);
-void offlineLearning(int argc, char* argv[]) throw (parsing::ParsingException);
+void offlineLearning(int argc, char* argv[])
+                    throw (AgentException, parsing::ParsingException);
 void newExperiment(int argc, char* argv[])   throw (parsing::ParsingException);
-void runExperiment(int argc, char* argv[])   throw (parsing::ParsingException);
+void runExperiment(int argc, char* argv[])
+                    throw (AgentException, parsing::ParsingException);
 
 
 // ---------------------------------------------------------------------------
 //	Main function
 // ---------------------------------------------------------------------------
 int main(int argc, char* argv[])
-{
+{     
      //   'DDS' package initilization
 	init();
 	
@@ -78,7 +80,13 @@ int main(int argc, char* argv[])
           else            { cout << "No mode selected! (see '--help')\n"; }
      }
      
-     catch (parsing::ParsingException e)
+     catch (AgentException& e)
+     {
+          cout << "\nagent exception: " << e.what();
+          cout << "\n\n";
+     }
+     
+     catch (parsing::ParsingException& e)
      {
           cout << "\nparsing exception: " << e.what();
           cout << "\n(see '--help')\n\n";
@@ -217,7 +225,8 @@ void formulaVGen(int argc, char* argv[]) throw (parsing::ParsingException)
 }
 
 
-void offlineLearning(int argc, char* argv[]) throw (parsing::ParsingException)
+void offlineLearning(int argc, char* argv[]) throw (AgentException,
+                                                    parsing::ParsingException)
 {
      //   1.   Get 'agent'
      Agent* agent = Agent::parse(argc, argv);
@@ -363,7 +372,8 @@ void newExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
 	delete mdpDistrib;
 }
 
-void runExperiment(int argc, char* argv[]) throw (parsing::ParsingException)
+void runExperiment(int argc, char* argv[]) throw (AgentException,
+                                                  parsing::ParsingException)
 {
      //   1.   Get 'experiment'
      Experiment* experiment = 0;

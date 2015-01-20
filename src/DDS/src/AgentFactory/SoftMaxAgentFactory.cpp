@@ -8,7 +8,7 @@ using namespace std;
 //	Public Constructor
 // ===========================================================================
 dds::SoftMaxAgentFactory::SoftMaxAgentFactory(std::istream& is) :
-          AgentFactory()
+          AgentFactory(), iniModel(0)
 {
 	try							{ dDeserialize(is);	}
 	catch (SerializableException e)	{ deserialize(is);	}
@@ -16,7 +16,7 @@ dds::SoftMaxAgentFactory::SoftMaxAgentFactory(std::istream& is) :
 
 
 dds::SoftMaxAgentFactory::SoftMaxAgentFactory(double minTau_, double maxTau_) :
-          minTau(minTau_), maxTau(maxTau_)
+          minTau(minTau_), maxTau(maxTau_), iniModel(0)
 {
 	assert((minTau > 0.0) && (minTau < maxTau));
 	assert((maxTau > 0.0) && (maxTau > minTau));
@@ -92,7 +92,7 @@ void dds::SoftMaxAgentFactory::serialize(ostream& os) const
 	
 	
 	os << SoftMaxAgentFactory::toString() << "\n";
-	os << 3 << "\n";
+	os << 2 << "\n";
 	
 	
 	//  'minTau'
@@ -101,16 +101,6 @@ void dds::SoftMaxAgentFactory::serialize(ostream& os) const
 	
 	//  'maxTau'
 	os << maxTau << "\n";
-	
-
-     //  'iniModel'
-	stringstream iniModelStream;
-	iniModel->serialize(iniModelStream);
-	
-	os << iniModelStream.str().length() << "\n";
-	copy(istreambuf_iterator<char>(iniModelStream),
-			istreambuf_iterator<char>(),
-			ostreambuf_iterator<char>(os));
 }
 
 
@@ -152,17 +142,7 @@ void dds::SoftMaxAgentFactory::deserialize(istream& is)
 
 
      //  'iniModel'
-	if (!getline(is, tmp)) { throwEOFMsg("iniModel"); }
-	unsigned int iniModelStreamLength = atoi(tmp.c_str());
-	
-	stringstream iniModelStream;
-	tmp.resize(iniModelStreamLength);
-	is.read(&tmp[0], iniModelStreamLength);
-	iniModelStream << tmp;
-	
-	iniModel = dynamic_cast<CModel*>(
-			Serializable::createInstance<CModel>(iniModelStream));
-	++i;
+	if (iniModel) { delete iniModel; iniModel = 0; }
 	
 	
 	//	Number of parameters check

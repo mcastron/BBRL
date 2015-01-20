@@ -292,7 +292,9 @@ void OPPSDSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
      
      
      //   Run the UCB1
-     int s = ucb1.run(n);
+     int s;
+     try { s = ucb1.run(n); }
+     catch (std::exception& e) { throw AgentException(e.what()); }
      
      
      //   No agent found (the UCB1 discarded all submitted strategies)

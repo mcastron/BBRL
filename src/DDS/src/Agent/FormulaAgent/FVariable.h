@@ -16,7 +16,7 @@
 	
 	\brief 	Represent a variable for the FormulaAgent's.
 
-	\date 	2014-12-13
+	\date 	2015-01-16
 */
 // ===========================================================================
 class dds::FVariable : public Serializable
@@ -40,6 +40,17 @@ class dds::FVariable : public Serializable
           // =================================================================
 		//	Public static methods
 		// =================================================================
+		/**
+               \brief         Return the FVariable represented by the given
+                              string if possible, throw a FVariableException
+                              else.
+               
+               \param[str     The string representing this FVariable.
+          */
+          static FVariable* getFVariable(std::string str)
+                                                  throw (FVariableException);
+
+
 		/**
 			\brief	Return the string representation of this class name.
 			

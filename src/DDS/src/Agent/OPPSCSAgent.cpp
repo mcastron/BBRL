@@ -264,24 +264,26 @@ void OPPSCSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
      
      
      //   Create a UCT
-     agentFactory->init(mdpDistrib);
+     try { agentFactory->init(mdpDistrib); }
+     catch (AgentFactoryException& e) { throw AgentException(e.what()); }
+     
      opps::UCT uct(c, agentFactory, mdpDistrib, gamma, T);
      
      
      //   Run the UCT
-     vector<double> paramList = uct.run(n);
+     vector<double> paramList;
+     try { paramList = uct.run(n); }
+     catch (std::exception& e) { throw AgentException(e.what()); }
      
      
      //   Build the discovered strategy
-     agent = agentFactory->get(paramList);
+     try { agent = agentFactory->get(paramList); }
+     catch (AgentFactoryException& e) { throw AgentException(e.what()); }
+     
      stringstream sstr;
 	sstr << "OPPS-CS (" << agent->getName() << ", ";
 	sstr << sstr << mdpDistrib->getShortName() << ")";
 	setName(sstr.str());
-
-
-     //   Delete the AgentFactory
-     if (agentFactory) { delete agentFactory; agentFactory = 0; }
 	
 	
 	//	Check integrity

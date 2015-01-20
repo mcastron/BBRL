@@ -46,7 +46,8 @@ Token* Token::getToken(std::string str) throw (TokenException)
      //   Constant
      unsigned int i = 0;
      for (; ((i < str.size())
-               && (std::isdigit(str[i]) || (str[i] == '.'))); ++i);
+               && ((std::isdigit(str[i]) || (str[i] == '.')
+                    || (str[i] == '-') || (str[i] == 'e')))); ++i);
      
      if (i == str.size()) { return new Constant(atof(str.c_str())); }
      

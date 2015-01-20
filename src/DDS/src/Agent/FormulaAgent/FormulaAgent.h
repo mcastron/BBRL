@@ -28,11 +28,8 @@
 		     A formula is used to compute a Q-function, where its variables 
 		     are computed through Q-iteration on specific models
 		     (updated during the interaction).
-		     
-		     !!! Only supports formulas with 3 variables !!!
-		     (will be more flexible in the future releases)
 
-	\date 	2014-12-13
+	\date 	2015-01-20
 */
 // ===========================================================================
 /* final */ class dds::FormulaAgent : public dds::Agent
@@ -54,9 +51,11 @@
 		/**
                \brief    Constructor.
                
-               \param[f_ A list of formulas.
+               \param[f_           A formula.
+               \param[varNameList_ The list of variables' names.
 		*/
-		FormulaAgent(utils::formula::Formula* f_);
+		FormulaAgent(utils::formula::Formula* f_,
+		             const std::vector<std::string>& varNameList_);
 		
 		
 		/**
@@ -170,9 +169,16 @@
 		utils::formula::Formula* f;
 
 
-		//
+		/**
+               \brief   The list of variables' names.
+		*/
+		std::vector<std::string> varNameList;
+
+
+		/**
+               \brief    The list of variables.
+		*/
 		std::vector<FVariable*> varList;
-		//
 
 
 		/**

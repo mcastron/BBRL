@@ -138,6 +138,30 @@
           {
                return (varMap.find(rank_) != varMap.end());
           }
+          
+          
+          /**
+               \brief    Return the maximal rank of the variables used by
+                         this formula.
+               
+               \return   The maximal rank of the variables used by this formula.
+          */
+          unsigned int getMaxRank() const
+          {
+               unsigned int maxR = 0;
+               
+               std::map<unsigned int, Variable*>::const_iterator it, end;
+               it  = varMap.begin();
+               end = varMap.end();
+
+               for (; it != end; ++it)
+               {
+                    if ((it->second)->getRank() > maxR)
+                         maxR = (it->second)->getRank();
+               }
+               
+               return maxR;
+          }
 
 
 	private:	

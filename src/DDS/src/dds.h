@@ -17,7 +17,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2014-12-18
+	\date		2015-01-20
 */
 // ===========================================================================
 namespace dds
@@ -235,6 +235,14 @@ namespace dds
           \brief 	An AgentFactory which generates VDBEEGreedyAgent's.
 	*/
 	class VDBEEGreedyAgentFactory;
+	
+	
+	/**
+          \class    FormulaAgentFactory
+          \brief 	An AgentFactory which generates FormulaAgent's
+                    (where the formulas are polynomials).
+	*/
+	class FormulaAgentFactory;
 	
 	
 	/**
@@ -484,7 +492,8 @@ namespace dds
           			\return			The score of the arm defined by
           			                    'paramList'.
           		*/
-				double drawArm(const vector<double>& paramList) const;
+				double drawArm(const vector<double>& paramList) const
+                                                       throw (std::exception);
 		};
 	}
 }

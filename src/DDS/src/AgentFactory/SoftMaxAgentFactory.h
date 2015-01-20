@@ -18,8 +18,11 @@
 	\author 	Castronovo Michael
 	
 	\brief 	An AgentFactory which generates SoftMaxAgent's.
+	
+	          'init()' must be called after this AgentFactory has been
+	          deserialized.
 
-	\date 	2014-12-13
+	\date 	2015-01-20
 */
 // ===========================================================================
 /* final */ class dds::SoftMaxAgentFactory : public dds::AgentFactory
@@ -70,6 +73,9 @@
 		/**
 			\brief			Initialize this AgentFactory with respect
 							to the given MDP distribution.
+			
+			                    Must be called after this AgentFactory has
+							been deserialized.
 			
 			\param[mdpDistrib	A MDP distribution.
 		*/

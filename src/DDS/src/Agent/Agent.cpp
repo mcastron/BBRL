@@ -110,12 +110,23 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
           
           if (agentClassName == FormulaAgent::toString())
           {     
-               //   Get 'K'
+               //   Get 'f'
                string fStr = parsing::getValue(argc, argv, "--formula");
+               utils::formula::Formula* f = new utils::formula::Formula(fStr);
+               
+               
+               //   Get 'varNameList'
+               string tmp = parsing::getValue(argc, argv, "--variables");
+               unsigned int nVar = atoi(tmp.c_str());
+               
+               vector<string> varNameList
+                         = parsing::getValues(argc, argv,
+                                              "--variables", (nVar + 1));                                              
+               varNameList.erase(varNameList.begin());
                
                
                //   Return
-               return new FormulaAgent(new formula::Formula(fStr));
+               return new FormulaAgent(f, varNameList);
           }
           
           if (agentClassName == BAMCPAgent::toString())
@@ -214,6 +225,16 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                assert(formulaVector);
                
                
+               //   Get 'varNameList'
+               tmp = parsing::getValue(argc, argv, "--variables");
+               unsigned int nVar = atoi(tmp.c_str());
+               
+               vector<string> varNameList
+                         = parsing::getValues(argc, argv,
+                                              "--variables", (nVar + 1));                                              
+               varNameList.erase(varNameList.begin());
+               
+               
                //   Get 'gamma'
                tmp = parsing::getValue(argc, argv, "--discount_factor");
                double gamma = atof(tmp.c_str());
@@ -233,7 +254,8 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                vector<Agent*> strategyList;
                for (unsigned int i = 0; i < formulaVector->size(); ++i)
                     strategyList.push_back(
-                              new FormulaAgent((*formulaVector)[i]));
+                              new FormulaAgent((*formulaVector)[i],
+                                               varNameList));
                     
                     //   Free 'formulaVector'
                delete formulaVector;

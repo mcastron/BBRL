@@ -14,7 +14,7 @@
 	
 	\brief 	An interface to specialize for UCT.
 	
-	\date 	2014-12-13
+	\date 	2015-01-20
 */
 // ===========================================================================
 class utils::UCT
@@ -79,7 +79,7 @@ class utils::UCT
 			\return			The score of the arm defined by 'paramList'.
 		*/
 		virtual double drawArm(const std::vector<double>& paramList)
-													const = 0;
+                                             const throw (std::exception) = 0;
 
 
 	private:		

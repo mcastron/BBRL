@@ -1,8 +1,30 @@
 
 #include "FVariable.h"
+#include "QMean.h"
+#include "QSelf.h"
+#include "QUniform.h"
 
 using namespace std;
 using namespace dds;
+
+
+// ===========================================================================
+//	Public static methods
+// ===========================================================================
+FVariable* FVariable::getFVariable(std::string str) throw (FVariableException)
+{
+     //   Instantiate the correct FVariable
+     if (str == "QMean")    { return new QMean();    }
+     if (str == "QSelf")    { return new QSelf();    }
+     if (str == "QUniform") { return new QUniform(); }
+
+
+     //   Error
+     std::string msg;
+     msg += "Unable to convert \"" + str + "\" into a FVariable!\n";
+     
+     throw FVariableException(msg);
+}
 
 
 // ===========================================================================

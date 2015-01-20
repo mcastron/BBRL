@@ -92,7 +92,7 @@ void dds::EGreedyAgentFactory::serialize(ostream& os) const
 	
 	
 	os << EGreedyAgentFactory::toString() << "\n";
-	os << 3 << "\n";
+	os << 2 << "\n";
 	
 	
 	//  'minEps'
@@ -101,16 +101,6 @@ void dds::EGreedyAgentFactory::serialize(ostream& os) const
 	
 	//  'maxEps'
 	os << maxEps << "\n";
-	
-	
-	//  'iniModel'
-	stringstream iniModelStream;
-	iniModel->serialize(iniModelStream);
-	
-	os << iniModelStream.str().length() << "\n";
-	copy(istreambuf_iterator<char>(iniModelStream),
-			istreambuf_iterator<char>(),
-			ostreambuf_iterator<char>(os));
 }
 
 
@@ -152,17 +142,7 @@ void dds::EGreedyAgentFactory::deserialize(istream& is)
 	
 	
 	//  'iniModel'
-	if (!getline(is, tmp)) { throwEOFMsg("iniModel"); }
-	unsigned int iniModelStreamLength = atoi(tmp.c_str());
-	
-	stringstream iniModelStream;
-	tmp.resize(iniModelStreamLength);
-	is.read(&tmp[0], iniModelStreamLength);
-	iniModelStream << tmp;
-	
-	iniModel = dynamic_cast<CModel*>(
-			Serializable::createInstance<CModel>(iniModelStream));
-	++i;
+	if (iniModel) { delete iniModel; iniModel = 0; }
 	
 	
 	//	Number of parameters check
