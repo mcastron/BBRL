@@ -4,6 +4,28 @@ TinyBRL
 
 TinyBRL is a C++ open-source library for bayesian reinforcement learning. For more information, you can visit the official [wiki](http://www.montefiore.ulg.ac.be/~mcastron/tinybrl-wiki/index.php) or our [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
 
+1.3.1
+ - 'TinyBRL-DDS' will stop if the output file already exists (useful not to perform the same tests several times).
+ - 'TinyBRL-DDS' detects if a backup already exists when running an experiment (based on output file name) and starts from it if it exists.
+ - Added 'pause()' and 'resume()' methods to 'Chrono'.
+ - It is now possible to restart a 'Chrono' as paused (see 'Chrono::restart()').
+ - Added the flag 'saveTraj' in the constructor of 'IExperiment' and 'dds::Experiment', allowing to enable/disable the saving of the trajectories.
+ - Added 'getRList()' method to 'IExperiment'.
+ - Added 'computeDSRList()' in 'rl_utils::simulation'.
+ - Added 'src/RLUtils/CMakeLists.txt' and 'src/RLUtils/src/rl_utils.cpp'
+ - Added option '--save_trajectories' to 'TinyBRL-DDS' (for '--new_experiment').
+ - Added option '--variables' to 'FormulaAgent' and 'OPPSDSAgent', which allows to select which variable to use in the formulas.
+ - Added 'FormulaAgentFactory' (for searching through polynomial formulas).
+ - Clarification about the call of 'init()' method after calling 'deserialize()' for 'EGreedyAgentFactory', 'SoftMaxAgentFactory' & 'VDBEEGreedyAgentFactory' (see headers).
+ - Handle properly exceptions in 'utils::UCT', 'dds::opps::UCT',  'dds::OPPSCSAgent::learnOffline_aux()', 'dds::OPPSDSAgent::learnOffline_aux()' and in 'main.cpp'.
+ - Added 'getNbParam()' method to 'AgentFactory'.
+ - Added namespace 'algorithm' in namespace 'utils'.
+ - Moved 'utils::UCB1' & 'utils::UCT' in namespace 'utils::algorithm'
+ - Implemented Sto-SOO algorithm in 'utils::algorithm::StoSOO'.
+ - Added option '--seed' to 'TinyBRL-DDS' (and 'TinyBRL-custom'), allowing to choose the seed used by the RNG.
+ - 'OPPSCSAgent' now uses 'StoSOO' optimization algorithm instead of 'UCT' (command-line options have been updated appropriately).
+ - Updated the documentation file of 'TinyBRL-DDS'.
+
 1.3
  - Added support of gnuplot output in 'main-export.cpp'.
  - Updated the documentation file of 'TinyBRL-export'.
