@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <map>
+#include <queue>
 #include <pthread.h>
 #include <set>
 #include <stdexcept>

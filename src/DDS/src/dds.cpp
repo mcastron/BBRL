@@ -37,10 +37,11 @@ using namespace std;
 // ===========================================================================
 //	Functions
 // ===========================================================================
-void dds::init()
+void dds::init(unsigned int seed)
 {
 	//	Initialize the RNGs
-	utils::RandomGen::setSeed(time(0));
+	if (seed == 0) { utils::RandomGen::setSeed(time(0)); }
+	else           { utils::RandomGen::setSeed(seed);    }
 	guez_utils::setSeed(utils::RandomGen::randIntRange_Uniform(0, INT_MAX));
 	
 	
@@ -200,12 +201,44 @@ dds::simulation::SimulationRecord dds::simulation::simulate(
 // ---------------------------------------------------------------------------
 //	'opps' namespace
 // ---------------------------------------------------------------------------
+dds::opps::StoSOO::StoSOO(
+		unsigned int K, unsigned int k, unsigned int hMax, double delta,
+		AgentFactory* agentFactory_,
+		const MDPDistribution* mdpDistrib_,
+		double gamma_, unsigned int T_) :
+				utils::algorithm::StoSOO(
+                         agentFactory_->getNbParam(),
+                         K, k, hMax, delta, agentFactory_->getBounds()),
+				agentFactory(agentFactory_), mdpDistrib(mdpDistrib_),
+				gamma(gamma_), T(T_)
+{
+	assert(mdpDistrib);
+	assert((gamma > 0.0) && (gamma <= 1.0));
+}
+
+
+double dds::opps::StoSOO::f(const std::vector<double>& x) const
+                                                       throw (std::exception)
+{
+     Agent* agent = agentFactory->get(x);
+	MDP* mdp = mdpDistrib->draw();
+		
+	dds::simulation::SimulationRecord simRec;
+	simRec = dds::simulation::simulate(agent, mdp, gamma, T, false);
+	
+	delete agent;
+	delete mdp;
+	
+	return simRec.computeDSR();
+}
+
+
 dds::opps::UCB1::UCB1(
 		double c,
 		const vector<Agent*>& strategyList_,
 		const MDPDistribution* mdpDistrib_,
 		double gamma_, unsigned int T_) :
-				utils::UCB1(strategyList_.size(), c),
+				utils::algorithm::UCB1(strategyList_.size(), c),
 				strategyList(strategyList_), mdpDistrib(mdpDistrib_),
 				gamma(gamma_), T(T_)
 {
@@ -233,9 +266,8 @@ dds::opps::UCT::UCT(
 		AgentFactory* agentFactory_,
 		const MDPDistribution* mdpDistrib_,
 		double gamma_, unsigned int T_) :
-				utils::UCT(	c,
-							agentFactory_->getBounds(),
-							agentFactory_->getSplitAcc()),
+				utils::algorithm::UCT(c, agentFactory_->getBounds(),
+							       agentFactory_->getSplitAcc()),
 				agentFactory(agentFactory_), mdpDistrib(mdpDistrib_),
 				gamma(gamma_), T(T_)
 {

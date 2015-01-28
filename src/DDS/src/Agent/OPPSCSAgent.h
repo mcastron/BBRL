@@ -27,7 +27,7 @@
 			For Offline learning, does not support another distribution
 			than 'DirMultiDistribution'.
 
-	\date 	2015-01-20
+	\date 	2015-01-28
 */
 // ===========================================================================
 /* final */ class dds::OPPSCSAgent : public dds::Agent
@@ -48,18 +48,42 @@
 		
 		/**
 			\brief			 Constructor.
+			                     ('K' = 3, 'k', 'hMax' and 'delta' are
+			                     chosen appropriatly with respect to 'n').
 
-               \param[n_            The number of draws of the UCT during the
-			                     offline learning.
-			\param[c_            The constant used in the UCB1
-                                        formula:
-                                        I_t(i) = mu_i + c * sqrt(ln(n_t) / n_i)
+               \param[n_            The number of evaluations performed during
+                                    the offline learning.
+               \param[K_            The arity of the tree to develop
+                                    (odd number).
                \param[agentFactory_ The AgentFactory to use for bulding the
                                     strategies.
                \param[gamma_        The discount factor.
                \param[T_            The horizon limit.
 		*/
-		OPPSCSAgent(   unsigned int n_, double c_,
+		OPPSCSAgent(   unsigned int n_, unsigned int K_,
+		               AgentFactory* agentFactory_,
+					double gamma_, unsigned int T_);
+
+
+		/**
+			\brief			 Constructor.
+
+               \param[n_            The number of evaluations performed during
+                                    the offline learning.
+               \param[K_            The arity of the tree to develop
+                                    (odd number).
+	          \param[k_            The maximal number of evaluations
+	                               per node.
+	          \param[hMax_         The maximal depth of the tree to
+	                               develop.
+	          \param[delta_        The confidence parameter.
+               \param[agentFactory_ The AgentFactory to use for bulding the
+                                    strategies.
+               \param[gamma_        The discount factor.
+               \param[T_            The horizon limit.
+		*/
+		OPPSCSAgent(   unsigned int n_, unsigned int K_,
+                         unsigned int k_, unsigned int hMax_, double delta_,
 		               AgentFactory* agentFactory_,
 					double gamma_, unsigned int T_);
 		
@@ -172,17 +196,33 @@
 		
 		
 		/**
-		     \brief    The number of draws of the UCT during the offline
-		               learning.
+               \brief    The number of evaluations performed during the
+                         offline learning.
 		*/
 		unsigned int n;
 
 		
 		/**
-		     \brief    The constant used in the UCB1 formula:
-                              I_t(i) = mu_i + c * sqrt(ln(n_t) / n_i)
-		*/
-		double c;
+               \brief    The arity of the tree to develop (odd number).
+          */
+          unsigned int K;
+                                    
+          /**
+               \brief    The maximal number of evaluations per node.
+          */
+          unsigned int k;
+          
+          
+          /**
+               \brief    The maximal depth of the tree to develop.
+          */
+	     unsigned int hMax;
+	     
+	     
+	     /**
+               \brief    The confidence parameter.
+	     */     
+          double delta;        
 		
 		
 		/**
@@ -217,6 +257,12 @@
 		*/
 		void learnOffline_aux(const MDPDistribution* mdpDistrib)
 											throw (AgentException);
+
+
+          /**
+               \brief    Initialize this OPPSCSAgent.
+          */
+          void init();
 
 		
 		#ifndef NDEBUG

@@ -12,7 +12,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2014-12-13
+	\date		2015-01-28
 */
 // ===========================================================================
 namespace utils
@@ -48,23 +48,36 @@ namespace utils
 	class ThreadException;
 	
 	
-	/**
-	    \class    UCB1
-	    \brief    An interface to specialize for UCB1.
-	*/
-	class UCB1;
-	
-	
-	/**
-	    \class    UCT
-	    \brief    An interface to specialize for UCT.
-	*/
-	class UCT;
-	
-	
 	// ======================================================================
 	//	Namespaces
 	// ======================================================================
+	/**
+		\brief	This namespace gathers various algorithms.
+	*/
+	namespace algorithm
+	{
+	     /**
+               \class    StoSOO
+               \brief    An interface to specialize for StoSOO.
+     	*/
+     	class StoSOO;
+
+
+     	/**
+               \class    UCB1
+               \brief    An interface to specialize for UCB1.
+     	*/
+     	class UCB1;
+     	
+     	
+     	/**
+               \class    UCT
+               \brief    An interface to specialize for UCT.
+     	*/
+     	class UCT;
+	}	
+	
+
 	/**
 		\brief	This namespace gathers several functions related to
 				the calculation of statistics data.
@@ -283,6 +296,9 @@ namespace utils
 	*/
 	namespace compression
 	{
+	     // =================================================================
+		//	Functions
+		// =================================================================
 		/**
 			\brief		Compress a STL string using zlib with given
 						compression level and return the binary data.
@@ -325,6 +341,9 @@ namespace utils
 	*/
 	namespace search
 	{
+	     // =================================================================
+		//	Functions
+		// =================================================================
 		/**
 			\brief		Return a list of iterator pointing on the
 						minimal elements between 'begin' and 'end'
@@ -382,6 +401,9 @@ namespace utils
 	*/
 	namespace parsing
 	{
+	    // ==================================================================
+	    //	Classes
+	    // ==================================================================
 	    /**
 	         \class    ParsingException
 	         \brief    Exception
@@ -434,6 +456,9 @@ namespace utils
          };
 	    
 	    
+	    // ==================================================================
+	    //	Functions
+	    // ==================================================================
 	    /**
 	         \brief         Return the value of option 'opt', throws a
 	                        ParsingException if an error occurs.
@@ -484,6 +509,9 @@ namespace utils
 	*/
 	namespace formula
 	{
+	    // ==================================================================
+	    //	Functions
+	    // ==================================================================
 	    /**
 	         \class    Token
 	         \brief    Interface of a token, an element of a formula.

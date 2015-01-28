@@ -17,30 +17,25 @@ OPPSCSAgent::OPPSCSAgent(std::istream& is) :
 }
 
 
-OPPSCSAgent::OPPSCSAgent(unsigned int n_, double c_,
+OPPSCSAgent::OPPSCSAgent(unsigned int n_, unsigned int K_,
                          AgentFactory* agentFactory_,
 					double gamma_, unsigned int T_) :
-					     Agent(),
-					     agent(0),
-					     n(n_), c(c_), agentFactory(agentFactory_),
-					     gamma(gamma_), T(T_)
-{
-     assert(n > 0);
-     assert(agentFactory);
-     assert((gamma > 0.0) && (gamma <= 1.0));
-     assert(T > 0);
-
-	
-	stringstream sstr;
-	sstr << "OPPS-CS (no agent)";
-	setName(sstr.str());
+					     Agent(), agent(0), n(n_), K(K_),
+					     k(algorithm::StoSOO::getNbEvalPerNode(n)),
+					     hMax(algorithm::StoSOO::getMaxDepth(n)),
+					     delta(algorithm::StoSOO::getDelta(n)),
+					     agentFactory(agentFactory_),
+					     gamma(gamma_), T(T_) { init(); }
 
 
-	//	Check integrity
-	#ifndef NDEBUG
-	checkIntegrity();
-	#endif
-}
+OPPSCSAgent::OPPSCSAgent(unsigned int n_, unsigned int K_,
+                         unsigned int k_, unsigned int hMax_, double delta_,
+                         AgentFactory* agentFactory_,
+					double gamma_, unsigned int T_) :
+					     Agent(), agent(0),
+					     n(n_), K(K_), k(k_), hMax(hMax_), delta(delta_),
+					     agentFactory(agentFactory_),
+					     gamma(gamma_), T(T_) { init(); }
 
 
 OPPSCSAgent::~OPPSCSAgent()
@@ -106,7 +101,7 @@ void OPPSCSAgent::serialize(ostream& os) const
 	
 	
 	os << OPPSCSAgent::toString() << "\n";
-	os << 5 << "\n";
+	os << 9 << "\n";
 	
 	
 	//	'agent'
@@ -126,8 +121,12 @@ void OPPSCSAgent::serialize(ostream& os) const
 	}
 	
 	
-	//  'c'
-	os << c << "\n";
+	//  'n', 'K', 'k', 'hMax' & 'delta
+	os << n << "\n";
+	os << K << "\n";
+	os << k << "\n";
+	os << hMax << "\n";
+	os << delta << "\n";
 	
 	
 	//  'agentFactory'
@@ -201,9 +200,33 @@ void OPPSCSAgent::deserialize(istream& is) throw (SerializableException)
 	++i;
 	
 	
-	//	'c'
-	if (!getline(is, tmp)) { throwEOFMsg("c"); }
-	c = atof(tmp.c_str());
+	//	'n'
+	if (!getline(is, tmp)) { throwEOFMsg("n"); }
+	n = atoi(tmp.c_str());
+	++i;
+	
+	
+	//	'K'
+	if (!getline(is, tmp)) { throwEOFMsg("K"); }
+	K = atoi(tmp.c_str());
+	++i;
+	
+	
+	//	'k'
+	if (!getline(is, tmp)) { throwEOFMsg("k"); }
+	k = atoi(tmp.c_str());
+	++i;
+	
+	
+	//	'hMax'
+	if (!getline(is, tmp)) { throwEOFMsg("hMax"); }
+	hMax = atoi(tmp.c_str());
+	++i;
+	
+	
+	//	'delta'
+	if (!getline(is, tmp)) { throwEOFMsg("delta"); }
+	delta = atof(tmp.c_str());
 	++i;
 	
 	
@@ -263,16 +286,17 @@ void OPPSCSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
      assert(agent == 0);
      
      
-     //   Create a UCT
+     //   Create a StoSOO
      try { agentFactory->init(mdpDistrib); }
      catch (AgentFactoryException& e) { throw AgentException(e.what()); }
      
-     opps::UCT uct(c, agentFactory, mdpDistrib, gamma, T);
+     opps::StoSOO stoSOO(
+               K, k, hMax, delta, agentFactory, mdpDistrib, gamma, T);
      
      
-     //   Run the UCT
+     //   Run StoSOO
      vector<double> paramList;
-     try { paramList = uct.run(n); }
+     try { paramList = stoSOO.run(n); }
      catch (std::exception& e) { throw AgentException(e.what()); }
      
      
@@ -286,6 +310,30 @@ void OPPSCSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 	setName(sstr.str());
 	
 	
+	//	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
+void OPPSCSAgent::init()
+{
+     assert(n > 0);
+     assert((K > 0) && ((K % 2) == 1));
+     assert(k > 0);
+     assert(hMax > 0);
+     assert(delta > 0);
+     assert(agentFactory);
+     assert((gamma > 0.0) && (gamma <= 1.0));
+     assert(T > 0);
+
+	
+	stringstream sstr;
+	sstr << "OPPS-CS (no agent)";
+	setName(sstr.str());
+
+
 	//	Check integrity
 	#ifndef NDEBUG
 	checkIntegrity();

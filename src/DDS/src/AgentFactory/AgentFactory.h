@@ -14,7 +14,7 @@
 	
 	\brief 	Interface of an AgentFactory to generate RL Agents.
 
-	\date 	2014-12-13
+	\date 	2015-01-23
 */
 // ===========================================================================
 class dds::AgentFactory : public Serializable
@@ -72,6 +72,14 @@ class dds::AgentFactory : public Serializable
 		*/
 		virtual Agent* get(const std::vector<double>& paramList) const
 									throw (AgentFactoryException) = 0;
+
+
+          /**
+               \brief    Return the number of parameters.
+               
+               \return   The number of parameters.
+          */
+          unsigned int getNbParam() const { return getBounds().size(); }
 
 
 		/**

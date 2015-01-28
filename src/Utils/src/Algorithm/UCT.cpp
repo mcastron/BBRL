@@ -1,8 +1,8 @@
 
 #include "UCT.h"
 
-using namespace utils;
 using namespace std;
+using namespace utils::algorithm;
 
 
 // ===========================================================================
@@ -220,7 +220,6 @@ bool UCT::UCTNode::split()
 			splitC = -1;
 		}
 		else { break; }
-		
 	}
 	
 	

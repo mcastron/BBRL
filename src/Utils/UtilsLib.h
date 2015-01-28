@@ -7,8 +7,9 @@
 #include "src/RandomGen.h"
 #include "src/Thread.h"
 
-#include "src/UCB1.h"
-#include "src/UCT.h"
+#include "src/Algorithm/StoSOO.h"
+#include "src/Algorithm/UCB1.h"
+#include "src/Algorithm/UCT.h"
 
 #include "src/Formula/Token.h"
 #include "src/Formula/TokenException.h"

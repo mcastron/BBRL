@@ -7,7 +7,8 @@ NAME
 
 
 USAGE OVERVIEW               
-     --offline_learning                                        
+     --offline_learning
+          [--seed <integer>]                                    
           --agent <string>                                     
                "agent class name"
                     --agent_file <string>                      
@@ -45,8 +46,9 @@ USAGE OVERVIEW
                     --discount_factor <double>                 
                     --horizon_limit <integer>
                OPPSCSAgent
-                    --n_draws <integer>
-                    --c <double>
+                    --n_eval <integer>
+                    --K <integer>
+                    [--k <integer> --h_max <integer> --delta <double>]
                     --agent_factory <string>                   
                          EGreedyAgentFactory
                               --epsilon <double> <double>        
@@ -67,7 +69,8 @@ USAGE OVERVIEW
           [--compress_output]
           --output <string>                                    
      
-     --new_experiment                                          
+     --new_experiment
+          [--seed <integer>]                                          
           --name <string>
           --mdp_distribution <string>                          
                "MDP distribution class name"
@@ -81,7 +84,8 @@ USAGE OVERVIEW
           [--compress_output]
           --output <string>                                    
      
-     --run_experiment                                          
+     --run_experiment
+          [--seed <integer>]                                          
           --experiment                                         
                --experiment_file <string>                      
           --agent <string>                                     
@@ -96,6 +100,7 @@ USAGE OVERVIEW
           --backup_frequency <integer>                           
 
      --formula_set_generation
+          [--seed <integer>]
           --n_variables <integer>
           --tokens <integer> <string> ... <string>
           --max_size <integer>
@@ -122,7 +127,7 @@ OPTIONS DESCRIPTION
                - SBOSSAgent (parameters: --K --delta)
                - BEBAgent (parameters: --beta)
                - OPPSDSAgent (parameters: --n_draws, --c, --formula_set, --variables, --discount_factor, --horizon_limit)
-               - OPPSCSAgent (parameters: --n_draws, --c, --agent_factory, --discount_factor, --horizon_limit)
+               - OPPSCSAgent (parameters: --n_eval, [--k --h_max --delta], --agent_factory, --discount_factor, --horizon_limit)
 
           Can either be followed by agent's parameters (if any) or by a file
           (--agent_file)
@@ -145,7 +150,7 @@ OPTIONS DESCRIPTION
           The bonus parameter.
 
      --c <double>
-          (OPPSDSAgent & OPPSCSAgent parameter)
+          (OPPSDSAgent parameter)
           The constant to use in the UCB1 formula:
                I_t(i) = mu_i + c * sqrt(ln(n_t) / n_i)
 
@@ -161,6 +166,15 @@ OPTIONS DESCRIPTION
           The maximal depth.
 
      --delta <double>
+          (OPPSCSAgent parameter)
+          The confidence parameter in StoSOO.
+          (if not specified: 'delta = 1 / sqrt(n_eval)')
+
+     --delta <double>
+          (SBOSSAgent parameter)
+          The maximal threshold for resampling.
+
+     --delta <double>
           (VDBEEGreedyAgent parameter)
           Determine the influence of the selected action on the exploration
           rate.
@@ -169,10 +183,6 @@ OPTIONS DESCRIPTION
           (VDBEEGreedyAgentFactory parameter)
           The minimal and maximal value of parameter 'delta' of the
           VDBEEGreedyAgents defined by this AgentFactory.
-
-     --delta <double>
-          (SBOSSAgent parameter)
-          The maximal threshold for resampling.
 
      --discount_factor <double>
           The discount factor.
@@ -194,13 +204,21 @@ OPTIONS DESCRIPTION
           The file containing the data of the Experiment to load.
 
      --formula <string>
+          (FormulaAgent parameter)
           A formula in RPN notation (between quotes to be parsed correctly).
 
      --formula_set
+          (OPPSDSAgent parameter)
           Followed by the parameters of the formula set to load.
 
      --formula_set_file <string>
+          (OPPSDSAgent parameter)
           The file containing the data of the formula set to load.
+
+     --h_max
+          (OPPSCSAgent parameter)
+          The maximal depth of the tree in StoSOO.
+          (if not specified: 'h_max = sqrt(n_eval / k)')
 
      --help
           Display this help.
@@ -211,6 +229,11 @@ OPTIONS DESCRIPTION
      --ini_epsilon <double>
           (VDBEEGreedyAgent parameter)
           The initial value of epsilon for each state-action pair.
+
+     --k  <integer>
+          (OPPSCSAgent parameter)
+          The number of function evaluations per node in StoSOO.
+          (if not specified: 'k = n_eval / log^3(n_eval)')
 
      --K <integer>
           (BAMCPAgent & BFS3Agent parameter)
@@ -234,9 +257,13 @@ OPTIONS DESCRIPTION
      --mdp_distribution_file <string>
           The file containing the data of the MDP distribution to load.
      
+     --n_eval <integer>
+          (OPPSCSAgent parameter)
+          The number of function evaluations in StoSOO.
+     
      --n_draws <integer>
-          (OPPSDSAgent & OPPSCSAgent parameter)
-          The number of draws of the internal UCB1/UCT.
+          (OPPSDSAgent parameter)
+          The number of draws of the UCB1.
           
      --n_mdps <integer>
           The number of MDPs to consider.
@@ -292,6 +319,10 @@ OPTIONS DESCRIPTION
      --save_trajectories
           If set, the created experiment will not save the complete trajectories
           of the agents tested on it (only the rewards will remain).
+
+     --seed <integer>
+          The seed to use for initializing the RNG.
+          (<= 0 or unspecified: random seed)
 
      --sigma <double>
           (VDBEEGreedyAgent parameter)

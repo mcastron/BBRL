@@ -46,12 +46,18 @@ void runExperiment(int argc, char* argv[])
 //	Main function
 // ---------------------------------------------------------------------------
 int main(int argc, char* argv[])
-{     
-     //   'DDS' package initilization
-	init();
-	
-	
+{
 	//   Parsing and execution
+	    //   0.   Get seed (if specified) in order to initialize 'DDS'.
+     bool hasSeed = parsing::hasFlag(argc, argv, "--seed");
+     if (hasSeed)
+     {
+          int seed = atoi(parsing::getValue(argc, argv, "--seed").c_str());
+          init((seed > 0) ? seed : 0);
+     }
+     else { init(); }
+
+	
 	    //   1.   Get the right mode
 	bool modeIsHelp =
 	     parsing::hasFlag(argc, argv, "--help");
@@ -72,7 +78,7 @@ int main(int argc, char* argv[])
 	    //   2.   Launch the selected mode
      try
      {
-          if (modeIsHelp)                { help();                        }
+          if      (modeIsHelp)           { help();                        }
           else if (modeIsFormulaVGen)    { formulaVGen(argc, argv);       }
           else if (modeIsOfflineLearning){ offlineLearning(argc, argv);   }
           else if (modeIsNewExperiment)  { newExperiment(argc, argv);     }

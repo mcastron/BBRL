@@ -2,9 +2,9 @@
 #ifndef UCB1_H
 #define UCB1_H
 
-#include "RandomGen.h"
-#include "utils.h"
-#include "../ExternalLibs.h"
+#include "../RandomGen.h"
+#include "../utils.h"
+#include "../../ExternalLibs.h"
 
 
 // ===========================================================================
@@ -14,10 +14,10 @@
 	
      \brief    An interface to specialize for UCB1.
 	
-	\date 	2014-12-13
+	\date 	2015-01-28
 */
 // ===========================================================================
-class utils::UCB1
+class utils::algorithm::UCB1
 {
 	public:
 		// =================================================================

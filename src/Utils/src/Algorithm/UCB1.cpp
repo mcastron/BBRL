@@ -1,8 +1,8 @@
 
 #include "UCB1.h"
 
-using namespace utils;
 using namespace std;
+using namespace utils::algorithm;
 
 
 // ===========================================================================

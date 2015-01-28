@@ -17,7 +17,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2015-01-20
+	\date		2015-01-28
 */
 // ===========================================================================
 namespace dds
@@ -44,10 +44,13 @@ namespace dds
 	//	Functions
 	// ======================================================================
 	/**
-		\brief	Perfom some initialization tasks for the 'DDS' package
-				and initializes the RNG's.
+          \brief         Perfom some initialization tasks for the 'DDS' package
+				     and initializes the RNG's.
+          
+          \param[seed    The seed to use to initialize the RNG.
+                         (0: random seed, using 'time(0)')
 	*/	
-	void init();
+	void init(unsigned int seed = 0);
 
 	
 	// ======================================================================
@@ -349,12 +352,94 @@ namespace dds
 	*/
 	namespace opps
 	{
+	     /**
+		     \brief    A StoSOO instance where evaluating the function 'f'
+		               consists to test the strategy represented by the
+		               center vector of parameters of the part of the domain
+		               represented by the node, and play it on a MDP of the
+		               given MDP distribution.
+		*/
+		class StoSOO : public utils::algorithm::StoSOO
+		{
+			public:
+			     // =======================================================
+			     //     Public Constructors.
+			     // =======================================================
+                    /**
+                         \brief               Constructor.
+
+                         \param[K             The arity of the tree to develop
+                                              (odd number).
+			          \param[k             The maximal number of evaluations
+			                               per node.
+			          \param[hMax          The maximal depth of the tree to
+			                               develop.
+			          \param[delta         The confidence parameter.
+                         \param[agentFactory_ The AgentFactory to use for
+                                              bulding the strategies.
+                         \param[mdpDistrib_   The MDP distribution from to
+                                              learn.
+                         \param[gamma_        The discount factor.
+                         \param[T_            The horizon limit.
+                    */
+				StoSOO(unsigned int K,
+                           unsigned int k, unsigned int hMax, double delta,
+				       AgentFactory* agentFactory_,
+					  const MDPDistribution* mdpDistrib_,
+					  double gamma_, unsigned int T_);
+
+
+			private:
+			     // =======================================================
+			     //     Private attributes.
+			     // =======================================================
+			     /**
+                         \brief    The AgentFactory to use for bulding the
+                                   strategies.
+			     */
+				AgentFactory* agentFactory;
+				
+				
+				/**
+				     \brief     The MDP distribution from to learn.
+				*/
+				const MDPDistribution* mdpDistrib;
+				
+				
+				/**
+				     \brief     The discount factor.
+				*/
+				double gamma;
+				
+				
+				/**
+				     \brief     The horizon limit.
+				*/
+				unsigned int T;
+				
+				
+				// =======================================================
+			     //     Private methods.
+			     // =======================================================
+				/**
+                         \brief    Represent the function to optimize.
+                                   Return a noisy evaluation of 'f' in 'x'.
+          
+                         \param[x  The point in which to evaluate 'f'.
+          
+                         \return   A noisy evaluation of 'f' in 'x'.
+          		*/
+          		double f(const std::vector<double>& x) const
+                                                       throw (std::exception);
+		};
+
+	    
           /**
                \brief    A UCB1 instance where drawing an arm consists to play
                          the associated strategy an a MDP of the given MDP
                          distribution.
           */	
-		class UCB1 : public utils::UCB1
+		class UCB1 : public utils::algorithm::UCB1
 		{
 			public:
 			     // =======================================================
@@ -425,7 +510,7 @@ namespace dds
 		               strategy space defined by this node, and play it on
 		               a MDP of the given MDP distribution.
 		*/
-		class UCT : public utils::UCT
+		class UCT : public utils::algorithm::UCT
 		{
 			public:
 			     // =======================================================

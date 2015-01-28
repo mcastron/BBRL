@@ -2,9 +2,9 @@
 #ifndef UCT_H
 #define UCT_H
 
-#include "RandomGen.h"
-#include "utils.h"
-#include "../ExternalLibs.h"
+#include "../RandomGen.h"
+#include "../utils.h"
+#include "../../ExternalLibs.h"
 
 
 // ===========================================================================
@@ -14,10 +14,10 @@
 	
 	\brief 	An interface to specialize for UCT.
 	
-	\date 	2015-01-20
+	\date 	2015-01-28
 */
 // ===========================================================================
-class utils::UCT
+class utils::algorithm::UCT
 {
 	public:
 		// =================================================================

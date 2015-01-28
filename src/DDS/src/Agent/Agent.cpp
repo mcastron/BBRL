@@ -267,16 +267,16 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
           
           if (agentClassName == OPPSCSAgent::toString())
           {
-               //   Get 'nDraws'
-               string tmp = parsing::getValue(argc, argv, "--n_draws");
-               unsigned int nDraws = atoi(tmp.c_str());
-               
-               
-               //   Get 'c'
-               tmp = parsing::getValue(argc, argv, "--c");
-               double c = atof(tmp.c_str());
-               
-               
+               //   Get 'n'
+               string tmp = parsing::getValue(argc, argv, "--n_eval");
+               unsigned int nEval = atoi(tmp.c_str());
+
+
+               //   Get 'K'
+               tmp = parsing::getValue(argc, argv, "--K");
+               unsigned int K = atoi(tmp.c_str());
+
+
                //   Get 'agentFactory'
                AgentFactory* agentFactory = AgentFactory::parse(argc, argv);
                assert(agentFactory);
@@ -292,9 +292,42 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                unsigned int T = atoi(tmp.c_str());
                
                
-               //   Return
-               return new OPPSCSAgent(nDraws, c, agentFactory, gamma, T);
+               //   Check if 'k', 'hMax' & delta are specified
+               bool hasSmallK = parsing::hasFlag(argc, argv, "--k");
+               bool hasHMax   = parsing::hasFlag(argc, argv, "--h_max");
+               bool hasDelta  = parsing::hasFlag(argc, argv, "--delta");
                
+               
+               //   Case 1:   'k', 'hMax' & 'delta' are specified
+               if (hasSmallK && hasHMax && hasDelta)
+               {
+                    tmp = parsing::getValue(argc, argv, "--k");
+                    unsigned int k = atoi(tmp.c_str());
+
+                    tmp = parsing::getValue(argc, argv, "--h_max");
+                    unsigned int hMax = atoi(tmp.c_str());
+
+                    tmp = parsing::getValue(argc, argv, "--delta");
+                    double delta = atof(tmp.c_str());
+                    
+                    return new OPPSCSAgent(nEval, K, k, hMax, delta,
+                                           agentFactory, gamma, T);
+               }
+
+
+               //  Case 2:    'k', 'hMax' & 'delta' are not specified 
+               else if (!hasSmallK && !hasHMax && !hasDelta)
+                    return new OPPSCSAgent(nEval, K, agentFactory, gamma, T);
+               
+               
+               //   Case 3:   Among 'k', 'hMax' & 'delta', at least one is
+               //             specified and one is not specified
+               else
+               {
+                    tmp = "Cannot define 'k', 'h_max' or 'delta' without ";
+                    tmp += "defining the others!\n";
+                    throw parsing::ParsingException(tmp);
+               }               
           }
      }
      
