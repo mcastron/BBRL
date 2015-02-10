@@ -4,6 +4,10 @@ TinyBRL
 
 TinyBRL is a C++ open-source library for bayesian reinforcement learning. For more information, you can visit the official [wiki](http://www.montefiore.ulg.ac.be/~mcastron/tinybrl-wiki/index.php) or our [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
 
+1.3.2
+ - Minor fix: 'FormulaAgentFactory' was printing out the tested formula.
+ - Bug fix: 'FormulaAgentFactory' was not registered with 'Serializable::checkIn(...)' (which is necessary during the deserialization of an 'OPPSCSAgent').
+
 1.3.1
  - 'TinyBRL-DDS' will stop if the output file already exists (useful not to perform the same tests several times).
  - 'TinyBRL-DDS' detects if a backup already exists when running an experiment (based on output file name) and starts from it if it exists.
