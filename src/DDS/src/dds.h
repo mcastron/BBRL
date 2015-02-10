@@ -17,7 +17,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2015-01-28
+	\date		2015-02-09
 */
 // ===========================================================================
 namespace dds

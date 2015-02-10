@@ -21,6 +21,7 @@
 #include "AgentFactory/EGreedyAgentFactory.h"
 #include "AgentFactory/SoftMaxAgentFactory.h"
 #include "AgentFactory/VDBEEGreedyAgentFactory.h"
+#include "AgentFactory/FormulaAgentFactory.h"
 
 #include "MDP/MDP.h"
 #include "MDP/CModel.h"
@@ -103,6 +104,9 @@ void dds::init(unsigned int seed)
 
 	Serializable::checkIn<VDBEEGreedyAgentFactory>(
 			&Serializable::createInstance<VDBEEGreedyAgentFactory>);
+
+	Serializable::checkIn<FormulaAgentFactory>(
+			&Serializable::createInstance<FormulaAgentFactory>);
 
 
 	//	MDP

@@ -58,8 +58,6 @@ dds::Agent* dds::FormulaAgentFactory::get(const vector<double>& paramList)
           sstr << " " << paramList[i] << " X" << i << " MUL2";
      sstr << " ADD" << paramList.size() << "\n";
      
-     cout << sstr.str() << "\n";
-     
      FormulaAgent* agent;
      try
      {
