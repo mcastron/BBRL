@@ -35,6 +35,7 @@ class AgentData
           string name, expName;
           double offlineTime;
           double onlineTime;
+          vector<double> dsrList;
           double mean;
           double gap;
 };
@@ -45,14 +46,20 @@ class AgentData
 // ---------------------------------------------------------------------------
 void help();
 void latex(int argc, char* argv[]) throw (parsing::ParsingException);
+void wdlLatex(int argc, char* argv[]) throw (parsing::ParsingException);
 void matlab(int argc, char* argv[]) throw (parsing::ParsingException);
 void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException);
 void writeLatexTable(ostream& os,
                      string expName, vector<AgentData>& agentDataList);
+void writeWDLLatexTable(ostream& os,
+                        set<string>& agentStrList,
+                        set<string>& expStrList,
+                        vector<AgentData>& agentDataList);
 void writeMatlabFunction(ostream& os, string functionName,
                          vector<AgentData>& agentDataList);
 void writeGnuplotScript(ostream& osDat, ostream& osGP,
                         vector<AgentData>& agentDataList);
+
 void splitTime(double t,
                unsigned int& days, unsigned int& hours, unsigned int& minutes,
                unsigned int& seconds, unsigned int& milliseconds);
@@ -68,20 +75,22 @@ int main(int argc, char *argv[])
      
      //   Parsing and execution
 	    //   1.   Get the right mode
-    bool modeIsHelp    = parsing::hasFlag(argc, argv, "--help");
-    bool modeIsLatex   = parsing::hasFlag(argc, argv, "--latex");
-    bool modeIsMatlab  = parsing::hasFlag(argc, argv, "--matlab");
-    bool modeIsGnuplot = parsing::hasFlag(argc, argv, "--gnuplot");
+    bool modeIsHelp     = parsing::hasFlag(argc, argv, "--help");
+    bool modeIsLatex    = parsing::hasFlag(argc, argv, "--latex");
+    bool modeIsWDLLatex = parsing::hasFlag(argc, argv, "--wdl-latex");
+    bool modeIsMatlab   = parsing::hasFlag(argc, argv, "--matlab");
+    bool modeIsGnuplot  = parsing::hasFlag(argc, argv, "--gnuplot");
 	    
 	    
 	    //   2.   Launch the selected mode
      try
 	{
-	    if      (modeIsHelp)    { help();              }
-	    else if (modeIsLatex)   { latex(argc, argv);   }
-	    else if (modeIsMatlab)  { matlab(argc, argv);  }
-	    else if (modeIsGnuplot) { gnuplot(argc, argv); }
-	    else                    { cout << "No mode selected!\n"; }
+	    if      (modeIsHelp)     { help();               }
+	    else if (modeIsLatex)    { latex(argc, argv);    }
+	    else if (modeIsWDLLatex) { wdlLatex(argc, argv); }
+	    else if (modeIsMatlab)   { matlab(argc, argv);   }
+	    else if (modeIsGnuplot)  { gnuplot(argc, argv);  }
+	    else                     { cout << "No mode selected!\n"; }
 	}
 	
 	catch (parsing::ParsingException e)
@@ -160,9 +169,9 @@ void latex(int argc, char* argv[]) throw (parsing::ParsingException)
           agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
                     / (double) exp->getNbOfMDPs());
           
-          vector<double> dsrList = exp->computeDSRList();
-			pair<double, double> CI95
-					= statistics::computeCI95<double>(dsrList);
+          agentDataList[nExp].dsrList = exp->computeDSRList();
+	     pair<double, double> CI95 = statistics::computeCI95<double>(
+                    agentDataList[nExp].dsrList);
                     
           agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
           agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
@@ -200,6 +209,93 @@ void latex(int argc, char* argv[]) throw (parsing::ParsingException)
 		
 		writeLatexTable(os, expName, tAgentDataList);
 	}
+	os.close();
+}
+
+
+void wdlLatex(int argc, char* argv[]) throw (parsing::ParsingException)
+{
+     vector<AgentData> agentDataList;
+
+     //   1.   Parse the Agents
+     set<string> agentStrList;
+     int iAgent = 0;
+     while (iAgent < (argc - 1))
+     {
+          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
+               ++iAgent;
+   
+          int argcBis = 2;
+          char** argvBis = new char*[argc];
+          argvBis[0] = argv[0];
+          argvBis[1] = argv[iAgent++];
+
+          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
+          {               
+               argvBis[argcBis] = argv[iAgent];
+               ++iAgent;
+               ++argcBis;
+          }
+          
+          Agent* agent = Agent::parse(argcBis, argvBis);
+          delete[] argvBis;
+          
+          agentStrList.insert(agent->getName());
+          
+          AgentData agentData;
+          agentData.name = agent->getName();
+          agentData.offlineTime = agent->getOfflineTime();
+          agentDataList.push_back(agentData);
+          
+          delete agent;
+     }
+     
+     
+     //   2.   Parse the Experiments
+     set<string> expStrList;
+     int iExp = 0, nExp = 0;
+     while (iExp < (argc - 1))
+     {
+          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
+               ++iExp;
+          
+          int argcBis = 2;
+          char** argvBis = new char*[argc];
+          argvBis[0] = argv[0];
+          argvBis[1] = argv[iExp++];
+          
+          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
+               argvBis[argcBis++] = argv[iExp++];
+          
+          Experiment* exp = Experiment::parse(argcBis, argvBis);         
+          delete argvBis;
+          
+          expStrList.insert(exp->getName());
+          
+          agentDataList[nExp].expName = (exp->getName());
+          agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
+                    / (double) exp->getNbOfMDPs());
+          
+          agentDataList[nExp].dsrList = exp->computeDSRList();
+	     pair<double, double> CI95 = statistics::computeCI95<double>(
+                    agentDataList[nExp].dsrList);
+                    
+          agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
+          agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
+          ++nExp;
+          
+          delete exp;
+     }
+     
+     
+     //   3.   Get 'output'
+     string output = parsing::getValue(argc, argv, "--output");
+     assert(output != "");
+     
+     
+     //   4.   Run
+	ofstream os(output.c_str());
+	writeWDLLatexTable(os, expStrList, agentStrList, agentDataList);
 	os.close();
 }
 
@@ -260,10 +356,10 @@ void matlab(int argc, char* argv[]) throw (parsing::ParsingException)
           agentDataList[nExp].expName = (exp->getName());
           agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
                     / (double) exp->getNbOfMDPs());
-          
-          vector<double> dsrList = exp->computeDSRList();
-			pair<double, double> CI95
-					= statistics::computeCI95<double>(dsrList);
+
+          agentDataList[nExp].dsrList = exp->computeDSRList();
+	     pair<double, double> CI95 = statistics::computeCI95<double>(
+                    agentDataList[nExp].dsrList);
                     
           agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
           agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
@@ -361,7 +457,7 @@ void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException)
      string outputGP  = parsing::getValue(argc, argv, "--output-gp");
      
      
-     //   4.   Run	
+     //   4.   Run
 	ofstream osDat(outputDat.c_str());
 	ofstream osGP(outputGP.c_str());
 	
@@ -426,6 +522,104 @@ void writeLatexTable(ostream& os,
 	}
 	os << "\t\\end{tabular}\n";
 	os << "\t\\caption{" << expName << "}\n";
+	os << "\\end{table}\n\n";
+}
+
+
+void writeWDLLatexTable(ostream& os,
+                        set<string>& agentStrList,
+                        set<string>& expStrList,
+                        vector<AgentData>& agentDataList)
+{
+     os << "\n";
+     os << "\\begin{table}\n";
+	os << "\t\\centering\n";
+	os << "\t\\begin{tabular}{l|c|c|c}\n";
+	os << "\t\t";
+	
+	set<string>::iterator itI  = agentStrList.begin();
+     set<string>::iterator endI = agentStrList.end();
+	for (; itI != endI; ++itI)
+	{
+          os << " & ";
+          os << *itI;
+	}
+	os << "\\\\\n";
+	os << "\t\t\\hline\n";
+     
+     
+     itI  = agentStrList.begin();
+     endI = agentStrList.end();
+     for (; itI != endI; ++itI)
+     {
+          os << "\t\t" << *itI;
+
+          set<string>::iterator itJ  = agentStrList.begin();
+          set<string>::iterator endJ = agentStrList.end();
+          for (; itJ != endJ; ++itJ)
+          {
+               os << "& ";
+               if (itI == itJ) { continue; }
+               
+               unsigned int winCount = 0, lossCount = 0, drawCount = 0;
+               set<string>::iterator itK  = expStrList.begin();
+               set<string>::iterator endK = expStrList.end();
+               for (; itK != endK; ++itK)
+               {
+                    //   Retrieve the experiment file for agent 'i'
+                    unsigned int m;
+                    for (m = 0; m < agentDataList.size(); ++m)
+                    {
+                         if ((agentDataList[m].name == *itI)
+                                   && (agentDataList[m].name == *itK))
+                         {
+                              break;
+                         }
+                    }
+
+
+                    //   Retrieve the experiment file for agent 'j'
+                    unsigned int n;
+                    for (n = 0; n < agentDataList.size(); ++n)
+                    {
+                         if ((agentDataList[n].name == *itJ)
+                                   && (agentDataList[n].name == *itK))
+                         {
+                              break;
+                         }
+                    }
+                    
+                    
+                    //   Retrieve the two series for statistical comparison
+                    vector<double>& x = agentDataList[m].dsrList;
+                    vector<double>& y = agentDataList[n].dsrList;
+                    
+                    
+                    //   Compute the statistical value 'Z' ('paired Z-test')
+                    double z = utils::statistics::computePairedZ<double>(x, y);
+                    
+                    
+                    //   Determine if agent 'i' wins/loses (or if it is a draw)
+                    if (z < utils::statistics::getBilateralPairedZThreshold95())
+                         ++drawCount;
+
+                    else if (agentDataList[m].mean > agentDataList[n].mean)
+                         ++winCount;
+
+                    else if (agentDataList[m].mean < agentDataList[n].mean)
+                         ++lossCount;
+
+                    else { ++drawCount; }
+               }
+               
+               os << winCount << "/" << drawCount << "/" << lossCount;
+          }
+          os << "\\\\\n";
+     }
+     
+     
+     os << "\t\\end{tabular}\n";
+	os << "\t\\caption{Win-Draw-Loss table}\n";
 	os << "\\end{table}\n\n";
 }
 

@@ -67,8 +67,7 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 	if (nbThreads == 1)
 	{
 	     //	Perform the simulations
-	     chrono.restart(true);
-	     
+	     chrono.restart();
 	     while (nextMDP < mdpList.size())
 	     {
 			for (unsigned int i = 0; i < nbSimPerMDP; ++i)

@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a RL Experiment.
 			
-	\date 	2015-01-14
+	\date 	2015-02-22
 */
 // ===========================================================================
 template<typename AgentType, typename MDPType, typename SimulationRecordType>

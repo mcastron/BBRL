@@ -121,6 +121,12 @@ std::vector<double> utils::statistics::sampleDirichlet(
 }
 
 
+double utils::statistics::getBilateralPairedZThreshold95()  { return 1.96;  }
+
+
+double utils::statistics::getUnilateralPairedZThreshold95() { return 1.645; }
+
+
 // ---------------------------------------------------------------------------
 //	'compression' namespace
 // ---------------------------------------------------------------------------

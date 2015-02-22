@@ -12,7 +12,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2015-01-28
+	\date		2015-02-11
 */
 // ===========================================================================
 namespace utils
@@ -287,6 +287,40 @@ namespace utils
 		
 		std::vector<double> sampleDirichlet(
                     const std::vector<double>& theta);
+
+
+          /**
+               \brief    Compute a statistical value 'Z' to perform the
+                         'paired Z-test'.
+
+               \param[x  A series of data.
+               \param[y  A series of data.
+               
+               \return   The value of 'Z'.
+          */
+          template<typename T>
+          double computePairedZ(const std::vector<T>& x,
+                                const std::vector<T>& y);
+          
+          
+          /**
+               \brief    Return the threshold value of 'Z' in the
+                         'bilateral paired Z-test' with 95% confidence.
+
+               \return   The threshold value of 'Z' in the 'bilateral paired
+                         Z-test' with 95% confidence.
+          */
+          double getBilateralPairedZThreshold95();
+
+
+          /**
+               \brief    Return the threshold value of 'Z' in the
+                         'unilateral paired Z-test' with 95% confidence.
+
+               \return   The threshold value of 'Z' in the 'unilateral paired
+                         Z-test' with 95% confidence.
+          */
+          double getUnilateralPairedZThreshold95();
 	}
 	
 	

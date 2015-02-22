@@ -189,7 +189,7 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
 
 
                //   Get 'delta'
-               tmp = parsing::getValue(argc, argv, "--C");
+               tmp = parsing::getValue(argc, argv, "--delta");
                double delta = atof(tmp.c_str());
 
 

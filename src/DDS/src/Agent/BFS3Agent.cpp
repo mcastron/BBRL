@@ -266,7 +266,7 @@ void BFS3Agent::deserialize(istream& is) throw (SerializableException)
      
      
      //   'BFS3', 'simulator' and 'samplerFact'
-     if (bfs3)        { delete bfs3;       bfs3         = 0; }
+     if (bfs3)        { delete bfs3;        bfs3        = 0; }
      if (simulator)   { delete simulator;   simulator   = 0; }
      if (samplerFact) { delete samplerFact; samplerFact = 0; }
      

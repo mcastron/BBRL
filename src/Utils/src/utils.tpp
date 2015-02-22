@@ -62,6 +62,41 @@ std::pair<double, double> utils::statistics::computeCI99(
 }
 
 
+template<typename T>
+double utils::statistics::computePairedZ
+          (const std::vector<T>& x, const std::vector<T>& y)
+{
+     //   Check errors
+     unsigned int n = x.size();
+     assert((y.size() == n) && (n >= 30));
+     
+     
+     //   Compute 'sumD' and 'sumD2'
+     T sumD = 0, sumD2 = 0;
+     for (unsigned int i = 0; i < n; ++i)
+     {
+          sumD  += (x[i] - y[i]);
+          sumD2 += ((x[i] - y[i]) * (x[i] - y[i]));
+     }
+     
+     
+     //   Compute 'md'
+     double md = (sumD / (double) n);
+     
+     
+     //   Compute 's2d'
+     double s2d = ((sumD2 - ((sumD * sumD) / (double) n)) / (double) (n - 1));
+     
+     
+     //   Compute 'smd'
+     double smd = sqrt(s2d / (double) n);
+     
+     
+     //   Comute and return 'z'
+     return (fabs(md) / smd);
+}
+
+
 // ---------------------------------------------------------------------------
 //	'search' namespace
 // ---------------------------------------------------------------------------
