@@ -444,8 +444,8 @@ void IExperiment<AgentType, MDPType, SimulationRecordType>::
 	assert(nbSimPerMDP > 0);
 	assert(timeElapsed >= 0.0);
 	
-	assert(saveTraj  && simRecList.size() == mdpList.size()*nbSimPerMDP);
-	assert(!saveTraj && rList.size()      == mdpList.size()*nbSimPerMDP);
+	assert(( saveTraj && simRecList.size() == mdpList.size()*nbSimPerMDP)
+	    || (!saveTraj && rList.size()      == mdpList.size()*nbSimPerMDP));
 }
 #endif
 

@@ -22,7 +22,7 @@
 	          'init()' must be called after this AgentFactory has been
 	          deserialized.
 
-	\date 	2015-01-20
+	\date 	2015-02-23
 */
 // ===========================================================================
 /* final */ class dds::FormulaAgentFactory : public dds::AgentFactory

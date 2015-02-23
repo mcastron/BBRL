@@ -23,7 +23,7 @@ using namespace utils;
 	
 	\author	Castronovo Michael
 
-	\date	2014-12-15
+	\date	2015-02-23
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -32,7 +32,9 @@ using namespace utils;
 class AgentData
 {
      public:
-          string name, expName;
+          AgentData() : dsrList(vector<double>()) {}
+     
+          string className, name, expName;
           double offlineTime;
           double onlineTime;
           vector<double> dsrList;
@@ -49,11 +51,11 @@ void latex(int argc, char* argv[]) throw (parsing::ParsingException);
 void wdlLatex(int argc, char* argv[]) throw (parsing::ParsingException);
 void matlab(int argc, char* argv[]) throw (parsing::ParsingException);
 void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException);
+
+vector<AgentData> getAgentDataList(int argc, char* argv[]);
 void writeLatexTable(ostream& os,
                      string expName, vector<AgentData>& agentDataList);
 void writeWDLLatexTable(ostream& os,
-                        set<string>& agentStrList,
-                        set<string>& expStrList,
                         vector<AgentData>& agentDataList);
 void writeMatlabFunction(ostream& os, string functionName,
                          vector<AgentData>& agentDataList);
@@ -63,6 +65,7 @@ void writeGnuplotScript(ostream& osDat, ostream& osGP,
 void splitTime(double t,
                unsigned int& days, unsigned int& hours, unsigned int& minutes,
                unsigned int& seconds, unsigned int& milliseconds);
+
 
 // ---------------------------------------------------------------------------
 //	Main function
@@ -114,79 +117,16 @@ void help()
 
 void latex(int argc, char* argv[]) throw (parsing::ParsingException)
 {
-     vector<AgentData> agentDataList;
-
-     //   1.   Parse the Agents
-     int iAgent = 0;
-     while (iAgent < (argc - 1))
-     {
-          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
-               ++iAgent;
-   
-          int argcBis = 2;
-          char** argvBis = new char*[argc];
-          argvBis[0] = argv[0];
-          argvBis[1] = argv[iAgent++];
-
-          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
-          {               
-               argvBis[argcBis] = argv[iAgent];
-               ++iAgent;
-               ++argcBis;
-          }
-          
-          Agent* agent = Agent::parse(argcBis, argvBis);
-          delete[] argvBis;
-          
-          AgentData agentData;
-          agentData.name = agent->getName();
-          agentData.offlineTime = agent->getOfflineTime();
-          agentDataList.push_back(agentData);
-          
-          delete agent;
-     }
+     //   1.   Retrieve the 'AgentData's
+     vector<AgentData> agentDataList = getAgentDataList(argc, argv);
      
      
-     //   2.   Parse the Experiments
-     int iExp = 0, nExp = 0;
-     while (iExp < (argc - 1))
-     {
-          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
-               ++iExp;
-          
-          int argcBis = 2;
-          char** argvBis = new char*[argc];
-          argvBis[0] = argv[0];
-          argvBis[1] = argv[iExp++];
-          
-          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
-               argvBis[argcBis++] = argv[iExp++];
-          
-          Experiment* exp = Experiment::parse(argcBis, argvBis);         
-          delete argvBis;
-          
-          agentDataList[nExp].expName = (exp->getName());
-          agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
-                    / (double) exp->getNbOfMDPs());
-          
-          agentDataList[nExp].dsrList = exp->computeDSRList();
-	     pair<double, double> CI95 = statistics::computeCI95<double>(
-                    agentDataList[nExp].dsrList);
-                    
-          agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
-          agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
-          ++nExp;
-          
-          delete exp;
-     }
-     
-     
-     //   3.   Get 'output'
+     //   2.   Get 'output'
      string output = parsing::getValue(argc, argv, "--output");
      assert(output != "");
      
      
-     //   4.   Run
+     //   3.   Run
 	ofstream os(output.c_str());
 	while (!agentDataList.empty())
 	{
@@ -215,165 +155,33 @@ void latex(int argc, char* argv[]) throw (parsing::ParsingException)
 
 void wdlLatex(int argc, char* argv[]) throw (parsing::ParsingException)
 {
-     vector<AgentData> agentDataList;
-
-     //   1.   Parse the Agents
-     set<string> agentStrList;
-     int iAgent = 0;
-     while (iAgent < (argc - 1))
-     {
-          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
-               ++iAgent;
-   
-          int argcBis = 2;
-          char** argvBis = new char*[argc];
-          argvBis[0] = argv[0];
-          argvBis[1] = argv[iAgent++];
-
-          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
-          {               
-               argvBis[argcBis] = argv[iAgent];
-               ++iAgent;
-               ++argcBis;
-          }
-          
-          Agent* agent = Agent::parse(argcBis, argvBis);
-          delete[] argvBis;
-          
-          agentStrList.insert(agent->getName());
-          
-          AgentData agentData;
-          agentData.name = agent->getName();
-          agentData.offlineTime = agent->getOfflineTime();
-          agentDataList.push_back(agentData);
-          
-          delete agent;
-     }
+     //   1.   Retrieve the 'AgentData's
+     vector<AgentData> agentDataList = getAgentDataList(argc, argv);
      
      
-     //   2.   Parse the Experiments
-     set<string> expStrList;
-     int iExp = 0, nExp = 0;
-     while (iExp < (argc - 1))
-     {
-          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
-               ++iExp;
-          
-          int argcBis = 2;
-          char** argvBis = new char*[argc];
-          argvBis[0] = argv[0];
-          argvBis[1] = argv[iExp++];
-          
-          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
-               argvBis[argcBis++] = argv[iExp++];
-          
-          Experiment* exp = Experiment::parse(argcBis, argvBis);         
-          delete argvBis;
-          
-          expStrList.insert(exp->getName());
-          
-          agentDataList[nExp].expName = (exp->getName());
-          agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
-                    / (double) exp->getNbOfMDPs());
-          
-          agentDataList[nExp].dsrList = exp->computeDSRList();
-	     pair<double, double> CI95 = statistics::computeCI95<double>(
-                    agentDataList[nExp].dsrList);
-                    
-          agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
-          agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
-          ++nExp;
-          
-          delete exp;
-     }
-     
-     
-     //   3.   Get 'output'
+     //   2.   Get 'output'
      string output = parsing::getValue(argc, argv, "--output");
      assert(output != "");
      
      
-     //   4.   Run
+     //   3.   Run
 	ofstream os(output.c_str());
-	writeWDLLatexTable(os, agentStrList, expStrList, agentDataList);
+	writeWDLLatexTable(os, agentDataList);
 	os.close();
 }
 
 
 void matlab(int argc, char* argv[]) throw (parsing::ParsingException)
 {
-     vector<AgentData> agentDataList;
-
-     //   1.   Parse the Agents
-     int iAgent = 0;
-     while (iAgent < (argc - 1))
-     {
-          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
-               ++iAgent;
-   
-          int argcBis = 2;
-          char** argvBis = new char*[argc];
-          argvBis[0] = argv[0];
-          argvBis[1] = argv[iAgent++];
-
-          while ((string(argv[iAgent]) != "--agent") && (iAgent < (argc - 1)))
-          {               
-               argvBis[argcBis] = argv[iAgent];
-               ++iAgent;
-               ++argcBis;
-          }
-          
-          Agent* agent = Agent::parse(argcBis, argvBis);
-          delete[] argvBis;
-          
-          AgentData agentData;
-          agentData.name = agent->getName();
-          agentData.offlineTime = agent->getOfflineTime();
-          agentDataList.push_back(agentData);
-          
-          delete agent;
-     }
+     //   1.   Retrieve the 'AgentData's
+     vector<AgentData> agentDataList = getAgentDataList(argc, argv);
      
      
-     //   2.   Parse the Experiments
-     int iExp = 0, nExp = 0;
-     while (iExp < (argc - 1))
-     {
-          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
-               ++iExp;
-          
-          int argcBis = 2;
-          char** argvBis = new char*[argc];
-          argvBis[0] = argv[0];
-          argvBis[1] = argv[iExp++];
-          
-          while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
-               argvBis[argcBis++] = argv[iExp++];
-          
-          Experiment* exp = Experiment::parse(argcBis, argvBis);         
-          delete argvBis;
-          
-          agentDataList[nExp].expName = (exp->getName());
-          agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
-                    / (double) exp->getNbOfMDPs());
-
-          agentDataList[nExp].dsrList = exp->computeDSRList();
-	     pair<double, double> CI95 = statistics::computeCI95<double>(
-                    agentDataList[nExp].dsrList);
-                    
-          agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
-          agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
-          ++nExp;
-          
-          delete exp;
-     }
-     
-     
-     //   3.   Get 'output'
+     //   2.   Get 'output'
      string output = parsing::getValue(argc, argv, "--output");
      
      
-     //   4.   Run
+     //   3.   Run
      string tmp = output.substr(output.find_last_of('/') + 1);
 	string functionName = tmp.substr(0, tmp.find_last_of('.'));	
 	
@@ -385,6 +193,28 @@ void matlab(int argc, char* argv[]) throw (parsing::ParsingException)
 
 void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException)
 {
+     //   1.   Retrieve the 'AgentData's
+     vector<AgentData> agentDataList = getAgentDataList(argc, argv);
+     
+     
+     //   2.   Get 'output'
+     string outputDat = parsing::getValue(argc, argv, "--output-dat");
+     string outputGP  = parsing::getValue(argc, argv, "--output-gp");
+     
+     
+     //   3.   Run
+	ofstream osDat(outputDat.c_str());
+	ofstream osGP(outputGP.c_str());
+	
+     writeGnuplotScript(osDat, osGP, agentDataList);
+     
+	osDat.close();
+	osGP.close();
+}
+
+
+vector<AgentData> getAgentDataList(int argc, char* argv[])
+{
      vector<AgentData> agentDataList;
 
      //   1.   Parse the Agents
@@ -410,6 +240,7 @@ void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException)
           delete[] argvBis;
           
           AgentData agentData;
+          agentData.className = agent->getClassName();
           agentData.name = agent->getName();
           agentData.offlineTime = agent->getOfflineTime();
           agentDataList.push_back(agentData);
@@ -421,7 +252,7 @@ void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException)
      //   2.   Parse the Experiments
      int iExp = 0, nExp = 0;
      while (iExp < (argc - 1))
-     {
+     {          
           while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
                ++iExp;
           
@@ -432,17 +263,17 @@ void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException)
           
           while ((string(argv[iExp]) != "--experiment") && (iExp < (argc - 1)))
                argvBis[argcBis++] = argv[iExp++];
-          
+
           Experiment* exp = Experiment::parse(argcBis, argvBis);         
-          delete argvBis;
+          delete[] argvBis;
           
           agentDataList[nExp].expName = (exp->getName());
           agentDataList[nExp].onlineTime = (exp->getTimeElapsed()
                     / (double) exp->getNbOfMDPs());
           
-          vector<double> dsrList = exp->computeDSRList();
-			pair<double, double> CI95
-					= statistics::computeCI95<double>(dsrList);
+          agentDataList[nExp].dsrList = exp->computeDSRList();
+		pair<double, double> CI95 =
+		        statistics::computeCI95<double>(agentDataList[nExp].dsrList);
                     
           agentDataList[nExp].mean = ((CI95.first + CI95.second) / 2.0);;
           agentDataList[nExp].gap = (CI95.second - agentDataList[nExp].mean);
@@ -452,19 +283,8 @@ void gnuplot(int argc, char* argv[]) throw (parsing::ParsingException)
      }
      
      
-     //   3.   Get 'output'
-     string outputDat = parsing::getValue(argc, argv, "--output-dat");
-     string outputGP  = parsing::getValue(argc, argv, "--output-gp");
-     
-     
-     //   4.   Run
-	ofstream osDat(outputDat.c_str());
-	ofstream osGP(outputGP.c_str());
-	
-     writeGnuplotScript(osDat, osGP, agentDataList);
-     
-	osDat.close();
-	osGP.close();
+     //   3.   Return
+     return agentDataList;
 }
 
 
@@ -526,21 +346,58 @@ void writeLatexTable(ostream& os,
 }
 
 
-void writeWDLLatexTable(ostream& os,
-                        set<string>& agentStrList,
-                        set<string>& expStrList,
-                        vector<AgentData>& agentDataList)
+void writeWDLLatexTable(ostream& os, vector<AgentData>& agentDataList)
 {
+     //   Build the list of agent class names
+     vector<string> agentClassStrList;
+     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+     {
+          bool found = false;
+          for (unsigned int j = 0; j < agentClassStrList.size(); ++j)
+          {
+               if (agentDataList[i].className == agentClassStrList[j])
+               {
+                    found = true;
+                    break;
+               }
+          }
+          
+          if (!found)
+               agentClassStrList.push_back(agentDataList[i].className);
+     }
+
+
+     //   Build the list of experiment names
+     vector<string> expStrList;
+     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+     {
+          bool found = false;
+          for (unsigned int j = 0; j < expStrList.size(); ++j)
+          {
+               if (agentDataList[i].expName == expStrList[j])
+               {
+                    found = true;
+                    break;
+               }
+          }
+          
+          if (!found)
+               expStrList.push_back(agentDataList[i].expName);
+     }
+     
+     
+     
      os << "\n";
      os << "\\begin{table}\n";
 	os << "\t\\centering\n";
 	os << "\t\\begin{tabular}{c";
-	for (unsigned int i = 0; i < agentStrList.size(); ++i) { os << "|c"; }
+	for (unsigned int i = 0; i < agentClassStrList.size(); ++i) { os << "|c"; }
 	os << "}\n";
 	os << "\t\t";
 	
-	set<string>::iterator itI  = agentStrList.begin();
-     set<string>::iterator endI = agentStrList.end();
+	vector<string>::iterator itI, endI;
+	itI  = agentClassStrList.begin();
+     endI = agentClassStrList.end();
 	for (; itI != endI; ++itI)
 	{
           os << " & ";
@@ -550,46 +407,67 @@ void writeWDLLatexTable(ostream& os,
 	os << "\t\t\\hline\n";
      
      
-     itI  = agentStrList.begin();
-     endI = agentStrList.end();
+     itI  = agentClassStrList.begin();
+     endI = agentClassStrList.end();
      for (; itI != endI; ++itI)
      {
           os << "\t\t" << *itI;
 
-          set<string>::iterator itJ  = agentStrList.begin();
-          set<string>::iterator endJ = agentStrList.end();
+          vector<string>::iterator itJ;
+          vector<string>::iterator endJ;
+          itJ  = agentClassStrList.begin();
+          endJ = agentClassStrList.end();
           for (; itJ != endJ; ++itJ)
           {
                os << "& ";
-               if (itI == itJ) { continue; }
+               if (*itI == *itJ) { os << "-/-/-"; continue; }
                
                unsigned int winCount = 0, lossCount = 0, drawCount = 0;
-               set<string>::iterator itK  = expStrList.begin();
-               set<string>::iterator endK = expStrList.end();
+               vector<string>::iterator itK, endK;
+               itK  = expStrList.begin();
+               endK = expStrList.end();
                for (; itK != endK; ++itK)
                {
-                    //   Retrieve the experiment file for agent 'i'
-                    unsigned int m;
-                    for (m = 0; m < agentDataList.size(); ++m)
-                    {
-                         if ((agentDataList[m].name == *itI)
-                                   && (agentDataList[m].name == *itK))
+                    double maxMean;
+                    
+                    //   Retrieve the experiment file of agent of class 'i'
+                    //   which obtained the best average score on this
+                    //   experiment
+                    int m = -1;
+                    maxMean= 0.0;
+                    for (unsigned int i = 0; i < agentDataList.size(); ++i)
+                    {                         
+                         if ((agentDataList[i].className == *itI)
+                                   && (agentDataList[i].expName == *itK))
                          {
-                              break;
+                              if ((m == -1) || (maxMean < agentDataList[i].mean))
+                              {
+                                   m = i;
+                                   maxMean = agentDataList[i].mean;
+                              }
                          }
                     }
+                    assert((m >= 0) && (m < (int) agentDataList.size()));
 
 
-                    //   Retrieve the experiment file for agent 'j'
-                    unsigned int n;
-                    for (n = 0; n < agentDataList.size(); ++n)
+                    //   Retrieve the experiment file of agent of class 'j'
+                    //   which obtained the best average score on this
+                    //   experiment
+                    int n = -1;
+                    maxMean = 0.0;
+                    for (unsigned int i = 0; i < agentDataList.size(); ++i)
                     {
-                         if ((agentDataList[n].name == *itJ)
-                                   && (agentDataList[n].name == *itK))
+                         if ((agentDataList[i].className == *itJ)
+                                   && (agentDataList[i].expName == *itK))
                          {
-                              break;
+                              if ((n == -1) || (maxMean < agentDataList[i].mean))
+                              {
+                                   n = i;
+                                   maxMean = agentDataList[i].mean;
+                              }
                          }
                     }
+                    assert((n >= 0) && (n < (int) agentDataList.size()));
                     
                     
                     //   Retrieve the two series for statistical comparison
@@ -711,29 +589,66 @@ void writeMatlabFunction(ostream& os, string functionName,
 void writeGnuplotScript(ostream& osDat, ostream& osGP,
                          vector<AgentData>& agentDataList)
 {
-	set<string> expNameList, agentNameList;
-	for (unsigned int i = 0; i < agentDataList.size(); ++i)
-	{
-	    expNameList.insert(agentDataList[i].expName);
-	    agentNameList.insert(agentDataList[i].name);
-	}
+     //   Build the list of agent names
+     vector<string> agentStrList;
+     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+     {
+          bool found = false;
+          for (unsigned int j = 0; j < agentStrList.size(); ++j)
+          {
+               if (agentDataList[i].name == agentStrList[j])
+               {
+                    found = true;
+                    break;
+               }
+          }
+          
+          if (!found)
+               agentStrList.push_back(agentDataList[i].name);
+     }
+
+
+     //   Build the list of experiment names
+     vector<string> expStrList;
+     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+     {
+          bool found = false;
+          for (unsigned int j = 0; j < expStrList.size(); ++j)
+          {
+               if (agentDataList[i].expName == expStrList[j])
+               {
+                    found = true;
+                    break;
+               }
+          }
+          
+          if (!found)
+               expStrList.push_back(agentDataList[i].expName);
+     }
 	
 	
 	//  Data file
 	osDat << "Experiments";
-	set<string>::iterator itA  = agentNameList.begin();
-	set<string>::iterator endA = agentNameList.end();
-	for (; itA != endA; ++itA) { osDat << "\t\"" << *itA << "\""; }
+	vector<string>::iterator itA, endA;
+	itA  = agentStrList.begin();
+	endA = agentStrList.end();
+	for (; itA != endA; ++itA)
+	{
+	    osDat << "\t\"" << *itA << "\"";
+	    osDat << "\t\"" << *itA << "\"";
+	    osDat << "\t\"" << *itA << "\"";
+     }
 	osDat << "\n";
 	
-	set<string>::iterator itE  = expNameList.begin();
-	set<string>::iterator endE = expNameList.end();
+	vector<string>::iterator itE, endE;
+	itE  = expStrList.begin();
+	endE = expStrList.end();
 	for (; itE != endE; ++itE)
 	{
 	    osDat << "\"" << *itE << "\"";
 	    
-	    itA  = agentNameList.begin();
-	    endA = agentNameList.end();
+	    itA  = agentStrList.begin();
+	    endA = agentStrList.end();
 	    for (; itA != endA; ++itA)
 	         for (unsigned int i = 0; i < agentDataList.size(); ++i)
 	         {
@@ -743,6 +658,15 @@ void writeGnuplotScript(ostream& osDat, ostream& osGP,
 	              if ((name == *itA) && (expName == *itE))
 	              {
 	                   osDat << "\t" << agentDataList[i].mean;
+	                   
+	                   //
+	                   double diff = (agentDataList[i].gap / 2.0);
+	                   double minV, maxV;
+	                   minV = (agentDataList[i].mean - diff);
+	                   maxV = (agentDataList[i].mean + diff);
+	                   
+	                   osDat << "\t" << minV << "\t" << maxV;
+	                   //
 	                   break;
 	              }
 	         }
@@ -755,26 +679,41 @@ void writeGnuplotScript(ostream& osDat, ostream& osGP,
 	osGP << "enhanced solid color font 'Helvetica,10'\n";
      osGP << "set output output\n";
      osGP << "set yrange [0:*]\n";
-     osGP << "set xlabel \"Experiments\"\n";
+     
+     if (expStrList.size() > 1) { osGP << "set xlabel \"Experiments\"\n"; }
+     else                       { osGP << "set xlabel \"\"\n";            }
+     
      osGP << "set ylabel \"Score\"\n";
      osGP << "\n";
      osGP << "set xtics border nomirror\n";
      osGP << "set ytics border nomirror\n";
      osGP << "\n";
-     osGP << "set style fill pattern\n";
+     osGP << "set palette defined (0 0.9 0.9 1, 35 0.3 0.3 1, 50 0.6 ";
+     osGP << "0.15 0.4, 70 'red', 100 'yellow')\n";
+     osGP << "unset colorbox\n";
+     osGP << "\n";
+     
+     osGP << "set style fill solid 0.3\n";
+     osGP << "set bars front\n";
      osGP << "set style data histogram\n";
-     osGP << "set style histogram clustered gap 1.5\n";
+     osGP << "set style histogram errorbars gap 1.5\n";
+
      osGP << "set style fill solid 1.25 border -1\n";
      osGP << "set boxwidth 0.9 relative\n";
      osGP << "set key outside\n";
      osGP << "\n";
      osGP << "\n";
      osGP << "plot ";
-     for (unsigned int i = 1; i <= agentNameList.size(); ++i)
+     for (unsigned int i = 1; i <= agentStrList.size(); ++i)
      {
           if (i != 1) { osGP << ", \\\n\t"; }
-          osGP << "input u " << (i + 1) << ":xtic(1) ";
-          osGP << "title columnheader fs solid";
+          osGP << "input u " << (3*i)-1 << ":" << (3*i) << ":" << (3*i)+1;
+          osGP << ":xtic(1) ";
+          
+          
+          osGP << "title columnheader fs solid ";
+          osGP << "lt palette frac ";
+          osGP << ((i - 1) / (double) (agentStrList.size() - 1));
      }
      osGP << "\n";
 }

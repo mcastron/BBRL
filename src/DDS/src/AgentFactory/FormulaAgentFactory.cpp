@@ -22,7 +22,7 @@ dds::FormulaAgentFactory::FormulaAgentFactory(
                minW(minW_), maxW(maxW_), accW(accW_),
                varNameList(varNameList_), mdpDistrib(0)
 {
-	assert((minW < maxW) && (acc > 0.0) && !varNameList.empty());
+	assert((minW < maxW) && (accW > 0.0) && !varNameList.empty());
 }
 
 
@@ -142,7 +142,7 @@ void dds::FormulaAgentFactory::deserialize(istream& is)
 	if (!getline(is, tmp)) { throwEOFMsg("varNameList"); }
 	unsigned int varNameListSize = atoi(tmp.c_str());
 	
-	for (unsigned int i = 0; i < varNameList.size(); ++i)
+	for (unsigned int i = 0; i < varNameListSize; ++i)
 	{
 	    if (!getline(is, tmp)) { throwEOFMsg("varNameList"); }
 	    varNameList.push_back(tmp);
