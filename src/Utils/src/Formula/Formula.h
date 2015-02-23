@@ -20,7 +20,7 @@
 	          e.g.:    '1 2 ln +'               ==> (1 + ln(2))
 	                   '3 5 * 2 / 6 sqrt -'     ==> ((3 * 5) / 2) - sqrt(6)
 
-	\date 	2014-12-13
+	\date 	2014-02-22
 */
 // ===========================================================================
 /* final */ class utils::formula::Formula
@@ -122,9 +122,18 @@
                \brief    Return a string representing this Formula in RPN
                          notation.
                
-               \return   A string representing this FOrmula in RPN notation .
+               \return   A string representing this Formula in RPN notation .
           */
           std::string getRPNStr() const;
+
+
+          /**
+               \brief    Return the string representing this Formula
+                         (meant for export, cannot be used to build a formula).
+
+               \return   The string representing this Formula.
+          */
+          std::string getStr() const;
           
           
           /**

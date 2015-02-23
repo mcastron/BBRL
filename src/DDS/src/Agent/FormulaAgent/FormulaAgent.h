@@ -29,7 +29,7 @@
 		     are computed through Q-iteration on specific models
 		     (updated during the interaction).
 
-	\date 	2015-01-20
+	\date 	2015-02-22
 */
 // ===========================================================================
 /* final */ class dds::FormulaAgent : public dds::Agent

@@ -27,7 +27,7 @@
 			For Offline learning, does not support another distribution
 			than 'DirMultiDistribution'.
 
-	\date 	2015-01-28
+	\date 	2015-02-22
 */
 // ===========================================================================
 /* final */ class dds::OPPSCSAgent : public dds::Agent

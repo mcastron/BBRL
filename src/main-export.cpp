@@ -295,7 +295,7 @@ void wdlLatex(int argc, char* argv[]) throw (parsing::ParsingException)
      
      //   4.   Run
 	ofstream os(output.c_str());
-	writeWDLLatexTable(os, expStrList, agentStrList, agentDataList);
+	writeWDLLatexTable(os, agentStrList, expStrList, agentDataList);
 	os.close();
 }
 
@@ -534,7 +534,9 @@ void writeWDLLatexTable(ostream& os,
      os << "\n";
      os << "\\begin{table}\n";
 	os << "\t\\centering\n";
-	os << "\t\\begin{tabular}{l|c|c|c}\n";
+	os << "\t\\begin{tabular}{c";
+	for (unsigned int i = 0; i < agentStrList.size(); ++i) { os << "|c"; }
+	os << "}\n";
 	os << "\t\t";
 	
 	set<string>::iterator itI  = agentStrList.begin();

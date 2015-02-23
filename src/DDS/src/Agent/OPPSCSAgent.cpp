@@ -306,7 +306,7 @@ void OPPSCSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
      
      stringstream sstr;
 	sstr << "OPPS-CS (" << agent->getName() << ", ";
-	sstr << sstr << mdpDistrib->getShortName() << ")";
+	sstr << mdpDistrib->getShortName() << ")";
 	setName(sstr.str());
 	
 	

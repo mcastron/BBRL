@@ -23,7 +23,7 @@ FormulaAgent::FormulaAgent(Formula* f_, const vector<string>& varNameList_) :
      assert(f_);
      
      
-     setName("Formula agent(" + f->getRPNStr() + ")");     
+     setName("Formula agent(" + f->getStr() + ")");     
 
 
      //	Check integrity
