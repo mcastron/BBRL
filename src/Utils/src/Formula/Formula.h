@@ -3,6 +3,7 @@
 #define FORMULA_H
 
 #include "Token.h"
+#include "Constant.h"
 #include "Variable.h"
 #include "FormulaException.h"
 #include "../utils.h"

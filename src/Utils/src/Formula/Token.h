@@ -1,7 +1,7 @@
 
 #ifndef TOKEN_H
 #define TOKEN_H
-
+#include <iostream>
 #include "TokenException.h"
 #include "../utils.h"
 #include "../../ExternalLibs.h"

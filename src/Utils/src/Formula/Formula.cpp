@@ -205,10 +205,11 @@ std::string Formula::getStr() const
      str += tokenList[0]->getSymbol();
      for (unsigned int i = 1; i < tokenList.size(); ++i)
      {
-          if (tokenList[i]->getArity() == 0)
+          Constant* cst = dynamic_cast<Constant*>(tokenList[i]);
+          if (cst != NULL)
           {
                std::vector<double> operands;
-               double value = (*tokenList[i])(operands);
+               double value = (*cst)(operands);
                
                std::stringstream sstr;
                sstr << " " << (round(value * 100.0) / 100.0);
