@@ -154,6 +154,20 @@ class dds::Agent : public IAgent
 		{
 			return Agent::toString();
 		}
+		
+		
+          /**
+               \brief    Return the name of the class of this object, formatted
+                         for output files.
+                         This method should be overloaded by any derived class.
+
+               \return   The name of the class of this object, formatted for
+                         output files.
+          */
+		virtual std::string getFormattedClassName() const
+		{
+               return "Agent";
+		}
 
 		
 		/**

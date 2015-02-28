@@ -14,7 +14,7 @@
 	
 	\brief 	Defines a Token, an element composing a Formula.
 
-	\date 	2014-12-13
+	\date 	2015-02-26
 */
 // ===========================================================================
 class utils::formula::Token

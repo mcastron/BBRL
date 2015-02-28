@@ -21,8 +21,8 @@ BFS3Agent::BFS3Agent(unsigned int K_, unsigned int C_, unsigned int D_) :
           K(K_), C(C_), D(D_), bfs3(0), simulator(0), samplerFact(0)
 {
      stringstream sstr;
-	sstr << "BFS3 (" << K << ", " << C;
-	if (D > 0) { sstr << ", " << D; }
+	sstr << "BFS3 (K = " << K << ", C = " << C;
+	if (D > 0) { sstr << ", depth = " << D; }
 	sstr << ", no model)";
 	setName(sstr.str());
      
@@ -305,8 +305,8 @@ void BFS3Agent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 	     maxR = *(search::max<vector<double> >(R.begin(), R.end())[0]);
 		
 		stringstream sstr;
-		sstr << "BFS3 (" << K << ", " << C;
-		if (D > 0) { sstr << ", " << D; }
+		sstr << "BFS3 (K = " << K << ", C = " << C;
+		if (D > 0) { sstr << ", depth = " << D; }
 		sstr << ", " << dirDistrib->getShortName() << ")";
 		setName(sstr.str());
 	}

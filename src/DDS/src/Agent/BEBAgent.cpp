@@ -21,7 +21,7 @@ BEBAgent::BEBAgent(double beta_) :
           beta(beta_), beb(0), simulator(0), samplerFact(0)
 {
      stringstream sstr;
-	sstr << "BEB (" << beta;
+	sstr << "BEB (beta = " << setprecision(ceil(log10(beta) + 2)) << beta;
 	sstr << ", no model)";
 	setName(sstr.str());
      
@@ -267,7 +267,7 @@ void BEBAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		R = dirDistrib->getR();
 		priorcountList = dirDistrib->getTheta();		
 		stringstream sstr;
-		sstr << "BEB (" << beta;
+		sstr << "BEB (beta = " << setprecision(ceil(log10(beta) + 2)) << beta;
 		sstr << ", " << dirDistrib->getShortName() << ")";
 		setName(sstr.str());
 	}

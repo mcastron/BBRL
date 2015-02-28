@@ -21,7 +21,8 @@ SBOSSAgent::SBOSSAgent(unsigned int K_, double delta_) :
           K(K_), delta(delta_), sboss(0), simulator(0), samplerFact(0)
 {
      stringstream sstr;
-	sstr << "SBOSS (" << K << ", " << delta;
+	sstr << "SBOSS (K = " << K << ", delta = ";
+	sstr << setprecision(ceil(log10(delta) + 2)) << delta;
 	sstr << ", no model)";
 	setName(sstr.str());
      
@@ -278,7 +279,8 @@ void SBOSSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		R = dirDistrib->getR();
 		priorcountList = dirDistrib->getTheta();		
 		stringstream sstr;
-		sstr << "SBOSS (" << K << ", " << delta;
+		sstr << "SBOSS (K = " << K << ", delta = ";
+		sstr << setprecision(ceil(log10(delta) + 2)) << delta;
 		sstr << ", " << dirDistrib->getShortName() << ")";
 		setName(sstr.str());
 	}

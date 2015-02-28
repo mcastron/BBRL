@@ -22,7 +22,7 @@
 	          'init()' must be called after this AgentFactory has been
 	          deserialized.
 
-	\date 	2015-02-23
+	\date 	2015-02-26
 */
 // ===========================================================================
 /* final */ class dds::FormulaAgentFactory : public dds::AgentFactory
@@ -73,6 +73,14 @@
 		// =================================================================
 		//	Public methods
 		// =================================================================
+		/**
+               \brief    Return the name of this AgentFactory.
+               
+               \return   The name of this AgentFactory.
+		*/
+		std::string getName() const { return "Formula space"; }
+
+
 		/**
 			\brief			Initialize this AgentFactory with respect
 							to the given MDP distribution.

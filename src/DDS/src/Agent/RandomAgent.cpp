@@ -16,7 +16,7 @@ RandomAgent::RandomAgent(std::istream& is) : Agent()
 }
 
 
-RandomAgent::RandomAgent() : Agent("Random Agent") {}
+RandomAgent::RandomAgent() : Agent("Random") {}
 
 
 // ===========================================================================

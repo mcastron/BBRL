@@ -14,7 +14,7 @@
 	
 	\brief 	A Token representing a constant value.
 	
-	\date 	2014-12-13
+	\date 	2015-02-26
 */
 // ===========================================================================
 /* final */class utils::formula::Constant : public Token

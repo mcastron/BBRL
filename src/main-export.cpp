@@ -240,8 +240,8 @@ vector<AgentData> getAgentDataList(int argc, char* argv[])
           delete[] argvBis;
           
           AgentData agentData;
-          agentData.className = agent->getClassName();
-          agentData.name = agent->getName();
+          agentData.className = agent->getExportClassName();
+          agentData.name = agent->getExportName();
           agentData.offlineTime = agent->getOfflineTime();
           agentDataList.push_back(agentData);
           
@@ -292,7 +292,8 @@ void writeLatexTable(ostream& os,
                      string expName, vector<AgentData>& agentDataList)
 {
      os << "\n";
-     os << "\\begin{table}\n";
+     os << "\\begin{table}[!h]\n";
+     os << "\t\\tiny\n";
 	os << "\t\\centering\n";
 	os << "\t\\begin{tabular}{l|c|c|c}\n";
 	os << "\t\tAgent & Offline time & Online time & Mean score\\\\\n";
@@ -388,7 +389,8 @@ void writeWDLLatexTable(ostream& os, vector<AgentData>& agentDataList)
      
      
      os << "\n";
-     os << "\\begin{table}\n";
+     os << "\\begin{table}[!h]\n";
+     os << "\t\\tiny\n";
 	os << "\t\\centering\n";
 	os << "\t\\begin{tabular}{c";
 	for (unsigned int i = 0; i < agentClassStrList.size(); ++i) { os << "|c"; }
@@ -492,7 +494,9 @@ void writeWDLLatexTable(ostream& os, vector<AgentData>& agentDataList)
                     else { ++drawCount; }
                }
                
+               if (winCount > lossCount) { os << "\textbf{"; }
                os << winCount << "/" << drawCount << "/" << lossCount;
+               if (winCount > lossCount) { os << "}"; }
           }
           os << "\\\\\n";
      }
@@ -695,12 +699,14 @@ void writeGnuplotScript(ostream& osDat, ostream& osGP,
      
      osGP << "set style fill solid 0.3\n";
      osGP << "set bars front\n";
-     osGP << "set style data histogram\n";
-     osGP << "set style histogram errorbars gap 1.5\n";
-
+     osGP << "set style data histogram \n";
+     osGP << "set style histogram errorbars gap 1\n";
+     osGP << "\n";
      osGP << "set style fill solid 1.25 border -1\n";
+     osGP << "set offset -0.4,0.4,0,0\n";
      osGP << "set boxwidth 0.9 relative\n";
-     osGP << "set key outside\n";
+     osGP << "set key inside\n";
+     osGP << "set key font \",6\"\n";
      osGP << "\n";
      osGP << "\n";
      osGP << "plot ";

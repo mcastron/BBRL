@@ -14,7 +14,7 @@
 	
 	\brief 	Interface of an AgentFactory to generate RL Agents.
 
-	\date 	2015-01-23
+	\date 	2015-02-26
 */
 // ===========================================================================
 class dds::AgentFactory : public Serializable
@@ -53,6 +53,14 @@ class dds::AgentFactory : public Serializable
 		// =================================================================
 		//	Public methods
 		// =================================================================
+		/**
+               \brief    Return the name of this AgentFactory.
+               
+               \return   The name of this AgentFactory.
+		*/
+		virtual std::string getName() const = 0;
+		
+		
 		/**
 			\brief			Initialize this AgentFactory with respect
 							to the given MDP distribution.

@@ -196,34 +196,6 @@ std::string Formula::getRPNStr() const
 }
 
 
-std::string Formula::getStr() const
-{
-     if (tokenList.empty()) { return ""; }
-     
-     
-     std::string str;
-     str += tokenList[0]->getSymbol();
-     for (unsigned int i = 1; i < tokenList.size(); ++i)
-     {
-          Constant* cst = dynamic_cast<Constant*>(tokenList[i]);
-          if (cst != NULL)
-          {
-               std::vector<double> operands;
-               double value = (*cst)(operands);
-               
-               std::stringstream sstr;
-               sstr << " " << (round(value * 100.0) / 100.0);
-               
-               str += sstr.str();
-          }
-          
-          else { str += " " + tokenList[i]->getSymbol(); }
-     }
-     
-     return str;
-}
-
-
 // ============================================================================
 //	Private methods
 // ============================================================================

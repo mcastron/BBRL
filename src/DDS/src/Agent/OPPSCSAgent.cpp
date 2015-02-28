@@ -305,7 +305,13 @@ void OPPSCSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
      catch (AgentFactoryException& e) { throw AgentException(e.what()); }
      
      stringstream sstr;
-	sstr << "OPPS-CS (" << agent->getName() << ", ";
+	sstr << "OPPS-CS (" << agentFactory->getName() << ", w = < ";
+	for (unsigned int i = 0; i < paramList.size(); ++i)
+	{
+	    if (i > 0) { sstr << ", "; }
+	    sstr << setprecision(ceil(log10(paramList[i]) + 2)) << paramList[i];
+	}
+	sstr << " >, ";	
 	sstr << mdpDistrib->getShortName() << ")";
 	setName(sstr.str());
 	
@@ -330,7 +336,7 @@ void OPPSCSAgent::init()
 
 	
 	stringstream sstr;
-	sstr << "OPPS-CS (no agent)";
+	sstr << "OPPS-CS (no space)";
 	setName(sstr.str());
 
 

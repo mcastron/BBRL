@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a RL agent.
 			
-	\date 	2013-08-13
+	\date 	2015-02-27
 */
 // ===========================================================================
 class IAgent : public Serializable
@@ -59,6 +59,16 @@ class IAgent : public Serializable
 		
 		
 		/**
+               \brief    Return the name of this IAgent, formatted for
+                         export files.
+                         If not overloaded, has the same return as 'getName()'.
+
+               \return   The name of this IAgent, formatted for export files.
+		*/
+		virtual std::string getExportName() const { return getName(); }
+		
+		
+		/**
 			\brief		Set a new name for this IAgent.
 			
 			\param[name_	The new name for this IAgent.
@@ -76,6 +86,22 @@ class IAgent : public Serializable
 		{
 			return IAgent::toString();
 		}
+
+
+		/**
+               \brief    Return the name of the class of this object, formatted
+                         for export files.
+                         If not overloaded, has the same return as
+                         'getClassName()'.
+
+               \return   The name of the class of this object, formatted for
+                         export files.
+		*/
+		virtual std::string getExportClassName() const
+		{
+		   return getClassName();
+          }
+
 
 		
 		/**

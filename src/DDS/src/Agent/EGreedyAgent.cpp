@@ -24,7 +24,7 @@ EGreedyAgent::EGreedyAgent(double epsilon_, CModel* iniModel_) :
 	
 
 	stringstream sstr;
-	sstr << "e-Greedy (" << setprecision(ceil(log10(epsilon) + 2)) << epsilon;
+	sstr << "e-Greedy (e = " << setprecision(ceil(log10(epsilon) + 2)) << epsilon;
 	if (iniModel) { sstr << ", " << iniModel->getName() << ")"; }
 	else          { sstr << ", no model)";                      }
 	setName(sstr.str());
@@ -247,7 +247,7 @@ void EGreedyAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		
 		
 		stringstream sstr;
-		sstr << "e-Greedy (" << setprecision(ceil(log10(epsilon) + 2));
+		sstr << "e-Greedy (e = " << setprecision(ceil(log10(epsilon) + 2));
 		sstr << epsilon << ", ";
 		sstr << iniModel->getName() << ")";
 		setName(sstr.str());

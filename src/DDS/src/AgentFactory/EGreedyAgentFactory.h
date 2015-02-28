@@ -70,6 +70,14 @@
 		// =================================================================
 		//	Public methods
 		// =================================================================
+          /**
+               \brief    Return the name of this AgentFactory.
+               
+               \return   The name of this AgentFactory.
+		*/
+		std::string getName() const { return "e-Greedy space"; }
+
+
 		/**
 			\brief			Initialize this AgentFactory with respect
 							to the given MDP distribution.

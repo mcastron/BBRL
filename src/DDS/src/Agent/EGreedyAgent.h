@@ -25,7 +25,7 @@
 			For Offline learning, does not support another distribution
 			than 'DirMultiDistribution'.
 
-	\date 	2014-12-13
+	\date 	2015-02-27
 */
 // ===========================================================================
 /* final */ class dds::EGreedyAgent : public dds::Agent
@@ -136,6 +136,16 @@
 			\return	The name of the class of this object.
 		*/
 		std::string getClassName() const { return EGreedyAgent::toString(); }
+
+
+          /**
+               \brief    Return the name of the class of this object, formatted
+                         for export files.
+
+               \return   The name of the class of this object, formatted for
+                         export files.
+		*/
+		std::string getExportClassName() const { return "e-Greedy"; }
 
 		
 		/**

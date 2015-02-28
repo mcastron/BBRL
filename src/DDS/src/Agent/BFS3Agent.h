@@ -24,7 +24,7 @@
 
                (based on Guez work)
 
-	\date 	2014-12-18
+	\date 	2015-02-27
 */
 // ===========================================================================
 /* final */ class dds::BFS3Agent : public dds::Agent
@@ -135,7 +135,17 @@
 		*/
 		std::string getClassName() const { return BFS3Agent::toString(); }
 
-		
+
+          /**
+               \brief    Return the name of the class of this object, formatted
+                         for export files.
+
+               \return   The name of the class of this object, formatted for
+                         export files.
+		*/
+		std::string getExportClassName() const { return "BFS3"; }
+
+
 		/**
 			\brief	Serialize this Object.
 					If overloaded, the new 'serialize()' method should
