@@ -13,7 +13,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2015-02-11
+	\date		2015-03-13
 */
 // ===========================================================================
 namespace utils
@@ -673,6 +673,602 @@ namespace utils
 	    */
 	    class FormulaException;
 	}
+	
+	
+	/**
+          \brief    This namespace gathers several classes and functions
+                    to create graphs using gnuplot.
+	*/
+	namespace gnuplot
+     {          
+          // ==================================================================
+          //   Enum definitions
+          // ==================================================================
+          /**
+               \enum     NoiseFilterType
+               \brief    A noise filtering condition.
+          */
+          enum NoiseFilterType
+          {
+               NFT_MIN, NFT_MAX, NFT_MEAN
+          };
+          
+          
+          // =================================================================
+		//	Details (to ignore)
+		// =================================================================
+		namespace details
+		{
+		     // Return a pack corresponding to similar points. A point is
+		     // part of the pack if the shortest distance between this point
+		     // and a point of the pack is at most 'epsilon'
+		     // (first coordinate). The data in 'dataV' have to be sorted.
+               std::vector<std::pair<double, double> > getFirstPack(
+                         const std::vector<std::pair<double, double> >& dataV,
+                         double epsilon);
+		}
+          
+          
+          // ==================================================================
+          //    Classes
+          // ==================================================================
+          /**
+               \class    GnuplotOptions
+               \brief    Defines the Gnuplot options.
+          */
+          class GnuplotOptions
+          {
+               public:
+                    // ========================================================
+                    //   Public Constructor
+                    // ========================================================
+                    /**
+                         \brief              Constructor.
+                         \param[fontSize     The size of the font.
+                    */
+                    GnuplotOptions(unsigned int fontSize = 12) : withValue ("")
+                    {
+                         std::stringstream sstr;
+                         sstr << "postscript eps enhanced color font ";
+                         sstr << "\'Helvetica," << fontSize << "\'";
+                         setOption("terminal", sstr.str());
+
+                         setOption("output", "\'plot-graph.eps\'");
+                         setOption("key", "inside right bottom");
+                    }
+
+
+                    // ========================================================
+                    //   Public methods
+                    // ========================================================
+                    /**
+                         \brief         Add the following line to the header
+                                        of the gnuplot script:
+                                             'set [option] [value]'
+                         
+                         \param[option  The option to 'set'.
+                         \param[value   The value of the option.
+                    */
+                    void setOption(std::string option, std::string value)
+                    {
+                         for (unsigned int i = 0; i < setOptions.size(); ++i)
+                         {
+                              if (setOptions[i] == option)
+                              {
+                                   values[i] = value;
+                                   return;
+                              }
+                         }
+                         
+                         setOptions.push_back(option);
+                         values.push_back(value);
+                    }
+                    
+                    
+                    /**
+                         \brief         Add the following line to the header
+                                        of the gnuplot script:
+                                             'unset [option]'
+                         
+                         \param[option  The option to 'unset'.
+                    */
+                    void unsetOption(std::string option)
+                    {
+                         for (unsigned int i = 0; i < unsetOptions.size(); ++i)
+                              if (unsetOptions[i] == option) { return; }
+                         
+                         unsetOptions.push_back(option);
+                    }
+                    
+                    
+                    /**
+                         \brief         When plotting a curve with 'plot()',
+                                        add the following sequence to each
+                                        curve:
+                                             '... with [value]'.
+
+                         \param[value   The value of 'with' option.
+                    */
+                    void setWith(std::string value) { withValue = value; }
+                    
+                    
+                    /**
+                         \brief    Return the 'with' option, added to each
+                                   curve definition when plotted.
+
+                         \return   The 'with' option, added to each curve
+                                   definition when plotted.
+                    */
+                    std::string getWith() { return withValue; }                    
+
+
+                    /**
+                         \brief    Return the gnuplot script header
+                                   corresponding to the options defined.
+
+                         \return   The gnuplot script header corresponding
+                                   to the options defined.
+                    */
+                    std::string getScriptOptions()
+                    {
+                         std::string scriptOptions = "";
+                         for (unsigned int i = 0; i < setOptions.size(); ++i)
+                         {
+                              scriptOptions +=
+                                        "set " +
+                                        setOptions[i] + " " + values[i] + "\n";
+                         }
+
+                         for (unsigned int i = 0; i < unsetOptions.size(); ++i)
+                         {
+                              scriptOptions +=
+                                        "unset " + unsetOptions[i] + "\n";
+                         }
+                         
+                         return scriptOptions;
+                    }
+
+               private:
+                    // ========================================================
+                    //   Private attributes
+                    // ========================================================
+                    /**
+                         \brief    The 'set'/'unset' options.
+                    */
+                    std::vector<std::string> setOptions, unsetOptions;
+                    
+                    
+                    /**
+                         \brief    The values of the 'set' options.
+                    */
+                    std::vector<std::string> values;
+                    
+                    
+                    /**
+                         \brief    The 'with' options.
+                    */
+                    std::string withValue;
+          };
+         
+         
+          // ==================================================================
+	     //	Functions
+	     // ==================================================================
+	     /**
+	          \brief        Plot the data on a 2D graph.
+	          \param[data   The data to plot (1 vector per curve).
+	          \param[titles The title associated to each curve.
+	          \param[opt    The gnuplot options to use.
+	     */
+           void plot(const std::vector<
+                              std::vector<std::pair<double, double> > >& data,
+                     const std::vector<std::string>& titles,
+                     GnuplotOptions opt = GnuplotOptions());
+
+
+          /**
+               \brief         Remove the noise present on the data by merging
+                              too close points (if the preceeding point is at
+                              a distance of at most 'epsilon' with respect to
+                              the first coordinate).
+                              
+                              The point replacing a set of similar points is
+                              depending of the type of filter used
+                              (chosen by 'nft').
+               
+               \param[data    The data to filter (must be SORTED by their first
+                              coordinate).
+
+               \param[epsilon The filtering threshold value.
+               \param[nft     The type of filter to apply.
+               
+               \return        The filtered data.
+          */
+          std::vector<std::pair<double, double> > removeNoise(
+                         const std::vector<std::pair<double, double> >& dataV,
+                         double epsilon, NoiseFilterType nft);
+     }
+     
+     
+     namespace latex
+     {
+          // ==================================================================
+          //   Details (to ignore)
+          // ==================================================================
+          namespace details
+          {
+               //   Split time 't' (in ms) in days, hours, minutes, seconds
+               //   and milliseconds.
+               void splitTime(double t,
+                              unsigned int& days, unsigned int& hours,
+                              unsigned int& minutes, unsigned int& seconds,
+                              unsigned int& milliseconds);
+          }
+
+
+          // ==================================================================
+	     //	Classes
+	     // ==================================================================
+	     /**
+               \class    Cell
+               \brief    Represent a latex table cell.
+	     */
+          class Cell
+          {
+               public:
+                    // ========================================================
+                    //   Public Constructor/Destructor
+                    // ========================================================
+                    /**
+                         \brief    Constructor.
+                    */
+                    Cell() : bold(false) {}
+
+
+                    /**
+                         \brief    Destructor.
+                    */
+                    virtual ~Cell() {}
+
+                    
+                    // ========================================================
+                    //   Public methods
+                    // ========================================================
+                    /**
+                         \brief    Return a string representing the content of
+                                   this Cell, formatted for latex output.
+
+                         \return   A string representing the content of
+                                   this Cell, formatted for latex output.
+                    */
+                    virtual std::string getStr() const = 0;
+
+
+                    /**
+                         \brief    Set this cell in bold.
+                    */
+                    void setBold()   { bold = true; }
+
+
+                    /**
+                         \brief    If this cell has been set in bold
+                                   previously, cancel it.                                   
+                    */
+                    void unsetBold() { bold = false; }
+                    
+               protected:
+                    // ========================================================
+                    //   Protected methods
+                    // ========================================================
+                    /**
+                         \brief    Return true if this cell is in bold, false
+                                   else.
+
+                         \return   True if this cell is in bold, false else.
+                    */
+                    bool isBold() const { return bold; }
+
+
+               private:
+                    // ========================================================
+                    //   Private attributes
+                    // ========================================================
+                    /**
+                         \brief    Tru if this cell is in bold, false else.
+                    */
+                    bool bold;
+          };
+
+
+          /**
+               \class    StrCell
+               \brief    Represent a latex table cell containing a string.
+          */
+          class StrCell : public Cell
+          {
+               public:
+                    // ========================================================
+                    //   Public Constructor/Destructor
+                    // ========================================================
+                    /**
+                         \brief         Constructor.
+                         
+                         \param[str_    The string to represent.
+                    */
+                    StrCell(std::string str_) : str(str_) {}
+
+
+                    // ========================================================
+                    //   Public methods
+                    // ========================================================
+                    /**
+                         \brief    Return a string representing the content of
+                                   this Cell, formatted for latex output.
+
+                         \return   A string representing the content of
+                                   this Cell, formatted for latex output.
+                    */
+                    std::string getStr() const
+                    {
+                         if (isBold()) { return "\\textbf{" + str + "}"; }
+                         else          { return str;                     }
+                    }
+               
+               
+               private:
+                    // ========================================================
+                    //   Public attributes
+                    // ========================================================
+                    /**
+                         \brief    The string to represent.
+                    */
+                    std::string str;
+          };
+
+
+          /**
+               \class    NumberCell
+               \brief    Represent a latex table cell containing a number.
+          */
+          class NumberCell : public Cell
+          {
+               public:
+                    // ========================================================
+                    //   Public Constructor/Destructor
+                    // ========================================================
+                    /**
+                         \brief         Constructor.
+                         
+                         \param[value_  The value to represent.
+                    */
+                    NumberCell(double value_) : value(value_) {}
+                    
+                    
+                    // ========================================================
+                    //   Public methods
+                    // ========================================================
+                    /**
+                         \brief    Return a string representing the content of
+                                   this Cell, formatted for latex output.
+
+                         \return   A string representing the content of
+                                   this Cell, formatted for latex output.
+                    */
+                    std::string getStr() const
+                    {
+                         std::stringstream sstr;
+                         sstr << "$";
+                         
+                         if (isBold()) { sstr << "\\boldsymbol{"; }
+                         sstr << round(100.0*value)/100.0;
+                         if (isBold()) { sstr << "}"; }
+                         sstr << "$";
+                         
+                         return sstr.str();
+                    }
+
+
+               private:
+                    // ========================================================
+                    //   Private attributes
+                    // ========================================================
+                    /**
+                         \brief    The value to represent.
+                    */
+                    double value;
+          };
+
+
+          /**
+               \class    NumberIntervalCell
+               \brief    Represent a latex table cell containing a bounded
+                         number.
+          */
+          class NumberIntervalCell : public Cell
+          {
+               public:
+                    // ========================================================
+                    //   Public Constructor/Destructor
+                    // ========================================================
+                    /**
+                         \brief              Constructor.
+                         
+                         \param[lowerBound_  The lower bound of the value to
+                                             represent.
+                         \param[upperBound_  The upper bound of the value to
+                                             represent.
+                    */
+                    NumberIntervalCell(double lowerBound_, double upperBound_) :
+                              lowerBound(lowerBound_),
+                              upperBound(upperBound_) {}
+                    
+                    
+                    // ========================================================
+                    //   Public methods
+                    // ========================================================
+                    /**
+                         \brief    Return a string representing the content of
+                                   this Cell, formatted for latex output.
+
+                         \return   A string representing the content of
+                                   this Cell, formatted for latex output.
+                    */
+                    std::string getStr() const
+                    {
+                         double mid   = ((upperBound + lowerBound) / 2.0);
+                         double delta = (upperBound - mid);
+                         
+                         std::stringstream sstr;
+                         sstr << "$";
+                         if (isBold()) { sstr << "\\boldsymbol{"; }
+                         sstr << round(100.0*mid)/100.0;
+                         sstr << " \\pm " << round(100.0*delta)/100.0;
+                         if (isBold()) { sstr << "}"; }
+                         sstr << "$";
+                         
+                         
+                         return sstr.str();
+                    }
+
+
+               private:
+                    // ========================================================
+                    //   Private attributes
+                    // ========================================================
+                    /**
+                         \brief    The lower bound of the value to represent.
+                    */
+                    double lowerBound;
+
+                    
+                    /**
+                         \brief    The upper bound of the value to represent.
+                    */
+                    double upperBound;
+          };
+
+          
+          /**
+               \class    TimeCell
+               \brief    Represent a latex table cell containing a time value.
+          */
+          class TimeCell : public Cell
+          {
+               public:
+                    // ========================================================
+                    //   Public Constructor/Destructor
+                    // ========================================================
+                    /**
+                         \brief              Constructor.
+                         
+                         \param[timeInMs     The time value to represent
+                                             (in ms).
+                    */
+                    TimeCell(double timeInMs)
+                    {
+                         details::splitTime(
+                                   timeInMs,
+                                   days, hours, minutes, seconds, milliseconds);
+                    }
+                    
+                    
+                    // ========================================================
+                    //   Public methods
+                    // ========================================================
+                    /**
+                         \brief    Return a string representing the content of
+                                   this Cell, formatted for latex output.
+
+                         \return   A string representing the content of
+                                   this Cell, formatted for latex output.
+                    */
+                    std::string getStr() const
+                    {
+                         unsigned int value;
+                         std::string unit;
+
+                         if (days > 0)
+                         {
+                              value = (days + (hours >= 12 ? 1 : 0));
+                              unit = "d";
+                         }
+
+                         else if (hours > 0)
+                         {
+                              value = (hours + (minutes >= 30 ? 1 : 0));
+                              unit = "h";
+                         }
+
+                         else if (minutes > 0)
+                         {
+                              value = (minutes + (seconds >= 30 ? 1 : 0));
+                              unit = "m";
+                         }
+
+                         else if (seconds > 0)
+                         {
+                              value = (seconds + (milliseconds >= 500 ? 1 : 0));
+                              unit = "s";
+                         }
+
+                         else
+                         {
+                              value = milliseconds;
+                              unit = "ms";
+                         }
+                         
+                         std::stringstream sstr;
+
+                         sstr << "$";
+                         if (isBold()) { sstr << "\\boldsymbol{"; }
+                         sstr << "\\sim " << value;
+                         if (isBold()) { sstr << "}"; }
+                         sstr << "$";
+                         
+                         if (isBold()) { sstr << "\\textbf{"; }
+                         sstr << unit;
+                         if (isBold()) { sstr << "}"; }
+                         
+                         return sstr.str();
+                    }
+
+
+               private:
+                    // ========================================================
+                    //   Private attributes
+                    // ========================================================
+                    /**
+                         \brief    The number of days/hours/minutes/seconds/
+                                   milliseconds contained in the value to
+                                   represent, such that the sum is a close
+                                   approximation of the real value.
+                    */
+                    unsigned int days, hours,minutes, seconds, milliseconds;
+          };
+
+
+          // ==================================================================
+	     //	Functions
+	     // ==================================================================
+	     /**
+	         \brief              Create a latex table in 'outputFile'.
+	         
+	         \param[grid         The content of the table.
+	         \param[hLines       Put an horizontal line before row 'i'.
+	         \param[vLines       Put a vertical line after column 'i'.
+	         \param[columnWidth  Fix the width of each column
+	                             (default: adapted to the content).
+	     */
+          void table(const std::vector<std::vector<Cell*> >& grid,
+                     std::string outputFile,
+                     std::vector<unsigned int> hLines
+                              = std::vector<unsigned int>(),
+                     std::vector<unsigned int> vLines
+                              = std::vector<unsigned int>(),
+                     std::vector<double> columnWidth
+                              = std::vector<double>());
+          
+     }
 }
 
 #include "utils.tpp"

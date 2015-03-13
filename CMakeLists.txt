@@ -34,7 +34,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BUILD_TYPE})
 #	RELEASE
 # ----------------------------------------------------------------------------
 add_definitions(-DNDEBUG)
-set(CMAKE_CXX_FLAGS "-g -O3 -fPIC")
+set(CMAKE_CXX_FLAGS "-g -O3")
 
 
 # ============================================================================
@@ -48,6 +48,7 @@ add_subdirectory(src/IExperiment)
 add_subdirectory(src/RLUtils)
 add_subdirectory(src/Serializable)
 add_subdirectory(src/Utils)
+add_subdirectory(src/Xport)
 
 
 # ============================================================================
@@ -72,18 +73,6 @@ target_link_libraries(TinyBRL-DDS
 					Serializable
 					Utils)		#	uses Boost 1.52 if possible.
 
-target_link_libraries(TinyBRL-custom
-					DDS
-					IAgent
-					IMDP
-					IMDPDistribution
-					IExperiment
-					RLUtils
-					Serializable
-					Utils)		#	uses Boost 1.52 if possible.
-
-target_link_libraries(TinyBRL-zlib Utils)
-
 target_link_libraries(TinyBRL-export
 					DDS
 					IAgent
@@ -92,4 +81,18 @@ target_link_libraries(TinyBRL-export
 					IExperiment
 					RLUtils
 					Serializable
-					Utils)
+					Utils          #	uses Boost 1.52 if possible.
+					Xport)
+
+target_link_libraries(TinyBRL-custom
+					DDS
+					IAgent
+					IMDP
+					IMDPDistribution
+					IExperiment
+					RLUtils
+					Serializable
+					Utils          #	uses Boost 1.52 if possible.
+					Xport)
+
+target_link_libraries(TinyBRL-zlib Utils)

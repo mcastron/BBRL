@@ -1,7 +1,8 @@
 
-
 #include "utils.h"
 #include "RandomGen.h"
+
+using namespace std;
 
 
 // ===========================================================================
@@ -13,12 +14,12 @@
 // ===========================================================================
 //	Details (to ignore)
 // ===========================================================================
-std::pair<double, double> utils::statistics::details::computeCI(
+pair<double, double> utils::statistics::details::computeCI(
 		double alpha, double mean, double stDev, unsigned int n)
 {
 	assert(n > 0);
 
-	std::pair<double, double> p;
+	pair<double, double> p;
 	
 	double tmp = (alpha * (stDev / sqrt((double) n)));
 	
@@ -64,8 +65,8 @@ double utils::statistics::details::gamma(double shape, double scale)
 //	Functions
 // ===========================================================================
 void	utils::statistics::sampleDirichlet(
-		unsigned int hTheta, const std::vector<double>& theta,
-		unsigned int hP, std::vector<double>& P,
+		unsigned int hTheta, const vector<double>& theta,
+		unsigned int hP, vector<double>& P,
 		unsigned int n)
 {
 	assert(n > 0);
@@ -106,15 +107,15 @@ void	utils::statistics::sampleDirichlet(
 }
 
 void utils::statistics::sampleDirichlet(
-		const std::vector<double>& theta, std::vector<double>& P)
+		const vector<double>& theta, vector<double>& P)
 {
 	utils::statistics::sampleDirichlet(0, theta, 0, P, theta.size());
 }
 
-std::vector<double> utils::statistics::sampleDirichlet(
-		const std::vector<double>& theta)
+vector<double> utils::statistics::sampleDirichlet(
+		const vector<double>& theta)
 {
-	std::vector<double> P(theta.size());
+	vector<double> P(theta.size());
 	utils::statistics::sampleDirichlet(theta, P);
 	
 	return P;
@@ -133,21 +134,21 @@ double utils::statistics::getUnilateralPairedZThreshold95() { return 1.645; }
 // ===========================================================================
 //	Functions
 // ===========================================================================
-std::string utils::compression::compressStr(
-	const std::string& str, int compressionlevel) throw (std::runtime_error)
+string utils::compression::compressStr(
+	const string& str, int compressionlevel) throw (runtime_error)
 {
     z_stream zs;                        // z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));
 
     if (deflateInit(&zs, compressionlevel) != Z_OK)
-        throw(std::runtime_error("deflateInit failed while compressing."));
+        throw(runtime_error("deflateInit failed while compressing."));
 
     zs.next_in = (Bytef*)str.data();
     zs.avail_in = str.size();           // set the z_stream's input
 
     int ret;
     char outbuffer[32768];
-    std::string outstring;
+    string outstring;
 
     // retrieve the compressed bytes blockwise
     do {
@@ -166,30 +167,30 @@ std::string utils::compression::compressStr(
     deflateEnd(&zs);
 
     if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
-        std::ostringstream oss;
+        ostringstream oss;
         oss << "Exception during zlib compression: (" << ret << ") " << zs.msg;
-        throw(std::runtime_error(oss.str()));
+        throw(runtime_error(oss.str()));
     }
 
     return outstring;
 }
 
 
-std::string utils::compression::uncompressStr(const std::string& str)
-										throw (std::runtime_error)
+string utils::compression::uncompressStr(const string& str)
+										throw (runtime_error)
 {
     z_stream zs;                        // z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));
 
     if (inflateInit(&zs) != Z_OK)
-        throw(std::runtime_error("inflateInit failed while decompressing."));
+        throw(runtime_error("inflateInit failed while decompressing."));
 
     zs.next_in = (Bytef*)str.data();
     zs.avail_in = str.size();
 
     int ret;
     char outbuffer[32768];
-    std::string outstring;
+    string outstring;
 
     // get the decompressed bytes blockwise using repeated calls to inflate
     do {
@@ -208,10 +209,10 @@ std::string utils::compression::uncompressStr(const std::string& str)
     inflateEnd(&zs);
 
     if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
-        std::ostringstream oss;
+        ostringstream oss;
         oss << "Exception during zlib decompression: (" << ret << ") "
             << zs.msg;
-        throw(std::runtime_error(oss.str()));
+        throw(runtime_error(oss.str()));
     }
 
     return outstring;
@@ -224,26 +225,26 @@ std::string utils::compression::uncompressStr(const std::string& str)
 // ===========================================================================
 //	Functions
 // ===========================================================================
-std::string utils::parsing::getValue(int argc, char* argv[], std::string opt)
+string utils::parsing::getValue(int argc, char* argv[], string opt)
                                                        throw (ParsingException)
 {
      for (int i = 1; i < (argc - 1); ++i)
-          if (std::string(argv[i]) == opt) { return std::string(argv[i + 1]); }
+          if (string(argv[i]) == opt) { return string(argv[i + 1]); }
           
      throw parsing::ParsingException(opt);
 }
 
 
-std::vector<std::string> utils::parsing::getValues(int argc, char* argv[],
-          std::string opt, unsigned int n) throw (ParsingException)
+vector<string> utils::parsing::getValues(int argc, char* argv[],
+          string opt, unsigned int n) throw (ParsingException)
 {
-     std::vector<std::string> values;
+     vector<string> values;
      for (int i = 1; i < (argc - (int) n); ++i)
      {
-          if (std::string(argv[i]) == opt)
+          if (string(argv[i]) == opt)
           {
                for (int j = 1; j <= (int) n; ++j)
-                    values.push_back(std::string(argv[i + j]));
+                    values.push_back(string(argv[i + j]));
                break;
           }
      }
@@ -253,10 +254,270 @@ std::vector<std::string> utils::parsing::getValues(int argc, char* argv[],
 }
 
 
-bool utils::parsing::hasFlag(int argc, char* argv[], std::string opt)
+bool utils::parsing::hasFlag(int argc, char* argv[], string opt)
 {
      for (int i = 1; i < argc; ++i)
-          if (std::string(argv[i]) == opt) { return true; }
+          if (string(argv[i]) == opt) { return true; }
      
      return false;
+}
+
+
+// ---------------------------------------------------------------------------
+//	'gnuplot' namespace
+// ---------------------------------------------------------------------------
+// ===========================================================================
+//	Functions
+// ===========================================================================
+void utils::gnuplot::plot(const vector<vector<pair<double, double> > >& data,
+                          const vector<string>& titles,
+                          utils::gnuplot::GnuplotOptions opt)
+{
+     //   1.   Write the data file
+     string dataFile = ("data/export/tmp.dat");
+     ofstream datOS(dataFile.c_str());
+     for (unsigned int i = 0; i < data.size(); ++i)
+     {
+          for (unsigned int j = 0; j < data[i].size(); ++j)
+               datOS << data[i][j].first << "\t" << data[i][j].second << "\n";
+          if (!data[i].empty()) { datOS << "\n\n"; }
+     }
+     datOS.close();
+     
+     
+     //   2.   Write the script file
+     string scriptFile = ("data/export/tmp.gp");     
+     ofstream scriptOS(scriptFile.c_str());
+     scriptOS << opt.getScriptOptions();
+     
+     unsigned int index = 0;
+     for (unsigned int i = 0; i < data.size(); ++i)
+     {
+          if (!data[i].empty())
+          {
+               if (index == 0) { scriptOS << "plot \'" << dataFile << "\'"; }
+               else            { scriptOS << ", ''";                        }
+               
+               scriptOS << " index " << index++;
+               if (opt.getWith() != "")
+                    scriptOS << " with " << opt.getWith();
+               scriptOS << " lt palette frac " << (i / (double) data.size());
+     
+               if (i < titles.size())
+                    scriptOS << " title \"" << titles[i] << "\"";
+          }
+     }
+     scriptOS << "\n";
+     scriptOS.close();
+
+
+     //   3.   Generate the 'eps' file     
+     string command = "gnuplot -e \"input=\'";
+     command += dataFile;
+     command += "\'\" ";
+     command += scriptFile;
+     
+     system(command.c_str());
+     
+     
+     //   4.   Delete the temporary files
+     command = "rm " + dataFile;
+     system(command.c_str());
+     
+     command = "rm " + scriptFile;
+     system(command.c_str());
+}
+     
+
+vector<pair<double, double> >
+     utils::gnuplot::removeNoise(
+          const vector<pair<double, double> >& dataV,
+          double epsilon, utils::gnuplot::NoiseFilterType nft)
+{
+     vector<pair<double, double> > filteredV, cDataV = dataV;
+     vector<pair<double, double> > cPack =
+               details::getFirstPack(cDataV, epsilon);
+     while (!cPack.empty())
+     {
+          //   Filter the current pack to produce a single point
+          double x, y;
+          switch (nft)
+          {
+               case NFT_MIN:
+                    double minX, minY;
+                    for (unsigned int i = 0; i < cPack.size(); ++i)
+                    {
+                         if ((i == 0) || (cPack[i].second < minY))
+                         {
+                              minX = cPack[i].first;
+                              minY = cPack[i].second;
+                         }
+                    }
+
+                    x = minX;
+                    y = minY;
+                    break;
+
+              
+               case NFT_MAX:
+                    double maxX, maxY;
+                    for (unsigned int i = 0; i < cPack.size(); ++i)
+                    {
+                         if ((i == 0) || (cPack[i].second > maxY))
+                         {
+                              maxX = cPack[i].first;
+                              maxY = cPack[i].second;
+                         }
+                    }
+
+                    x = maxX;
+                    y = maxY;
+                    break;
+
+
+               case NFT_MEAN:
+                    double sumX = 0.0, sumY = 0.0;
+                    for (unsigned int i = 0; i < cPack.size(); ++i)
+                    {
+                         sumX += cPack[i].first;
+                         sumY += cPack[i].second;
+                    }
+                    
+                    x = (sumX / (double) cPack.size());
+                    y = (sumY / (double) cPack.size());
+                    break;
+          }
+          
+          
+          //   Save the generated point
+          filteredV.push_back(pair<double, double>(x, y));
+          
+          
+          //   Remove 'cPack' from 'cDataV'
+          for (unsigned int i = 0; i < (cDataV.size() - cPack.size()); ++i)
+               cDataV[i] = cDataV[i + cPack.size()];
+               
+          for (unsigned int i = 0; i < cPack.size(); ++i) { cDataV.pop_back(); }
+          
+          
+          //   Retrieve the next pack
+          cPack = details::getFirstPack(cDataV, epsilon);
+     }
+     
+     
+     //   Return
+     return filteredV;
+}
+
+
+vector<pair<double, double> >
+     utils::gnuplot::details::getFirstPack(
+          const vector<pair<double, double> >& dataV, double epsilon)
+{
+     vector<pair<double, double> > pack;
+     for (unsigned int i = 0; i < dataV.size(); ++i)
+     {
+          if (pack.empty()) { pack.push_back(dataV[i]); }
+
+          else if ((dataV[i].first - pack.back().first) <= epsilon)
+               pack.push_back(dataV[i]);
+
+          else { return pack; }          
+     }
+     return pack;
+}
+
+
+// ---------------------------------------------------------------------------
+//	'latex' namespace
+// ---------------------------------------------------------------------------
+// ===========================================================================
+//   Details (to ignore)
+// ===========================================================================
+void utils::latex::details::splitTime(double t,
+                                      unsigned int& days,
+                                      unsigned int& hours,
+                                      unsigned int& minutes, 
+                                      unsigned int& seconds,
+                                      unsigned int& milliseconds)
+{
+     days = floor(t / (24*60*60*1000));
+     t -= (days * (24*60*60*1000));
+     
+     hours = floor(t / (60*60*1000));
+     t -= (hours * (60*60*1000));
+     
+     minutes = floor(t / (60*1000));
+     t -= (minutes * (60*1000));
+     
+     seconds = floor(t / 1000);
+     t -= (seconds * 1000);
+     
+     milliseconds = round(t);
+}
+
+
+// ===========================================================================
+//   Functions
+// ===========================================================================
+void utils::latex::table(const vector<vector<Cell*> >& grid,
+                         string outputFile,
+                         vector<unsigned int> hLines,
+                         vector<unsigned int> vLines,
+                         vector<double> columnWidth)
+{
+     ofstream os(outputFile.c_str());
+     if (grid.empty()) { os.close(); return; }
+
+
+     //   Header
+     os << "\\begin{tabular}{";
+     for (unsigned int i = 0; i < grid[0].size(); ++i)
+     {
+          if (i < vLines.size())
+               for (unsigned int k = 0; k < vLines[i]; ++k) { os << "|"; }
+
+
+          if (i < columnWidth.size() && columnWidth[i] > 0.0)
+               os << "p{" << columnWidth[i] << "cm}";
+          else { os << "l"; }
+     }
+     
+     if (grid[0].size() < vLines.size())
+     {
+               for (unsigned int k = 0; k < vLines[grid[0].size()]; ++k)
+                    os << "|";
+     }
+     
+     os << "}\n";
+     
+     
+     //   Content
+     for (unsigned int i = 0; i < grid.size(); ++i)
+     {
+          if (i < hLines.size())
+          {
+               for (unsigned int k = 0; k < hLines[i]; ++k)
+                    os << "\t\\hline\n";
+          }
+          os << "\t";          
+          
+          for (unsigned int j = 0; j < grid[i].size(); ++j)
+          {
+               if (j > 0) { os << " & "; }
+               os << grid[i][j]->getStr();
+          }
+          os << "\\\\\n";
+     }
+     
+     if (grid.size() < hLines.size())
+     {
+          for (unsigned int k = 0; k < hLines[grid.size()]; ++k)
+               os << "\t\\hline\n";
+     }
+
+
+     //   Footer
+     os << "\\end{tabular}\n";
+     os.close();
 }
