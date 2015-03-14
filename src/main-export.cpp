@@ -25,7 +25,7 @@ using namespace xport;
 	
 	\author	Castronovo Michael
 
-	\date	2015-03-13
+	\date	2015-03-14
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -44,6 +44,8 @@ int main(int argc, char* argv[])
      //   OFFLINE/SCORE graph -------------------------------------------------
      DblField xField = OFFLINE_TIME;
      DblField yField = MEAN;
+     DblField lBField = LOWER_BOUND;
+     DblField uBField = UPPER_BOUND;
      unsigned int fontSize = 12;
      string xLabel = "Offline time bound per trajectory (in m)";
      string yLabel = "Mean score";
@@ -79,7 +81,7 @@ int main(int argc, char* argv[])
           //   For each type of agent, create a curve
           vector<string> classStrList;         
           classStrList = getList(cAgentDataList, CLASS_NAME);
-          vector<vector<pair<double, double> > > data;
+          vector<vector<pair<double, double> > > data, bounds;
           for (unsigned int j = 0; j < classStrList.size(); ++j)
           {
                string className = classStrList[j];
@@ -93,7 +95,7 @@ int main(int argc, char* argv[])
 
 
                //   For each sample, create a point
-               vector<pair<double, double> > dataV;               
+               vector<pair<double, double> > dataV, boundsV;               
                vector<AgentData> sortedList =
                          sort(ccAgentDataList, xField);
 
@@ -107,15 +109,37 @@ int main(int argc, char* argv[])
                
                //   Remove noise
                dataV = removeNoise(dataV, (500 * xCoeff), NFT_MAX);
+
+               //   Retrieve the bounds of each point
+               for (unsigned int p = 0; p < dataV.size(); ++p)
+               {
+                    unsigned int k = 0;
+                    for (; k < sortedList.size(); ++k)
+                    {
+                         double x = sortedList[k].getField(xField) * xCoeff;
+                         double y = sortedList[k].getField(yField);
+                         if ((x == dataV[p].first) && (y == dataV[p].second))
+                              break;
+                    }
+
+                    boundsV.push_back(pair<double, double>(
+                              sortedList[k].getField(lBField),
+                              sortedList[k].getField(uBField)));
+               }
                
                
                //   Add the (0, 0) point
                dataV.push_back(pair<double, double>(0, 0));
+               boundsV.push_back(pair<double, double>(0, 0));
                for (unsigned int i = 0; i < dataV.size(); ++i)
                {
                     pair<double, double> tmp = dataV[i];
                     dataV[i] = dataV.back();
-                    dataV[dataV.size() - 1] = tmp; 
+                    dataV[dataV.size() - 1] = tmp;
+
+                    tmp = boundsV[i];
+                    boundsV[i] = boundsV.back();
+                    boundsV[boundsV.size() - 1] = tmp;
                }
                
                
@@ -124,12 +148,17 @@ int main(int argc, char* argv[])
                {
                     double y = dataV.back().second;
                     dataV.push_back(pair<double, double>(xMax, y));
+                    
+                    double lBound = boundsV.back().first;
+                    double uBound = boundsV.back().second;
+                    boundsV.push_back(pair<double, double>(lBound, uBound));
                }
                
                
                //   Add the data points associated to this type of agent
                //   to the list
                data.push_back(dataV);
+               bounds.push_back(boundsV);
           }
           
           
@@ -167,13 +196,15 @@ int main(int argc, char* argv[])
           sstr.clear(); sstr.str(string());
           sstr << "\'" << output << "-" << i << ".eps\'";
           opt.setOption("output", sstr.str());
-          plot(data, classStrList, opt);
+          plot(opt, data, classStrList, bounds);
      }
 
 
      //   ONLINE/SCORE graph --------------------------------------------------
      xField = ONLINE_TIME;
      yField = MEAN;
+     lBField = LOWER_BOUND;
+     uBField = UPPER_BOUND;
      fontSize = 12;
      xLabel = "Online time bound per trajectory (in s)";
      yLabel = "Mean score";
@@ -209,7 +240,7 @@ int main(int argc, char* argv[])
           //   For each type of agent, create a curve
           vector<string> classStrList;         
           classStrList = getList(cAgentDataList, CLASS_NAME);
-          vector<vector<pair<double, double> > > data;
+          vector<vector<pair<double, double> > > data, bounds;
           for (unsigned int j = 0; j < classStrList.size(); ++j)
           {
                string className = classStrList[j];
@@ -223,7 +254,7 @@ int main(int argc, char* argv[])
 
 
                //   For each sample, create a point
-               vector<pair<double, double> > dataV;               
+               vector<pair<double, double> > dataV, boundsV;
                vector<AgentData> sortedList =
                          sort(ccAgentDataList, xField);
 
@@ -239,13 +270,36 @@ int main(int argc, char* argv[])
                dataV = removeNoise(dataV, (500 * xCoeff), NFT_MAX);
                
                
+               //   Retrieve the bounds of each point
+               for (unsigned int p = 0; p < dataV.size(); ++p)
+               {
+                    unsigned int k = 0;
+                    for (; k < sortedList.size(); ++k)
+                    {
+                         double x = sortedList[k].getField(xField) * xCoeff;
+                         double y = sortedList[k].getField(yField);
+                         if ((x == dataV[p].first) && (y == dataV[p].second))
+                              break;
+                    }
+
+                    boundsV.push_back(pair<double, double>(
+                              sortedList[k].getField(lBField),
+                              sortedList[k].getField(uBField)));
+               }
+               
+               
                //   Add the (0, 0) point
                dataV.push_back(pair<double, double>(0, 0));
+               boundsV.push_back(pair<double, double>(0, 0));
                for (unsigned int i = 0; i < dataV.size(); ++i)
                {
                     pair<double, double> tmp = dataV[i];
                     dataV[i] = dataV.back();
-                    dataV[dataV.size() - 1] = tmp; 
+                    dataV[dataV.size() - 1] = tmp;
+                    
+                    tmp = boundsV[i];
+                    boundsV[i] = boundsV.back();
+                    boundsV[boundsV.size() - 1] = tmp;
                }
                
                
@@ -254,12 +308,17 @@ int main(int argc, char* argv[])
                {
                     double y = dataV.back().second;
                     dataV.push_back(pair<double, double>(xMax, y));
+                    
+                    double lBound = boundsV.back().first;
+                    double uBound = boundsV.back().second;
+                    boundsV.push_back(pair<double, double>(lBound, uBound));
                }
                
                
                //   Add the data points associated to this type of agent
                //   to the list
                data.push_back(dataV);
+               bounds.push_back(boundsV);
           }
           
           
@@ -297,7 +356,7 @@ int main(int argc, char* argv[])
           sstr.clear(); sstr.str(string());
           sstr << "\'" << output << "-" << i << ".eps\'";
           opt.setOption("output", sstr.str());
-          plot(data, classStrList, opt);
+          plot(opt, data, classStrList, bounds);
      }
 
 
@@ -469,7 +528,7 @@ int main(int argc, char* argv[])
           sstr << "\'" << output << "-" << i << ".eps\'";
           opt.setOption("output", sstr.str());
 
-          plot(data, titles, opt);
+          plot(opt, data, titles);
      }
 
 

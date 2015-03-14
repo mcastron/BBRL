@@ -13,7 +13,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2015-03-13
+	\date		2015-03-14
 */
 // ===========================================================================
 namespace utils
@@ -856,14 +856,20 @@ namespace utils
 	     // ==================================================================
 	     /**
 	          \brief        Plot the data on a 2D graph.
-	          \param[data   The data to plot (1 vector per curve).
-	          \param[titles The title associated to each curve.
 	          \param[opt    The gnuplot options to use.
+	          \param[data   The data to plot (1 vector per curve).
+	          \param[titles Defines the title associated to each curve.
+	          \param[bounds Defines the bounds associated to each point of
+	                        each curve.
 	     */
-           void plot(const std::vector<
+           void plot(GnuplotOptions opt,
+                     const std::vector<
                               std::vector<std::pair<double, double> > >& data,
                      const std::vector<std::string>& titles,
-                     GnuplotOptions opt = GnuplotOptions());
+                     std::vector<std::vector<
+                              std::pair<double, double> > > bounds
+                                   = std::vector<std::vector<
+                                             std::pair<double, double> > >());
 
 
           /**

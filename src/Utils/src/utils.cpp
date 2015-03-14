@@ -269,9 +269,10 @@ bool utils::parsing::hasFlag(int argc, char* argv[], string opt)
 // ===========================================================================
 //	Functions
 // ===========================================================================
-void utils::gnuplot::plot(const vector<vector<pair<double, double> > >& data,
+void utils::gnuplot::plot(utils::gnuplot::GnuplotOptions opt,
+                          const vector<vector<pair<double, double> > >& data,
                           const vector<string>& titles,
-                          utils::gnuplot::GnuplotOptions opt)
+                          vector<vector<pair<double, double> > > bounds)
 {
      //   1.   Write the data file
      string dataFile = ("data/export/tmp.dat");
@@ -279,7 +280,15 @@ void utils::gnuplot::plot(const vector<vector<pair<double, double> > >& data,
      for (unsigned int i = 0; i < data.size(); ++i)
      {
           for (unsigned int j = 0; j < data[i].size(); ++j)
-               datOS << data[i][j].first << "\t" << data[i][j].second << "\n";
+          {
+               datOS << data[i][j].first << "\t" << data[i][j].second;
+               if ((i < bounds.size()) && (bounds[i].size() == data[i].size()))
+               {
+                    datOS << "\t" << bounds[i][j].first;
+                    datOS << "\t" << bounds[i][j].second;
+               }
+               datOS << "\n";               
+          }
           if (!data[i].empty()) { datOS << "\n\n"; }
      }
      datOS.close();
@@ -290,21 +299,35 @@ void utils::gnuplot::plot(const vector<vector<pair<double, double> > >& data,
      ofstream scriptOS(scriptFile.c_str());
      scriptOS << opt.getScriptOptions();
      
+     unsigned int n = data.size();
      unsigned int index = 0;
      for (unsigned int i = 0; i < data.size(); ++i)
      {
           if (!data[i].empty())
-          {
+          {               
                if (index == 0) { scriptOS << "plot \'" << dataFile << "\'"; }
                else            { scriptOS << ", ''";                        }
                
-               scriptOS << " index " << index++;
+               scriptOS << " index " << index;
                if (opt.getWith() != "")
                     scriptOS << " with " << opt.getWith();
-               scriptOS << " lt palette frac " << (i / (double) data.size());
-     
-               if (i < titles.size())
-                    scriptOS << " title \"" << titles[i] << "\"";
+
+               double colorFrac = ((n <= 1) ? 0 : (i / (double) (n - 1)));
+               scriptOS << " lt palette frac " << colorFrac;
+
+               scriptOS << " title \"";
+               if (i < titles.size()) { scriptOS << titles[i];  }
+               else                   { scriptOS << "NO TITLE"; }
+               scriptOS << "\"";
+                    
+               if ((i < bounds.size()) && bounds[i].size() == data[i].size())
+               {
+                   scriptOS <<  ", \'\' index " << index;
+                   scriptOS << " with yerrorbars notitle pt -1";
+                   scriptOS << " lt palette frac " << colorFrac;
+               }
+               
+               ++index;
           }
      }
      scriptOS << "\n";
