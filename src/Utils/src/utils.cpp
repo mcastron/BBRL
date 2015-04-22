@@ -274,6 +274,11 @@ void utils::gnuplot::plot(utils::gnuplot::GnuplotOptions opt,
                           const vector<string>& titles,
                           vector<vector<pair<double, double> > > bounds)
 {
+     //   'inBox' case
+     vector<details::Polygon> polygons;
+     if (opt.getInBox()) { polygons  = details::getPolygons(data); }
+     
+     
      //   1.   Write the data file
      string dataFile = ("data/export/tmp.dat");
      ofstream datOS(dataFile.c_str());
@@ -299,6 +304,24 @@ void utils::gnuplot::plot(utils::gnuplot::GnuplotOptions opt,
      ofstream scriptOS(scriptFile.c_str());
      scriptOS << opt.getScriptOptions();
      
+          //   2.1  Polygons
+     for (unsigned int i = 0; i < polygons.size(); ++i)
+     {
+          scriptOS << "set object " << (i + 1) << " poly from ";
+          
+          pair<double, double> p0 = polygons[i].get(0);
+          scriptOS << p0.first << "," << p0.second;
+          
+          for (unsigned int j = 1; j < polygons[i].size(); ++j)
+          {
+               pair<double, double> p = polygons[i].get(j);
+               scriptOS << " to " << p.first << "," << p.second;
+          }
+          
+          scriptOS << " fs empty border 0\n";
+     }
+          
+          //   2.2  Plot
      unsigned int n = data.size();
      unsigned int index = 0;
      for (unsigned int i = 0; i < data.size(); ++i)
@@ -433,6 +456,49 @@ vector<pair<double, double> >
 }
 
 
+// ===========================================================================
+//   'details' namespace
+// ===========================================================================
+bool utils::gnuplot::details::Polygon::mergeWith(const Polygon& poly) const
+{
+     //   Ensure we can merge the polygons
+//     vector<bool> inBoth(poly.size());
+//     bool canBeMerged = false;
+//     for (unsigned int i = 0; i < poly.size(); ++i)
+//     {
+//          for (unsigned int j = 0; j < size(); ++j)
+//          {
+//               pair<double, double> pi = poly.get(i);
+//               pair<double, double> pj = get(j);
+//               
+//               if (pi.first == pj.first && pi.second == pj.second)
+//               {
+//                    inBoth[i]   = true;
+//                    canBeMerged = true;
+//               }
+//               else { inBoth[i] = false; }
+//          }
+//     }
+//     
+//     
+//     
+//     //   Exit if we can't merge the polygons
+//     if (!canBeMerged) { return false; }
+//     
+//     
+//     for (unsigned int i = 0; i < poly.size(); ++i)
+//     {
+//          if (!inBoth[i]) { 
+//     }
+//     
+//     
+//     //   Merge the polygons
+//     return true;
+     return false;
+     
+}
+
+
 vector<pair<double, double> >
      utils::gnuplot::details::getFirstPack(
           const vector<pair<double, double> >& dataV, double epsilon)
@@ -449,6 +515,158 @@ vector<pair<double, double> >
      }
      return pack;
 }
+
+
+std::vector<utils::gnuplot::details::Polygon>
+     utils::gnuplot::details::getPolygons(
+          const std::vector<std::vector<std::pair<double, double> > >& data)
+{
+     //   List all points of the space, and associate to each one:
+     //        - Its coordinates.
+     //        - The list of functions which are associated to it.
+          //   Retrieve all coordinate combinations
+     set<double> xSet, ySet;
+     for (unsigned int i = 0; i < data.size(); ++i)
+     {
+          for (unsigned int j = 0; j < data[i].size(); ++j)
+          {
+               xSet.insert(data[i][j].first);
+               ySet.insert(data[i][j].second);
+          }
+     }
+     
+     vector<double> xList, yList;
+     copy(xSet.begin(), xSet.end(), back_inserter(xList));
+     copy(ySet.begin(), ySet.end(), back_inserter(yList));
+     
+     sort(xList.begin(), xList.end());
+     sort(yList.begin(), yList.end());
+     
+     vector<vector<PointData> > grid;
+     for (unsigned int i = 0; i < yList.size(); ++i)
+     {
+          grid.push_back(vector<PointData>());
+          for (unsigned int j = 0; j < xList.size(); ++j)
+               grid[i].push_back(PointData(xList[j], yList[i]));
+     }
+     
+          //   Associate the function to each point of the space
+     for (unsigned int i = 0; i < data.size(); ++i)
+     {
+          for (unsigned int j = 0; j < data[i].size(); ++j)
+          {
+               const unsigned int& f = i;
+               const double&       x = data[i][j].first;
+               const double&       y = data[i][j].second;
+               
+               for (unsigned int k = 0; k < grid.size(); ++k)
+               {
+                    for (unsigned int l = 0; l < grid[k].size(); ++l)
+                    {
+                         if (grid[k][l].getX() == x
+                                   && grid[k][l].getY() == y)
+                         {                         
+                              grid[k][l].addToList(f);
+                              break;
+                         }
+                    }
+               }
+          }
+     }
+     
+     
+     //
+     for (int i = (int) grid.size() - 1; i >= 0; --i)
+     {
+          for (unsigned int j = 0; j < grid[i].size(); ++j)
+          {
+               cout << "(";
+               
+               const set<unsigned int>& list = grid[i][j].getList();
+               
+               set<unsigned int>::const_iterator it  = list.begin();
+               set<unsigned int>::const_iterator end = list.end();
+               for (; it != end; ++it)
+               {
+                    if (it != list.begin()) { cout << ","; }
+                    cout << *it;
+               }
+               cout << ")\t";  
+          }
+          cout << "\n";
+     }
+     
+     cout << "---" << endl;
+     //
+     
+     
+     //   Build a polygon around each point
+     vector<Polygon> polygons;
+     for (unsigned int i = 0; i < grid.size(); ++i)
+     {
+          for (unsigned int j = 0; j < grid[i].size(); ++j)
+          {
+               Polygon poly;
+               
+               unsigned int nX = grid[i].size();
+               unsigned int nY = grid.size();
+               
+               unsigned int x0 = ((int) j - 1) <   0 ?  0       : (j - 1);
+               unsigned int y0 = ((int) i - 1) <   0 ?  0       : (i - 1);
+               unsigned int x1 = ((int) j + 1) >= nX ? (nX - 1) : (j + 1);
+               unsigned int y1 = ((int) i + 1) >= nY ? (nY - 1) : (i + 1);
+
+               
+               //   Top-left
+               poly.add((grid[y0][x0].getX() + grid[i][j].getX()) / 2.0,
+                        (grid[y0][x0].getY() + grid[i][j].getY()) / 2.0);            
+               
+               //   Top-right
+               poly.add((grid[y0][x1].getX() + grid[i][j].getX()) / 2.0,
+                        (grid[y0][x1].getY() + grid[i][j].getY()) / 2.0);
+               
+               //   Bottom-right
+               poly.add((grid[y1][x1].getX() + grid[i][j].getX()) / 2.0,
+                        (grid[y1][x1].getY() + grid[i][j].getY()) / 2.0);
+               
+               //   Bottom-left
+               poly.add((grid[y1][x0].getX() + grid[i][j].getX()) / 2.0,
+                        (grid[y1][x0].getY() + grid[i][j].getY()) / 2.0);
+                        
+               //   Top-left
+               poly.add((grid[y0][x0].getX() + grid[i][j].getX()) / 2.0,
+                        (grid[y0][x0].getY() + grid[i][j].getY()) / 2.0);                        
+                        
+               polygons.push_back(poly);
+          }
+     }
+     
+     
+     //   Merge the polygons
+     for (unsigned int i = 0; i < polygons.size();)
+     {
+          bool merged = false;
+          for (unsigned int j = (i + 1); j < polygons.size(); ++j)
+          {              
+               //   Try to merge polygons 'i' and 'j'
+               if (polygons[i].mergeWith(polygons[j]))  
+               {
+                    polygons[j] = polygons.back();
+                    polygons.pop_back();
+                    
+                    merged = true;
+                    break;
+               }
+          }
+          
+          if (!merged) { ++i; }
+     }
+     
+     
+     //   Return the remaining polygons
+     return polygons;
+}
+
 
 
 // ---------------------------------------------------------------------------
@@ -494,7 +712,7 @@ void utils::latex::table(const vector<vector<Cell*> >& grid,
 
 
      //   Header
-     os << "\\begin{tabular}{";
+     os << "\\begin{longtable}{";
      for (unsigned int i = 0; i < grid[0].size(); ++i)
      {
           if (i < vLines.size())
@@ -541,6 +759,6 @@ void utils::latex::table(const vector<vector<Cell*> >& grid,
 
 
      //   Footer
-     os << "\\end{tabular}\n";
+     os << "\\end{longtable}\n";
      os.close();
 }

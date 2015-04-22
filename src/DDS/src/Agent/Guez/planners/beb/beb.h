@@ -36,8 +36,8 @@ public:
 
    
 	private:
-		double* counts;
-		double* countsSum;
+		double* postCounts;
+		double* postCountsSum;
     const SIMULATOR& Simulator;
 	
 		PARAMS Params;

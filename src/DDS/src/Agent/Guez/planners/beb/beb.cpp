@@ -35,13 +35,24 @@ BEB::BEB(const SIMULATOR& simulator, const PARAMS& params,
 		SAS = S*A*S;
 		
 		//Initialize transition counts for posterior estimation
-		counts = new double[SAS];	
-		std::fill(counts,counts+SAS,SampFact.getAlphaMean());
-		countsSum = new double[SA];
-		std::fill(countsSum,countsSum+SA,SampFact.getAlphaMean()*S);
+		uint* counts = new uint[SAS];
+		for (uint i = 0; i < SAS; ++i) { counts[i] = 0; }
+          postCounts = sampFact.getPostCounts(counts, S, A);
+          delete[] counts;
+          
+          postCountsSum = new double[SA];
+          P = new double[SAS];
+          for (uint s = 0; s < S; ++s)
+               for (uint a = 0; a < A; ++a)
+               {
+                    postCountsSum[A*s + a] = 0.0;
+                    for (uint sp = 0; sp < S; ++sp)
+                         postCountsSum[A*s + a] += postCounts[A*S*s + S*a + sp];
 
-		P = new double[SAS];
-		std::fill(P,P+SAS,1/(double)S);//For symmetric priors
+                    for (uint sp = 0; sp < S; ++sp)
+                         P[A*S*s + S*a + sp] = postCounts[A*S*s + S*a + sp]
+                                                  / postCountsSum[A*s + a];
+               }
 		
 		if(Simulator.rsas){
 			R = new double[SA*S];
@@ -64,10 +75,10 @@ BEB::BEB(const SIMULATOR& simulator, const PARAMS& params,
 			for(uint aa=0; aa<A; ++aa){
 				if(Simulator.rsas){
 					for(uint sp=0; sp<S;++sp)
-						R[ss*SA+aa*S+sp] += Params.b/(1+countsSum[ss*A+aa]);
+						R[ss*SA+aa*S+sp] += Params.b/(1+postCountsSum[ss*A+aa]);
 				}
 				else
-					R[ss*A+aa] += Params.b/(1+countsSum[ss*A+aa]);	
+					R[ss*A+aa] += Params.b/(1+postCountsSum[ss*A+aa]);	
 			}
 		}
 	
@@ -75,8 +86,8 @@ BEB::BEB(const SIMULATOR& simulator, const PARAMS& params,
 
 BEB::~BEB()
 {
-	delete[] counts;
-	delete[] countsSum;
+	delete[] postCounts;
+	delete[] postCountsSum;
 	delete[] P;
 	delete[] R;
 	delete[] V;
@@ -87,25 +98,25 @@ BEB::~BEB()
 bool BEB::Update(uint ss, uint aa, uint observation, double)
 {
 		//Update posterior
-		counts[ss*SA+S*aa+observation] += 1;
-		countsSum[ss*A+aa] += 1;	
+		postCounts[ss*SA+S*aa+observation] += 1;
+		postCountsSum[ss*A+aa] += 1;	
 
 
 		//Update mean model
-		memcpy(P+ss*SA+aa*S,counts+ss*SA+aa*S,S*sizeof(double));
+		memcpy(P+ss*SA+aa*S,postCounts+ss*SA+aa*S,S*sizeof(double));
 		for(uint sp=0;sp<S;++sp){
-			P[ss*SA+aa*S+sp] = P[ss*SA+aa*S+sp]/countsSum[ss*A+aa];
+			P[ss*SA+aa*S+sp] = P[ss*SA+aa*S+sp]/postCountsSum[ss*A+aa];
 		}
 		//Update Reward function
 		
 		if(Simulator.rsas){
 			memcpy(R+ss*SA+aa*S,Simulator.R+ss*SA+aa*S,S*sizeof(double));
 			for(uint sp=0; sp<S;++sp)
-				R[ss*SA+aa*S+sp] += Params.b/(1+countsSum[ss*A+aa]);
+				R[ss*SA+aa*S+sp] += Params.b/(1+postCountsSum[ss*A+aa]);
 		}
 		else{
 			R[ss*A+aa] = Simulator.R[ss*A+aa];
-			R[ss*A+aa] += Params.b/(1+countsSum[ss*A+aa]);
+			R[ss*A+aa] += Params.b/(1+postCountsSum[ss*A+aa]);
 		}
 		return true;
 }

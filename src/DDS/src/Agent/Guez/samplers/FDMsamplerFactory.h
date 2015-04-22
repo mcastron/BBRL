@@ -17,6 +17,7 @@ class FDMsamplerFactory : public SamplerFactory{
 //		void updateCounts(uint s, uint a, uint obs){};
 		void updateCounts(uint, uint, uint){};
 		double getAlphaMean(){return alpha;}
+		double* getPostCounts(uint* counts, uint S, uint A);
 	protected:
 		
 		double alpha;

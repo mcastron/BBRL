@@ -17,12 +17,14 @@ SBOSSAgent::SBOSSAgent(std::istream& is) :
 }
 
 
-SBOSSAgent::SBOSSAgent(unsigned int K_, double delta_) :
-          K(K_), delta(delta_), sboss(0), simulator(0), samplerFact(0)
+SBOSSAgent::SBOSSAgent(double epsilon_, double delta_) :
+          epsilon(epsilon_), delta(delta_),
+          sboss(0), simulator(0), samplerFact(0)
 {
      stringstream sstr;
-	sstr << "SBOSS (K = " << K << ", delta = ";
-	sstr << setprecision(ceil(log10(delta) + 2)) << delta;
+	sstr << "SBOSS (";
+	sstr << "epsilon = " << setprecision(ceil(log10(epsilon) + 2)) << epsilon;
+	sstr << ", delta = " << setprecision(ceil(log10(delta)   + 2)) << delta;
 	sstr << ", no model)";
 	setName(sstr.str());
      
@@ -71,7 +73,7 @@ void SBOSSAgent::reset() throw (AgentException)
      if (samplerFact)    { delete samplerFact; }
      
      SBOSS::PARAMS searchParamsSBOSS;
-	searchParamsSBOSS.K = K;
+	searchParamsSBOSS.epsilon = epsilon;
 	searchParamsSBOSS.delta = delta;
 	
      
@@ -111,8 +113,8 @@ void SBOSSAgent::serialize(ostream& os) const
      os << 6 << "\n";
 
 
-	//  'K'
-	os << K << "\n";
+	//  'epsilon'
+	os << epsilon << "\n";
 
 
 	//  'delta'
@@ -178,9 +180,9 @@ void SBOSSAgent::deserialize(istream& is) throw (SerializableException)
 	int i = 0;
 
 
-	//  'K'
-	if (!getline(is, tmp)) { throwEOFMsg("K"); }
-	K = atoi(tmp.c_str());
+	//  'epsilon'
+	if (!getline(is, tmp)) { throwEOFMsg("epsilon"); }
+	epsilon = atof(tmp.c_str());
 	++i;
 
 
@@ -279,8 +281,11 @@ void SBOSSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 		R = dirDistrib->getR();
 		priorcountList = dirDistrib->getTheta();		
 		stringstream sstr;
-		sstr << "SBOSS (K = " << K << ", delta = ";
-		sstr << setprecision(ceil(log10(delta) + 2)) << delta;
+		sstr << "SBOSS (";
+	     sstr << "epsilon = " << setprecision(ceil(log10(epsilon) + 2));
+	     sstr << epsilon;
+	     sstr << ", delta = " << setprecision(ceil(log10(delta)   + 2));
+	     sstr << delta;
 		sstr << ", " << dirDistrib->getShortName() << ")";
 		setName(sstr.str());
 	}
@@ -306,7 +311,7 @@ void SBOSSAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 #ifndef NDEBUG
 void SBOSSAgent::checkIntegrity() const
 {
-	assert(K > 0);
-	assert(delta > 0.0);
+	assert(epsilon > 0.0);
+	assert(delta   > 0.0);
 }
 #endif

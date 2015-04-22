@@ -10,7 +10,7 @@
 #include "../../../samplers/sampler.h"
 #include "../../../samplers/samplerFactory.h"
 
-#include "../../../envs/banditSim.h"
+//#include "../../../envs/banditSim.h"
 #include "../../../planners/MDPutils.h"
 
 #include "../../../envs/basicMDP.h"
@@ -28,7 +28,6 @@ BAMCP::PARAMS::PARAMS()
     ExpandCount(1),
     ExplorationConstant(1),
 		ReuseTree(false),
-		BANDIT(false),   //Deal with bandits a bit differently in the code
 		RB(-1),
 		eps(1)
 {
@@ -67,22 +66,9 @@ BAMCP::BAMCP(const SIMULATOR& simulator, const PARAMS& params,
     QlearningRate = 0.2;
 		
 		//Initialize transition counts for posterior estimation
-		if(!Params.BANDIT){
-			counts = new uint[SAS];
-			for(uint c=0;c<SAS;++c){
-				counts[c] = 0;
-			}
-		}
-		else{
-			assert(S == 2);
-			counts = new uint[SA];
-			for(uint c=0;c<SA;++c){
-				counts[c] = 0;
-			}
-		}
-		
-		countsSum = new double[SA];
-		std::fill(countsSum,countsSum+SA,SampFact.getAlphaMean()*S);
+		counts = new uint[SAS];
+		for (uint i = 0; i < SAS; ++i) { counts[i] = 0; }
+          postCounts = sampFact.getPostCounts(counts, S, A);
 	
 		step = 0;
   
@@ -94,7 +80,7 @@ BAMCP::BAMCP(const SIMULATOR& simulator, const PARAMS& params,
 BAMCP::~BAMCP()
 {
 	delete[] counts;
-	delete[] countsSum;	
+	delete[] postCounts;
  
 	delete[] RLPI;
 	delete[] V;
@@ -113,13 +99,9 @@ bool BAMCP::Update(uint ss, uint aa, uint observation, double reward)
     History.Add(aa, observation);
 	
 		//Update posterior
-		if(!Params.BANDIT){
-			counts[ss*SA+S*aa+observation] += 1;
-			SampFact.updateCounts(ss,aa,observation);	
-			countsSum[ss*A+aa] += 1;
-		}
-		else
-			counts[aa*S+observation] += 1;
+		counts[ss*SA+S*aa+observation] += 1;
+		postCounts[ss*SA+S*aa+observation] += 1;
+		SampFact.updateCounts(ss,aa,observation);	
 
     //Q value update
 		Q[ss*A+aa] += QlearningRate*(reward + Simulator.GetDiscount()*Q[observation*A+GreedyA[observation]->at(0)] - Q[ss*A+aa]);
@@ -171,32 +153,14 @@ void BAMCP::UCTSearch(uint state)
 		double* parm = 0;
 		double* p_samp = 0;
 		Sampler* MDPSampler = 0;
-		if(Params.BANDIT){
-			parm = new double[2];
-			p_samp = new double[Simulator.GetNumActions()];
-		}
-		else{
-			MDPSampler = SampFact.getMDPSampler(counts,S,A,
-					Simulator.R,Simulator.rsas,Simulator.GetDiscount());
-		}
+		MDPSampler = SampFact.getMDPSampler(counts,S,A,
+				Simulator.R,Simulator.rsas,Simulator.GetDiscount());
     
 			
     for (int n = 0; n < Params.NumSimulations; n++)
     {
-				SIMULATOR* mdp;
-				if(!Params.BANDIT){
-					// Sample MDP given counts	
-					mdp = MDPSampler->updateMDPSample();
-					
-				}else if(Params.BANDIT){  //TODO Move this to a special BANDIT sampler?
-					state = 0; //Ignore state itself
-					//sample Bandit
-					for(int a=0;a<Simulator.GetNumActions();++a){
-						guez_utils::sampleDirichlet(parm,counts+a*2,2,1);
-						p_samp[a] = parm[0];
-					}
-					mdp = new BANDIT(Simulator.GetNumActions(),p_samp,Simulator.GetDiscount());	
-				}
+				SIMULATOR* mdp;	
+				mdp = MDPSampler->updateMDPSample();
 
 				Status.Phase = SIMULATOR::STATUS::TREE;
 
@@ -218,17 +182,8 @@ void BAMCP::UCTSearch(uint state)
             DisplayValue(4, cout);
 
         History.Truncate(historyDepth);
-
-				if(Params.BANDIT)
-					delete mdp;
-
 		}
-		if(!Params.BANDIT)
-			delete MDPSampler;
-		else if(Params.BANDIT){	
-			delete[] parm;
-			delete[] p_samp;
-		}
+		delete MDPSampler;
     DisplayStatistics(cout);
 }
 
@@ -273,11 +228,6 @@ double BAMCP::SimulateQ(const SIMULATOR* mdp, uint state, QNODE& qnode, uint act
         if (vnode)
             delayedReward = SimulateV(mdp, observation, vnode);
         else{
-						if(Params.BANDIT){
-							double bestP = ((BANDIT*)mdp)->getBestArmP();
-							delayedReward = bestP/(1-mdp->GetDiscount()); //Rollout(mdp, state);
-						}
-						else{
 							if(Params.RB < 0){
 								delayedReward = Rollout(mdp, observation);
 							}else{
@@ -291,11 +241,9 @@ double BAMCP::SimulateQ(const SIMULATOR* mdp, uint state, QNODE& qnode, uint act
 										Simulator.GetDiscount(),
 										0.0001,
 										RLPI,
-										V,counts,Params.RB);
+										V,postCounts,Params.RB);
 								delayedReward = V[observation];
-							}	
-						}
-						
+							}
 				}
         TreeDepth--;
     }

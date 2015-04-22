@@ -13,7 +13,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2015-03-14
+	\date		2015-04-21
 */
 // ===========================================================================
 namespace utils
@@ -692,22 +692,7 @@ namespace utils
           {
                NFT_MIN, NFT_MAX, NFT_MEAN
           };
-          
-          
-          // =================================================================
-		//	Details (to ignore)
-		// =================================================================
-		namespace details
-		{
-		     // Return a pack corresponding to similar points. A point is
-		     // part of the pack if the shortest distance between this point
-		     // and a point of the pack is at most 'epsilon'
-		     // (first coordinate). The data in 'dataV' have to be sorted.
-               std::vector<std::pair<double, double> > getFirstPack(
-                         const std::vector<std::pair<double, double> >& dataV,
-                         double epsilon);
-		}
-          
+
           
           // ==================================================================
           //    Classes
@@ -726,7 +711,8 @@ namespace utils
                          \brief              Constructor.
                          \param[fontSize     The size of the font.
                     */
-                    GnuplotOptions(unsigned int fontSize = 12) : withValue ("")
+                    GnuplotOptions(unsigned int fontSize = 12) :
+                              withValue (""), inBox(false)
                     {
                          std::stringstream sstr;
                          sstr << "postscript eps enhanced color font ";
@@ -799,7 +785,23 @@ namespace utils
                          \return   The 'with' option, added to each curve
                                    definition when plotted.
                     */
-                    std::string getWith() { return withValue; }                    
+                    std::string getWith() const { return withValue; }                
+
+
+                    /**
+                         \brief         Set the 'inBox' option.
+                         
+                         \param[inBox_  The value of 'inBox' option.
+                    */
+                    void setInBox(bool inBox_) { inBox = inBox_; }
+                    
+                    
+                    /**
+                         \brief    Return the value of 'inBox' option.
+                         
+                         \return   The value of 'inBox' option.
+                    */
+                    bool getInBox() const { return inBox; }
 
 
                     /**
@@ -809,7 +811,7 @@ namespace utils
                          \return   The gnuplot script header corresponding
                                    to the options defined.
                     */
-                    std::string getScriptOptions()
+                    std::string getScriptOptions() const
                     {
                          std::string scriptOptions = "";
                          for (unsigned int i = 0; i < setOptions.size(); ++i)
@@ -848,7 +850,89 @@ namespace utils
                          \brief    The 'with' options.
                     */
                     std::string withValue;
+                    
+                    
+                    /**
+                         \brief    If true, the 2D-plane is split in 'areas',
+                                   where are all dots within the area are
+                                   occupied by the same functions.
+                    */
+                    bool inBox;
           };
+          
+          
+          // =================================================================
+		//	Details (to ignore)
+		// =================================================================
+		namespace details
+		{
+		     // Information on a particular point of the space
+		     class PointData
+		     {
+		          public:
+                         PointData(double x_, double y_) : x(x_), y(y_) {}
+
+                         double getX() const { return x; }
+                         
+                         double getY() const { return y; }
+
+                         void addToList(unsigned int f) { list.insert(f); }
+                         
+                         const std::set<unsigned int>& getList() const
+                         {
+                              return list;
+                         }
+		        
+		        
+                    private:
+                         double x, y;
+                         std::set<unsigned int> list;
+		     };
+		     
+		     
+		     // Represent a polygon
+		     class Polygon
+		     {
+                    public:
+                         void add(double x, double y)
+                         {
+                              vertices.push_back(
+                                        std::pair<double, double>(x, y));
+                         }
+                         
+                         
+                         std::pair<double, double> get(unsigned int i)
+                         {
+                              return vertices[i];
+                         }
+                         
+                         bool mergeWith(const Polygon& poly) const;
+                         
+                         
+                         unsigned int size() const { return vertices.size(); }
+                         
+                         
+                         void clear() { vertices.clear(); }
+                    
+                    
+                    private:
+                         std::vector<std::pair<double, double> > vertices;
+		     };
+		   
+		   
+		     // Return a pack corresponding to similar points. A point is
+		     // part of the pack if the shortest distance between this point
+		     // and a point of the pack is at most 'epsilon'
+		     // (first coordinate). The data in 'dataV' have to be sorted.
+               std::vector<std::pair<double, double> > getFirstPack(
+                         const std::vector<std::pair<double, double> >& dataV,
+                         double epsilon);
+                         
+                         
+               // The 'plot' function for handling 'inBox' case.
+               std::vector<Polygon> getPolygons(const std::vector<
+                         std::vector<std::pair<double, double> > >& data);
+		}
          
          
           // ==================================================================
@@ -862,11 +946,11 @@ namespace utils
 	          \param[bounds Defines the bounds associated to each point of
 	                        each curve.
 	     */
-           void plot(GnuplotOptions opt,
-                     const std::vector<
+          void plot(GnuplotOptions opt,
+                    const std::vector<
                               std::vector<std::pair<double, double> > >& data,
-                     const std::vector<std::string>& titles,
-                     std::vector<std::vector<
+                    const std::vector<std::string>& titles,
+                    std::vector<std::vector<
                               std::pair<double, double> > > bounds
                                    = std::vector<std::vector<
                                              std::pair<double, double> > >());

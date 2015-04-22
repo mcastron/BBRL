@@ -19,4 +19,5 @@ class SamplerFactory{
 		virtual void reset(){} //Reset factory
 
 		virtual double getAlphaMean(){return 0;}
+		virtual double* getPostCounts(uint* counts, uint S, uint A) = 0;
 };

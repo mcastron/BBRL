@@ -12,7 +12,7 @@
 	
 	\brief		A collection of general tools for exporting results.
 	
-	\date		2015-03-13
+	\date		2015-04-14
 */
 // ===========================================================================
 namespace xport
@@ -64,6 +64,58 @@ namespace xport
      //   Classes
 	// ======================================================================
 	/**
+         \class    AgentDataException
+         \brief    Exception
+    */
+    class AgentDataException: public std::exception
+     {
+     	public:
+     		// ============================================================
+     		//	Public Constructors/Destructors
+     		// ============================================================
+     		/**
+     			\brief 		Constructor.
+     			
+     			\param[opt	The option concerned by the error.
+     		*/
+     		AgentDataException(std::string opt)
+     		{
+                    msg = "Error while parsing option \'" + opt + "\'\n";
+     		}
+     		
+     		
+     		/**
+     		     \brief    Destructor.
+     		*/
+     		virtual ~AgentDataException() throw() {}
+     
+     
+     		// ============================================================
+     		//	Public methods
+     		// ============================================================
+     		/**
+     			\brief		Returns the error message.
+     			
+     			\return		The error messIAge.
+     		*/
+     		virtual const char* what() const throw()
+     		{
+     		   return msg.c_str();
+     		}
+     	
+     	
+     	private:
+     		// ============================================================
+     		//	Private attributes
+     		// ============================================================
+     		/**
+     			\brief	The error message.
+     		*/
+     		std::string msg;
+     };
+
+	
+	/**
           \class    AgentData
           \brief    Store the data related to an agent tested on an
                     experiment.
@@ -77,7 +129,8 @@ namespace xport
                /**
                     \brief    Constructor
                */
-               AgentData() : dsrList(std::vector<double>()) {}     
+               AgentData() : agentLoaded(false), expLoaded(false),
+                             dsrList(std::vector<double>()) {}     
                
                
                // ============================================================
@@ -88,21 +141,44 @@ namespace xport
                     
                     \param[agent   The data to load.
                */
-               void loadAgent(const Agent* agent)
+               void loadAgent(const Agent* agent) throw (AgentDataException)
                {
+                    if (agentLoaded)
+                    {
+                         string msg;
+                         msg += "An agent has already been loaded in this ";
+                         msg += "'AgentData'!";
+                         
+                         throw AgentDataException(msg);
+                    }
+
+                    
                     className   = agent->getExportClassName();
                     name        = agent->getExportName();
                     offlineTime = agent->getOfflineTime();
+                    
+                    agentLoaded = true;
                }
-               
-               
+
+
                /**
                     \brief         Load the data of 'exp'.
                     
                     \param[exp     The data to load.
                */
                void loadExperiment(const Experiment* exp)
+                                                  throw (AgentDataException)
                {
+                    if (expLoaded)
+                    {
+                         string msg;
+                         msg += "An experiment has already been loaded in ";
+                         msg += "this 'AgentData'!";
+                         
+                         throw AgentDataException(msg);
+                    }
+                    
+                    
                     expName     = exp->getName();
                     
                     onlineTime  = (exp->getTimeElapsed()
@@ -116,7 +192,29 @@ namespace xport
                     mean       = ((CI95.first + CI95.second) / 2.0);
                     lowerBound = CI95.first;
                     upperBound = CI95.second;
+                    
+                    expLoaded = true;
                }
+               
+               
+               /**
+                    \brief    Return true if an agent has already been loaded,
+                              false else.
+
+                    \return   True if an agent has alread been loaded, false
+                              else.
+               */
+               bool isAgentLoaded() const { return agentLoaded; }
+
+               
+               /**
+                    \brief    Return true if an experiment has already been
+                              loaded, false else.
+
+                    \return   True if an experiment has already been loaded,
+                              false else.
+               */
+               bool isExperimentLoaded() const { return expLoaded; }
                
                
                /**
@@ -124,7 +222,28 @@ namespace xport
                     
                     \return   The DSR list.
                */
-               std::vector<double> getDSRList() const { return dsrList; }
+               std::vector<double> getDSRList() const
+                                                  throw (AgentDataException)
+               {
+                    if (!agentLoaded)
+                    {
+                         string msg;
+                         msg += "An agent has not been loaded yet!";
+                         
+                         throw AgentDataException(msg);
+                    }
+                    
+                    if (!expLoaded)
+                    {
+                         string msg;
+                         msg += "An experiment has not been loaded yet!";
+                         
+                         throw AgentDataException(msg);
+                    }
+
+
+                    return dsrList;
+               }
 
 
                /**
@@ -133,7 +252,25 @@ namespace xport
                     \return   The value of field 'field.
                */
                std::string getField(StrField field) const
+                                                  throw (AgentDataException)
                {
+                    if (!agentLoaded)
+                    {
+                         string msg;
+                         msg += "An agent has not been loaded yet!";
+                         
+                         throw AgentDataException(msg);
+                    }
+                    
+                    if (!expLoaded)
+                    {
+                         string msg;
+                         msg += "An experiment has not been loaded yet!";
+                         
+                         throw AgentDataException(msg);
+                    }
+
+                    
                     switch (field)
                     {
                          case CLASS_NAME: return className;
@@ -149,7 +286,25 @@ namespace xport
                     \return   The value of field 'field.
                */
                double getField(DblField field) const
+                                                  throw (AgentDataException)
                {
+                    if (!agentLoaded)
+                    {
+                         string msg;
+                         msg += "An agent has not been loaded yet!";
+                         
+                         throw AgentDataException(msg);
+                    }
+                    
+                    if (!expLoaded)
+                    {
+                         string msg;
+                         msg += "An experiment has not been loaded yet!";
+                         
+                         throw AgentDataException(msg);
+                    }
+
+                    
                     switch (field)
                     {
                          case OFFLINE_TIME: return offlineTime;
@@ -159,12 +314,65 @@ namespace xport
                          case UPPER_BOUND:  return upperBound;
                     }
                }
+               
+               
+               /**
+                    \brief    Return true if 'x' is the same AgentData,
+                              false else.
+                    
+                    \param[x  An AgentData
+                    
+                    \return   True if 'x' is the same AgentData, false else.
+               */
+               bool operator==(const AgentData& x) const
+               {
+                    bool sameDSR = true;
+                    if (dsrList.size() != (x.dsrList).size())
+                         sameDSR = false;
+
+                    else
+                    {
+                         for (unsigned int i = 0; i < dsrList.size(); ++i)
+                         {
+                              if (dsrList[i] != (x.dsrList)[i])
+                              {
+                                   
+                                   sameDSR = false;
+                                   break;
+                              }
+                         }
+                    }
+                    
+                    return (className == x.className
+                              && name == x.name
+                              && expName == x.expName
+                              && offlineTime == x.offlineTime
+                              && onlineTime == x.onlineTime
+                              && sameDSR
+                              && mean == x.mean
+                              && lowerBound == x.lowerBound
+                              && upperBound == x.upperBound);
+               }
+               
 
 
           private:
                // ============================================================
                //   Private attributes
                // ============================================================
+               /**
+                    \brief    True if an agent has been loaded, false else.
+               */
+               bool agentLoaded;
+               
+               
+               /**
+                    \brief    True if an experiment has been loaded, false
+                              else.
+               */
+               bool expLoaded;
+
+
                /**
                     \brief    The class, agent and experiment names.
                */
@@ -211,6 +419,9 @@ namespace xport
 	std::vector<AgentData> getAgentDataList(int argc, char* argv[]);
 
 
+     // -----------------------------------------------------------------------
+     //   getList()
+     // -----------------------------------------------------------------------
      /**
           \brief         Return the list of 'AgentData's values taken by the
                          given field (no repetition).
@@ -225,44 +436,116 @@ namespace xport
 
 
      /**
-          \brief               Filter the 'AgentData's by returning those whose
-                               field 'field' matches the condition 'condition'
-                               when compared to 'cStr'.
+          \brief         Return the list of 'AgentData's values taken by the
+                         given field (no repetition).
+                         
+                         Limited to the 'AgentData's whose indexes are in
+                         'list'.
+
+          \param[list    The indexes of the 'AgentData's to consider.
+                         (optional)
+          \param[field   A string field.
+          
+          \return        The list of 'AgentData' values taken by the given
+                         field (no repetition).
+     */
+     std::vector<std::string> getList(
+               const vector<unsigned int>& list,
+               const std::vector<AgentData>& agentDataList, StrField field);
+
+
+     // -----------------------------------------------------------------------
+     //   filter()
+     // -----------------------------------------------------------------------
+     /**
+          \brief               Filter the 'AgentData's by returning the indexes
+                               of those whose field 'field' matches the
+                               condition 'condition' when compared to 'cStr'.
 
           \param[agentDataList The data to filter.
           \param[field         The field to analyse.
           \param[condition     The condition to check.
           \param[cStr          The comparison value.
           
-          \return              Return the 'AgentData' whose field 'field'
+          \return              Return the indexes of those whose field 'field'
                                matches the condition 'condition' when compared
                                to 'cStr'.
      */
-     std::vector<AgentData> filter(const std::vector<AgentData>& agentDataList,
-	                              StrField field,
-	                              StrFilterCondition condition,
-	                              string cStr);
+     std::vector<unsigned int> filter(
+               const std::vector<AgentData>& agentDataList,
+	          StrField field, StrFilterCondition condition, string cStr);
 
 
      /**
-          \brief               Filter the 'AgentData's by returning those whose
-                               field 'field' matches the condition 'condition'
-                               when compared to 'cStr'.
+          \brief               Filter the 'AgentData's by returning the indexes
+                               of those whose field 'field' matches the
+                               condition 'condition' when compared to 'cStr'.
+                               
+                               Limited to the 'AgentData's whose indexes are in
+                               'list'.
+
+          \param[list          The indexes of the 'AgentData's to consider.
+          \param[agentDataList The data to filter.
+          \param[field         The field to analyse.
+          \param[condition     The condition to check.
+          \param[cStr          The comparison value.
+          
+          \return              Return the indexes of those whose field 'field'
+                               matches the condition 'condition' when compared
+                               to 'cStr'.
+     */
+     std::vector<unsigned int> filter(
+               const vector<unsigned int>& list,
+               const std::vector<AgentData>& agentDataList,
+	          StrField field, StrFilterCondition condition, string cStr);
+
+
+     /**
+          \brief               Filter the 'AgentData's by returning the indexes
+                               of those whose field 'field' matches the
+                               condition 'condition' when compared to 'value'.
 
           \param[agentDataList The data to filter.
           \param[field         The field to analyse.
           \param[condition     The condition to check.
           \param[value         The comparison value.
           
-          \return              Return the 'AgentData' whose field 'field'
+          \return              Return the indexes of those whose field 'field'
                                matches the condition 'condition' when compared
                                to 'value'.
      */
-     std::vector<AgentData> filter(const std::vector<AgentData>& agentDataList,
-                                   DblField field,
-	                              DblFilterCondition condition, double value);
+     std::vector<unsigned int> filter(
+               const std::vector<AgentData>& agentDataList,
+               DblField field, DblFilterCondition condition, double value);
 
 
+     /**
+          \brief               Filter the 'AgentData's by returning the indexes
+                               of those whose field 'field' matches the
+                               condition 'condition' when compared to 'value'.
+
+                               Limited to the 'AgentData's whose indexes are in
+                               'list'.
+
+          \param[list          The indexes of the 'AgentData's to consider.
+          \param[agentDataList The data to filter.
+          \param[field         The field to analyse.
+          \param[condition     The condition to check.
+          \param[value         The comparison value.
+          
+          \return              Return the indexes of those whose field 'field'
+                               matches the condition 'condition' when compared
+                               to 'value'.
+     */
+     std::vector<unsigned int> filter(
+               const vector<unsigned int>& list,
+               const std::vector<AgentData>& agentDataList,
+               DblField field, DblFilterCondition condition, double value);
+
+
+     // -----------------------------------------------------------------------
+     //   getMin()
+     // -----------------------------------------------------------------------
      /**
           \brief               Return the index of the 'AgentData's minimizing 
                                field 'field', '-1' if 'agentDataList' is empty.
@@ -274,8 +557,37 @@ namespace xport
                                'field'.    
      */
      int getMin(const std::vector<AgentData>& agentDataList, DblField field);
+     
+     
+     /**
+          \brief               Return the index of the 'AgentData's minimizing 
+                               field 'field', '-1' if 'agentDataList' is empty.
+                               
+                               Limited to the 'AgentData's whose indexes are in
+                               'list'.
+
+          \param[list          The indexes of the 'AgentData's to consider.
+          \param[agentDataList The data.
+          \param[field         The field to check.
+
+          \return              The index of the 'AgentData' minimizing field
+                               'field'.    
+     */
+     int getMin(const vector<unsigned int>& list,
+                const std::vector<AgentData>& agentDataList, DblField field);
+     
+     
+     /**
+          \brief    DO NOT USE (memory optimization for 'sort()').
+     */
+     int getMin(const std::vector<const AgentData*>& agentDataList,
+                DblField field);
 
 
+
+     // -----------------------------------------------------------------------
+     //   getMax()
+     // -----------------------------------------------------------------------
      /**
           \brief               Return the index of the 'AgentData's maximizing 
                                field 'field', '-1' if 'agentDataList' is empty.
@@ -287,11 +599,40 @@ namespace xport
                                'field'.    
      */
      int getMax(const std::vector<AgentData>& agentDataList, DblField field);
-
-
+     
+     
      /**
-          \brief                Return a sorted vector of the 'AgentData's
-                                with respect to field 'field'.
+          \brief               Return the index of the 'AgentData's maximizing 
+                               field 'field', '-1' if 'agentDataList' is empty.
+                               
+                               Limited to the 'AgentData's whose indexes are in
+                               'list'.
+
+          \param[list          The indexes of the 'AgentData's to consider.
+          \param[agentDataList The data.
+          \param[field         The field to check.
+
+          \return              The index of the 'AgentData' maximizing field
+                               'field'.    
+     */
+     int getMax(const vector<unsigned int>& list,
+                const std::vector<AgentData>& agentDataList, DblField field);
+     
+     
+     /**
+          \brief    DO NOT USE (memory optimization for 'sort()').
+     */
+     int getMax(const std::vector<const AgentData*>& agentDataList,
+                DblField field);
+
+
+
+     // -----------------------------------------------------------------------
+     //   sort()
+     // -----------------------------------------------------------------------
+     /**
+          \brief                Return a sorted vector of the index of the
+                                'AgentData's with respect to field 'field'.
                                 (complexity: O(n^2))
 
           \param[agentDataList  The data.
@@ -299,8 +640,29 @@ namespace xport
           \param[ascendingOrder Sort in ascending if true, in descending order
                                 else.
      */
-     std::vector<AgentData> sort(const std::vector<AgentData>& agentDataList,
-                                 DblField field, bool ascendingOrder = true);
+     std::vector<unsigned int> sort(
+               const std::vector<AgentData>& agentDataList,
+               DblField field, bool ascendingOrder = true);
+
+
+     /**
+          \brief                Return a sorted vector of the index of the
+                                'AgentData's with respect to field 'field'.
+                                (complexity: O(n^2))
+                                
+                                Limited to the 'AgentData's whose indexes are
+                                in 'list'.
+
+          \param[list           The indexes of the 'AgentData's to consider.
+          \param[agentDataList  The data.
+          \param[field          The field to check.
+          \param[ascendingOrder Sort in ascending if true, in descending order
+                                else.
+     */
+     std::vector<unsigned int> sort(
+               const std::vector<unsigned int>& list,
+               const std::vector<AgentData>& agentDataList,
+               DblField field, bool ascendingOrder = true);
 }
 
 #endif

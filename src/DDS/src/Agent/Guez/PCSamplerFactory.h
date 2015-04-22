@@ -27,6 +27,7 @@ class PCSamplerFactory : public SamplerFactory{
 		   return mean;
 		   
 		}
+		double* getPostCounts(uint* counts, uint S, uint A);
 	protected:
 		
 		std::vector<double> priorcountList;

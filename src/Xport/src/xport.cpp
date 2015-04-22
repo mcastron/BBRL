@@ -31,17 +31,19 @@ vector<xport::AgentData> xport::getAgentDataList(int argc, char* argv[])
           argvBis[4] = argv[iAgent++];
 
 
-          Agent* agent;
+          Agent* agent = 0;
           try { agent = Agent::parse(argcBis, argvBis); }
-          catch (parsing::ParsingException&) { delete[] argvBis; break; }
+          catch (parsing::ParsingException&) {}
           delete[] argvBis;
 
           
           xport::AgentData agentData;
-          agentData.loadAgent(agent);
+          if (agent)
+          {
+               agentData.loadAgent(agent);
+               delete agent;
+          }
           agentDataList.push_back(agentData);
-          
-          delete agent;
      }
      
      
@@ -62,53 +64,128 @@ vector<xport::AgentData> xport::getAgentDataList(int argc, char* argv[])
           argvBis[3] = argv[iExp++];
 
 
-          Experiment* exp;
+          Experiment* exp = 0;
           try { exp = Experiment::parse(argcBis, argvBis); }
-          catch (parsing::ParsingException&) { delete[] argvBis; break; }
+          catch (parsing::ParsingException&) {}
           delete[] argvBis;
 
           
-          agentDataList[nExp].loadExperiment(exp);
-          ++nExp;
-          
-          delete exp;
+          if (exp)
+          {
+               agentDataList[nExp].loadExperiment(exp);
+               delete exp;
+          }
+          ++nExp;         
      }
      
      
-     //   3.   Return
-     return agentDataList;
+     //   3.   Remove the AgentData's which have not been loaded correctly
+     vector<AgentData> fAgentDataList;
+     unsigned int nbErrors = 0;
+     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+     {
+          if (!agentDataList[i].isAgentLoaded()
+                    || !agentDataList[i].isExperimentLoaded())
+          {
+               ++nbErrors;
+          }
+          else { fAgentDataList.push_back(agentDataList[i]); }
+     }
+     
+     
+     if (nbErrors > 0)
+     {
+          cout << "\n\t";
+          cout << "WARNING: Some data are missing (" << nbErrors << ")\n\n";
+     }
+     
+     
+     //   4.   Return
+     return fAgentDataList;
 }
 
 
-vector<xport::AgentData> xport::filter(
-                                const vector<xport::AgentData>& agentDataList,
-                                xport::StrField field,
-                                xport::StrFilterCondition condition,
-	                           string cStr)
+// ---------------------------------------------------------------------------
+//   getList()
+// ---------------------------------------------------------------------------
+vector<string> xport::getList(const vector<xport::AgentData>& agentDataList,
+                              xport::StrField field)
 {
-     vector<xport::AgentData> filteredList;
+     vector<unsigned int> list;
      for (unsigned int i = 0; i < agentDataList.size(); ++i)
+          list.push_back(i);
+     
+     return getList(list, agentDataList, field);
+}
+
+
+vector<string> xport::getList(const vector<unsigned int>& list,
+                              const vector<xport::AgentData>& agentDataList,
+                              xport::StrField field)
+{
+     vector<string> fList;
+     for (unsigned int i = 0; i < list.size(); ++i)
      {
-          const xport::AgentData& data = agentDataList[i];
+          const xport::AgentData& data = agentDataList[list[i]];
+          string fieldV = data.getField(field);
+          
+          bool found = false;
+          for (unsigned int j = 0; j < fList.size(); ++j)
+               if (fieldV == fList[j]) { found = true; break; }
+          
+          if (!found) { fList.push_back(fieldV); }
+     }
+     return fList;
+}
+
+
+// ---------------------------------------------------------------------------
+//   filter()
+// ---------------------------------------------------------------------------
+vector<unsigned int> xport::filter(
+          const vector<xport::AgentData>& agentDataList,
+          xport::StrField field,
+          xport::StrFilterCondition condition,
+	     string cStr)
+{
+     vector<unsigned int> list;
+     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+          list.push_back(i);
+     
+     return filter(list, agentDataList, field, condition, cStr);
+}
+
+
+vector<unsigned int> xport::filter(
+          const vector<unsigned int>& list,
+          const vector<xport::AgentData>& agentDataList,
+          xport::StrField field,
+          xport::StrFilterCondition condition,
+	     string cStr)
+{
+     vector<unsigned int> filteredList;
+     for (unsigned int i = 0; i < list.size(); ++i)
+     {
+          const xport::AgentData& data = agentDataList[list[i]];
           string fieldV = data.getField(field);
           switch (condition)
           {
                case STR_EQUAL:
-                    if (fieldV == cStr) { filteredList.push_back(data); }
+                    if (fieldV == cStr) { filteredList.push_back(list[i]); }
                     break;
 
                case STR_NOT_EQUAL:
-                    if (fieldV != cStr) { filteredList.push_back(data); }
+                    if (fieldV != cStr) { filteredList.push_back(list[i]); }
                     break;
 
                case STR_SUBSTR:
                     if (fieldV.find(cStr) != std::string::npos)
-                         filteredList.push_back(data);
+                         filteredList.push_back(list[i]);
                     break;
 
                case STR_NOT_SUBSTR:
                     if (fieldV.find(cStr) == std::string::npos)
-                         filteredList.push_back(data);
+                         filteredList.push_back(list[i]);
                     break;
           }
      }
@@ -116,56 +193,52 @@ vector<xport::AgentData> xport::filter(
 }
 
 
-vector<string> xport::getList(const vector<xport::AgentData>& agentDataList,
-                              xport::StrField field)
+vector<unsigned int> xport::filter(
+          const vector<xport::AgentData>& agentDataList,
+          xport::DblField field,
+	     xport::DblFilterCondition condition,
+	     double value)
 {
-     vector<string> list;
+     vector<unsigned int> list;
      for (unsigned int i = 0; i < agentDataList.size(); ++i)
-     {
-          const xport::AgentData& data = agentDataList[i];
-          string fieldV = data.getField(field);
-          
-          bool found = false;
-          for (unsigned int j = 0; j < list.size(); ++j)
-               if (fieldV == list[j]) { found = true; break; }
-          
-          if (!found) { list.push_back(fieldV); }
-     }
-     return list;
+          list.push_back(i);
+     
+     return filter(list, agentDataList, field, condition, value);
 }
 
 
-vector<xport::AgentData> xport::filter(
-                                const vector<xport::AgentData>& agentDataList,
-                                xport::DblField field,
-	                           xport::DblFilterCondition condition,
-	                           double value)
+vector<unsigned int> xport::filter(
+          const vector<unsigned int>& list,
+          const vector<xport::AgentData>& agentDataList,
+          xport::DblField field,
+	     xport::DblFilterCondition condition,
+	     double value)
 {
-     vector<xport::AgentData> filteredList;
-     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+     vector<unsigned int> filteredList;
+     for (unsigned int i = 0; i < list.size(); ++i)
      {
-          const xport::AgentData& data = agentDataList[i];
+          const xport::AgentData& data = agentDataList[list[i]];
           double fieldV = data.getField(field);
           switch (condition)
           {
                case DBL_BELOW:
-                    if (fieldV < value)  { filteredList.push_back(data); }
+                    if (fieldV < value)  { filteredList.push_back(list[i]); }
                     break;
 
                case DBL_BELOW_EQUAL:
-                    if (fieldV <= value) { filteredList.push_back(data); }
+                    if (fieldV <= value) { filteredList.push_back(list[i]); }
                     break;
 
                case DBL_EQUAL:
-                    if (fieldV == value) { filteredList.push_back(data); }
+                    if (fieldV == value) { filteredList.push_back(list[i]); }
                     break;
 
                case DBL_ABOVE_EQUAL:
-                    if (fieldV >= value) { filteredList.push_back(data); }
+                    if (fieldV >= value) { filteredList.push_back(list[i]); }
                     break;
 
                case DBL_ABOVE:
-                    if (fieldV > value)  { filteredList.push_back(data); }
+                    if (fieldV > value)  { filteredList.push_back(list[i]); }
                     break;
           }
      }
@@ -173,15 +246,50 @@ vector<xport::AgentData> xport::filter(
 }
 
 
+// ---------------------------------------------------------------------------
+//   getMin()
+// ---------------------------------------------------------------------------
 int xport::getMin(const vector<xport::AgentData>& agentDataList,
-                           xport::DblField field)
+                  xport::DblField field)
+{
+     vector<unsigned int> list;
+     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+          list.push_back(i);
+     
+     return getMin(list, agentDataList, field);
+}
+
+
+int xport::getMin(const vector<unsigned int>& list,
+                  const vector<xport::AgentData>& agentDataList,
+                  xport::DblField field)
+{
+     int min = -1;
+     double minV;
+     for (unsigned int i = 0; i < list.size(); i++)
+     {
+          const xport::AgentData& data = agentDataList[list[i]];
+          double fieldV = data.getField(field);
+          
+          if ((min == -1) || (fieldV < minV))
+          {
+               min = list[i];
+               minV = fieldV;
+          }
+     }
+     return min;
+}
+
+
+int xport::getMin(const vector<const xport::AgentData*>& agentDataList,
+                  xport::DblField field)
 {
      int min = -1;
      double minV;
      for (unsigned int i = 0; i < agentDataList.size(); i++)
      {
-          const xport::AgentData& data = agentDataList[i];
-          double fieldV = data.getField(field);
+          const xport::AgentData* data = agentDataList[i];
+          double fieldV = data->getField(field);
           
           if ((min == -1) || (fieldV < minV))
           {
@@ -193,15 +301,50 @@ int xport::getMin(const vector<xport::AgentData>& agentDataList,
 }
 
 
-int xport::getMax(const vector<AgentData>& agentDataList,
-                           xport::DblField field)
+// ---------------------------------------------------------------------------
+//   getMax()
+// ---------------------------------------------------------------------------
+int xport::getMax(const vector<xport::AgentData>& agentDataList,
+                  xport::DblField field)
+{
+     vector<unsigned int> list;
+     for (unsigned int i = 0; i < agentDataList.size(); ++i)
+          list.push_back(i);
+     
+     return getMax(list, agentDataList, field);
+}
+
+
+int xport::getMax(const vector<unsigned int>& list,
+                  const vector<AgentData>& agentDataList,
+                  xport::DblField field)
+{
+     int max = -1;
+     double maxV;
+     for (unsigned int i = 0; i < list.size(); i++)
+     {
+          const xport::AgentData& data = agentDataList[list[i]];
+          double fieldV = data.getField(field);
+          
+          if ((max == -1) || (fieldV > maxV))
+          {
+               max = list[i];
+               maxV = fieldV;
+          }
+     }
+     return max;
+}
+
+
+int xport::getMax(const vector<const AgentData*>& agentDataList,
+                  xport::DblField field)
 {
      int max = -1;
      double maxV;
      for (unsigned int i = 0; i < agentDataList.size(); i++)
      {
-          const xport::AgentData& data = agentDataList[i];
-          double fieldV = data.getField(field);
+          const xport::AgentData* data = agentDataList[i];
+          double fieldV = data->getField(field);
           
           if ((max == -1) || (fieldV > maxV))
           {
@@ -213,18 +356,56 @@ int xport::getMax(const vector<AgentData>& agentDataList,
 }
 
 
-vector<xport::AgentData> xport::sort(
-                              const vector<xport::AgentData>& agentDataList,
-                              xport::DblField field, bool ascendingOrder)
+// ---------------------------------------------------------------------------
+//   sort()
+// ---------------------------------------------------------------------------
+vector<unsigned int> xport::sort(
+          const vector<xport::AgentData>& agentDataList,
+          xport::DblField field, bool ascendingOrder)
 {
-     vector<xport::AgentData> sortedList, cAgentDataList = agentDataList;
+     vector<unsigned int> list;
      for (unsigned int i = 0; i < agentDataList.size(); ++i)
+          list.push_back(i);
+     
+     return sort(list, agentDataList, field, ascendingOrder);
+}
+     
+     
+vector<unsigned int> xport::sort(
+          const vector<unsigned int>& list,
+          const vector<xport::AgentData>& agentDataList,
+          xport::DblField field, bool ascendingOrder)
+{
+     //   Save the original indexes
+     map<unsigned int, unsigned int> m;
+     for (unsigned int i = 0; i < list.size(); ++i) { m[i] = list[i]; }     
+     
+     
+     //   Copy the list
+     vector<const AgentData*> cAgentDataList;
+     for (unsigned int i = 0; i < list.size(); ++i)
+          cAgentDataList.push_back(&agentDataList[list[i]]);
+
+
+     //   Sort the list
+     vector<unsigned int> sortedList;
+     while (!cAgentDataList.empty())
      {
+          //   Find the largest/smallest
           unsigned int s;
           if (ascendingOrder) { s = xport::getMin(cAgentDataList, field); }
           else                { s = xport::getMax(cAgentDataList, field); }
           
-          sortedList.push_back(cAgentDataList[s]);
+          
+          //   Add its index to 'sortedList'
+          sortedList.push_back(m[s]);
+          
+          
+          //   Updated the map
+          m[s] = m[cAgentDataList.size() - 1];
+          
+          
+          //   Remove the element found from the current list
           cAgentDataList[s] = cAgentDataList.back();
           cAgentDataList.pop_back();
      }

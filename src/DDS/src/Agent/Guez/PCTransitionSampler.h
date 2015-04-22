@@ -23,16 +23,12 @@ class PCTransitionSampler : public Sampler{
 class PCTransitionParamSampler : public Sampler{
 	public:
 
-	PCTransitionParamSampler(const uint* _counts,
-	         std::vector<double>& priorcountList_, uint _S);
+	PCTransitionParamSampler(double* _ncounts, uint _S);
 	~PCTransitionParamSampler();
 
 	void getNextTParamSample(double* P);
 
 	protected:
-
-	 const uint* counts;
-	 std::vector<double> priorcountList;
 	 double* ncounts;
 	 uint S;
 

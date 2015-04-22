@@ -24,21 +24,15 @@ uint PCTransitionSampler::getNextStateSample(){
 //-----------------------------------------------------
 
 
-PCTransitionParamSampler::PCTransitionParamSampler(const uint* _counts,
-		std::vector<double>& priorcountList_, uint _S) :
-	    counts(_counts),priorcountList(priorcountList_), S(_S){
-     ncounts = new double[priorcountList.size()];
-}
+PCTransitionParamSampler::PCTransitionParamSampler(double* _ncounts, uint _S) :
+          ncounts(_ncounts), S(_S) {}
 
 PCTransitionParamSampler::~PCTransitionParamSampler()
 {
      delete[] ncounts;
 }
 
-void PCTransitionParamSampler::getNextTParamSample(double* P){
-     for (unsigned int i = 0; i < priorcountList.size(); ++i)
-          ncounts[i] = (counts[i] + priorcountList[i]);
-     
+void PCTransitionParamSampler::getNextTParamSample(double* P){    
 	guez_utils::sampleDirichlet(P,ncounts,S,0.0);
 }
 

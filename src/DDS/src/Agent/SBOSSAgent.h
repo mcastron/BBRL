@@ -24,7 +24,7 @@
 
                (based on Guez work)
 
-	\date 	2015-02-27
+	\date 	2015-03-17
 */
 // ===========================================================================
 /* final */ class dds::SBOSSAgent : public dds::Agent
@@ -46,11 +46,11 @@
 		/**
 			\brief           Constructor.
 			
-			\param[K_        The number of model samples to take for each
-                                state-action pair.
-               \param[delta_    The maximal threshold for resampling.
+			\param[epsilon_  Defines the maximal error on sampling estimate.
+               \param[delta_    The maximal threshold on the posterior
+                                deviation before resampling.
 		*/
-		SBOSSAgent(unsigned int K_, double delta_);
+		SBOSSAgent(double epsilon_, double delta_);
 		
 		
 		/**
@@ -167,10 +167,9 @@
 		//	Private attributes
 		// =================================================================	
 		/**
-               \brief    The number of model samples to take for each
-                         state-action pair.
+               \brief    Defines the maximal error on sampling estimate.
 		*/
-		unsigned int K;
+		double epsilon;
 		
 		
 		/**

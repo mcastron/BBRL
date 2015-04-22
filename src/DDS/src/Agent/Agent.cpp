@@ -184,8 +184,8 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
           if (agentClassName == SBOSSAgent::toString())
           {     
                //   Get 'K'
-               string tmp = parsing::getValue(argc, argv, "--K");
-               unsigned int K = atoi(tmp.c_str());
+               string tmp = parsing::getValue(argc, argv, "--epsilon");
+               double epsilon = atof(tmp.c_str());
 
 
                //   Get 'delta'
@@ -194,7 +194,7 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
 
 
                //   Return
-               return new SBOSSAgent(K, delta);
+               return new SBOSSAgent(epsilon, delta);
           }
           
           if (agentClassName == BEBAgent::toString())

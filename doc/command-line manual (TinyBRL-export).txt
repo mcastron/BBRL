@@ -8,43 +8,18 @@ NAME
 
 USAGE OVERVIEW
      --help
-     
-     --latex
-          [
-               --agent
-                    "agent class name" 
-                    --agent_file
-               --experiment
-                    --experiment_file
-          ]*
-     --output
 
-     --matlab
-          [
-               --agent
-                    "agent class name"
-                    --agent_file
-               --experiment
-                    --experiment_file
-          ]*
-      --output
-      
-      --gnuplot
-          [
-               --agent
-                    "agent class name"
-                    --agent_file
-               --experiment
-                    --experiment_file
-          ]*
-      --output-dat
-      --output-gp      
+     [
+          --agent
+               "agent class name" 
+               --agent_file
+          --experiment
+               --experiment_file
+     ]*
     
 
 USAGE EXAMPLES
-     --- Latex export ---
-     
-          ./TinyBRL-export --latex \
+          ./TinyBRL-export \
                --agent RandomAgent \
                     --agent_file "data/agents/random_agent.dat" \
                --experiment \
@@ -60,58 +35,4 @@ USAGE EXAMPLES
                --agent EGreedyAgent \
                     --agent_file "data/agents/egreedy_agent(0.5).dat" \
                --experiment \
-                    --experiment_file "data/results/GC-1000-egreedy_agent(0.5).dat.zz" \
-               --output "data/export/tables.tex"
-
-
-     --- Maltab export ---
-     
-          ./TinyBRL-export --matlab \
-               --agent RandomAgent \
-                    --agent_file "data/agents/random_agent.dat" \
-               --experiment \
-                    --experiment_file "data/results/GC-1000-random_agent.dat.zz" \
-               --agent EGreedyAgent \
-                    --agent_file "data/agents/egreedy_agent(0.1).dat" \
-               --experiment \
-                    --experiment_file "data/results/GC-1000-egreedy_agent(0.1).dat.zz" \
-               --agent EGreedyAgent \
-                    --agent_file "data/agents/egreedy_agent(0.25).dat" \
-               --experiment \
-                    --experiment_file "data/results/GC-1000-egreedy_agent(0.25).dat.zz" \
-               --agent EGreedyAgent \
-                    --agent_file "data/agents/egreedy_agent(0.5).dat" \
-               --experiment \
-                    --experiment_file "data/results/GC-1000-egreedy_agent(0.5).dat.zz" \
-               --output "data/export/doBarGraph.m"
-               
-          # In matlab...
-          doBarGraph()
-
-
-     --- Gnuplot export ---
-     
-          ./TinyBRL-export --gnuplot \
-               --agent RandomAgent \
-                    --agent_file "data/agents/random_agent.dat" \
-               --experiment \
-                    --experiment_file "data/results/GC-1000-random_agent.dat.zz" \
-               --agent EGreedyAgent \
-                    --agent_file "data/agents/egreedy_agent(0.1).dat" \
-               --experiment \
-                    --experiment_file "data/results/GC-1000-egreedy_agent(0.1).dat.zz" \
-               --agent EGreedyAgent \
-                    --agent_file "data/agents/egreedy_agent(0.25).dat" \
-               --experiment \
-                    --experiment_file "data/results/GC-1000-egreedy_agent(0.25).dat.zz" \
-               --agent EGreedyAgent \
-                    --agent_file "data/agents/egreedy_agent(0.5).dat" \
-               --experiment \
-                    --experiment_file "data/results/GC-1000-egreedy_agent(0.5).dat.zz" \
-               --output-dat "data/export/graph.dat"
-               --output-gp "data/export/graph.gp"
-
-          # To create the graph with gnuplot...
-          gnuplot -e "input='data/export/graph.dat'; \
-                      output='data/export/graph.eps' \
-                  graph.gp
+                    --experiment_file "data/results/GC-1000-egreedy_agent(0.5).dat.zz"

@@ -36,7 +36,6 @@ public:
         int ExpandCount;
         double ExplorationConstant;
         bool ReuseTree;
-				bool BANDIT;
 				int RB;
 				double eps;
     };
@@ -63,7 +62,7 @@ public:
 
 private:
 		uint* counts;
-		double* countsSum;
+		double* postCounts;
 		//Cached values
 		uint S,A,SA,SAS;
 

@@ -33,7 +33,7 @@ USAGE OVERVIEW
                     --C <integer>
                     [--D <integer>]
                SBOSSAgent
-                    --K <integer>
+                    --epsilon <double>
                     --delta <double>
                BEBAgent
                     --beta <double>
@@ -124,7 +124,7 @@ OPTIONS DESCRIPTION
                - FormulaAgent (parameters: --formula, --variables)
                - BAMCPAgent (parameters: --K [--D])
                - BFS3Agent (parameters: --K --C [--D])
-               - SBOSSAgent (parameters: --K --delta)
+               - SBOSSAgent (parameters: --epsilon --delta)
                - BEBAgent (parameters: --beta)
                - OPPSDSAgent (parameters: --n_draws, --c, --formula_set, --variables, --discount_factor, --horizon_limit)
                - OPPSCSAgent (parameters: --n_eval, [--k --h_max --delta], --agent_factory, --discount_factor, --horizon_limit)
@@ -172,7 +172,7 @@ OPTIONS DESCRIPTION
 
      --delta <double>
           (SBOSSAgent parameter)
-          The maximal threshold for resampling.
+          The maximal threshold on the posterior deviation before resampling.
 
      --delta <double>
           (VDBEEGreedyAgent parameter)
@@ -191,6 +191,10 @@ OPTIONS DESCRIPTION
           (EGreedyAgent parameter)
           The probability for the Agent to choose the next action to perform
           randomly.
+
+     --epsilon <double>
+          (SBOSS parameter)
+          Defines the maximal error on sampling estimate.
      
      --epsilon <double> <double>
           (EGreedyAgentFactory parameter)
@@ -238,10 +242,6 @@ OPTIONS DESCRIPTION
      --K <integer>
           (BAMCPAgent & BFS3Agent parameter)
           The number of nodes to expand at each time-step.
-
-     --K <integer>
-          (SBOSSAgent parameter)
-          The number of model samples to take for each state-action pair.
 
      --max_size <integer>
           The maximal size of a formula (= the maximal number of tokens to

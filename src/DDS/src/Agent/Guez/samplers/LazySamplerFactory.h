@@ -15,6 +15,10 @@ class LazySamplerFactory : public SamplerFactory{
 		void reset();
 
 		double getAlphaMean(){return sampFact->getAlphaMean();}
+		double* getPostCounts(uint* counts, uint S, uint A)
+		{
+		   return sampFact->getPostCounts(counts, S, A);
+		}
 	protected:
 	
 		SamplerFactory* sampFact;

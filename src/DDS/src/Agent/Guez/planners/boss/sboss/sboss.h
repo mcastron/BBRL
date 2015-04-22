@@ -21,9 +21,9 @@ public:
         PARAMS();
 
         int Verbose;
-				uint K;
 				double delta;
 				double epsilon;
+				double maxError;
     };
 
     SBOSS(const SIMULATOR& simulator, const PARAMS& params,
@@ -33,10 +33,8 @@ public:
     uint SelectAction(uint state);
     bool Update(uint state, uint action, uint observation, double reward);
 		
-		double posteriorDeviation(const uint* counts1,
-													uint sum1,
-		                      const uint* counts2,
-													uint sum2);
+		double posteriorDeviation(const double* counts1, double sum1,
+		                          const double* counts2, double sum2);
 		void createMergedModel();
    
 	private:
@@ -45,9 +43,11 @@ public:
 	
 		//SBOSS-specific
 		bool do_sample;
-		uint* countsSum;
-		uint* countsSumLastResample;
-		uint* countsLastResample;	
+		
+		double* postCounts;
+		double* postCountsSum;
+		double* postCountsLastResample;
+		double* postCountsSumLastResample;
 		PARAMS Params;
 		
 		//Merged model
@@ -57,10 +57,14 @@ public:
 		uint* RLPI;
 		double* V;
 		
+		uint* K;
+		
 
 		//Cached values
 		uint S,A,SA,SAS,SAm;
 
 		SamplerFactory& SampFact;
+
+          void updateK(uint state, uint action);
 };
 

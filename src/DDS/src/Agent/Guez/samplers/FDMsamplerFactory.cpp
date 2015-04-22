@@ -33,4 +33,15 @@ Sampler* FDMsamplerFactory::getTransitionParamSampler(const uint* counts, uint, 
 	return (Sampler*) sampler;
 }
 
-
+double* FDMsamplerFactory::getPostCounts(uint* counts, uint S, uint A)
+{
+     double* postCounts = new double[S*A*S];
+     for (uint s = 0; s < S; ++s)
+          for (uint a = 0; a < A; ++a)
+               for (uint sp = 0; sp < S; ++sp)
+               {
+                    uint i = (s*A*S + a*S + sp);
+                    postCounts[i] = alpha + counts[i];
+               }
+     return postCounts;
+}

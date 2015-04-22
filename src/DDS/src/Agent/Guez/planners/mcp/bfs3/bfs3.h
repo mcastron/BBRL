@@ -52,7 +52,7 @@ private:
 	
 		void getQNodeValue(QNODE3& qnode, double& Usa, double& Lsa, uint ss,uint aa);
 		
-			uint* counts;
+		uint* counts;
 		uint* pcounts;
 		//Cached values
 		uint S,A,SA,SAS;

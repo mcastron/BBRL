@@ -36,6 +36,18 @@ namespace MDPutils{
 			double* V,
 			const uint* counts,
 			uint B);
+	
+	void valueIterationRmax(uint S,
+			uint A,
+			bool rsas,
+			double* P,
+			double* R,
+			double gamma,
+			double epsilon,
+			uint* PI,
+			double* V,
+			const double* counts,
+			uint B);
 
 	//void valueIterationEpisodic(double epsilon, size_t PI[], double V, size_t termState);
 	//void expectedOptimalReturn(std::vector<double>& Rt, size_t numSteps);
