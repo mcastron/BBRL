@@ -116,10 +116,10 @@ USAGE OVERVIEW
           --n_states <integer>
           --n_actions <integer>
           --ini_state <integer>
-          --counts <double> ... <double>
+          --transition_weights <double> ... <double>
           --reward_type <string>
-          --rewards_means <double> ... <double>
-          [--rewards_variances <double> ... <double>]
+          --reward_means <double> ... <double>
+          [--reward_variances <double> ... <double>]
           --output <string>
 
      --help
@@ -168,23 +168,6 @@ OPTIONS DESCRIPTION
 
      --compress_output
           If specified, the output/backup files are compressed.
-
-     --counts <double> ... <double>
-          Define, for each transition, a concentration parameter of the
-          Dirichlet multinomial distribution. They corresponds to the a priori
-          observations.
-
-          The concentration parameters are listed by:
-               (i) action, (ii) initial state, (iii) reached state.
-
-          For example, given 3 states and 2 actions, the concentration
-          parameters are defined in this order:
-               <0, 0, 0> <0, 0, 1> <0, 0, 2>
-               <1, 0, 0> <1, 0, 1> <1, 0, 2>
-               <2, 0, 0> <2, 0, 1> <2, 0, 2>
-               <0, 1, 0> <0, 1, 1> <0, 1, 2>
-               <1, 1, 0> <1, 1, 1> <1, 1, 2>
-               <2, 1, 0> <2, 1, 1> <2, 1, 2>
 
      --C <integer>
           (BFS3Agent parameter)
@@ -361,7 +344,7 @@ OPTIONS DESCRIPTION
                - RT_CONSTANT
                - RT_GAUSSIAN (requires '--rewards_variances' option)
 
-     --rewards_means <double> ... <double>
+     --reward_means <double> ... <double>
           Define, for each transition, the mean of the reward received by the
           agent.
           
@@ -377,7 +360,7 @@ OPTIONS DESCRIPTION
                <1, 1, 0> <1, 1, 1> <1, 1, 2>
                <2, 1, 0> <2, 1, 1> <2, 1, 2>
 
-     --rewards_variances <double> ... <double>
+     --reward_variances <double> ... <double>
           Define, for each transition, the variance of the reward received by
           the agent.
           
@@ -450,6 +433,23 @@ OPTIONS DESCRIPTION
                MIN<integer> -->  The minimum             (<integer> operand(s))
                MAX<integer> -->  The maximum             (<integer> operand(s))
                AVG<integer> -->  The average             (<integer> operand(s))
+
+     --transition_weights <double> ... <double>
+          Define, for each transition, a concentration parameter of the
+          Dirichlet multinomial distribution. They corresponds to the a priori
+          observations.
+
+          The concentration parameters are listed by:
+               (i) action, (ii) initial state, (iii) reached state.
+
+          For example, given 3 states and 2 actions, the concentration
+          parameters are defined in this order:
+               <0, 0, 0> <0, 0, 1> <0, 0, 2>
+               <1, 0, 0> <1, 0, 1> <1, 0, 2>
+               <2, 0, 0> <2, 0, 1> <2, 0, 2>
+               <0, 1, 0> <0, 1, 1> <0, 1, 2>
+               <1, 1, 0> <1, 1, 1> <1, 1, 2>
+               <2, 1, 0> <2, 1, 1> <2, 1, 2>
 
      --variables <integer> <string> ... <string>
           (FormulaAgent, OPPSDSAgent and FormulaAgentFactory parameter)
@@ -526,24 +526,24 @@ USAGE EXAMPLES
                --short_name "GC" \
                --n_states 5 --n_actions 3 \
                --ini_state 0 \
+               --transition_weights \
+                    1 1 0 0 0 \
+                    1 0 1 0 0 \
+                    1 0 0 1 0 \
+                    1 0 0 0 1 \
+                    1 0 0 0 1 \
+                    1 1 0 0 0 \
+                    1 0 1 0 0 \
+                    1 0 0 1 0 \
+                    1 0 0 0 1 \
+                    1 0 0 0 1 \
+                    1 1 0 0 0 \
+                    1 0 1 0 0 \
+                    1 0 0 1 0 \
+                    1 0 0 0 1 \
+                    1 0 0 0 1 \
                --reward_type "RT_CONSTANT" \
-               --counts \
-                    1 1 0 0 0 \
-                    1 0 1 0 0 \
-                    1 0 0 1 0 \
-                    1 0 0 0 1 \
-                    1 0 0 0 1 \
-                    1 1 0 0 0 \
-                    1 0 1 0 0 \
-                    1 0 0 1 0 \
-                    1 0 0 0 1 \
-                    1 0 0 0 1 \
-                    1 1 0 0 0 \
-                    1 0 1 0 0 \
-                    1 0 0 1 0 \
-                    1 0 0 0 1 \
-                    1 0 0 0 1 \
-               --rewards_means \
+               --reward_means \
                     2 0 0 0 10 \
                     2 0 0 0 10 \
                     2 0 0 0 10 \

@@ -159,10 +159,10 @@ void mdpDistribGen(int argc, char* argv[]) throw (parsing::ParsingException,
 
 
           //   Fill 'theta'
-     vector<string> counts
-               = parsing::getValues(argc, argv, "--counts", nX*nU*nX);
-     for (unsigned int i = 0; i < counts.size(); ++i)
-          theta.push_back(atof(counts[i].c_str()));
+     vector<string> weights
+               = parsing::getValues(argc, argv, "--transition_weights", nX*nU*nX);
+     for (unsigned int i = 0; i < weights.size(); ++i)
+          theta.push_back(atof(weights[i].c_str()));
 
 
      //   The type of rewards
@@ -172,7 +172,7 @@ void mdpDistribGen(int argc, char* argv[]) throw (parsing::ParsingException,
 
      //   Fill 'R' and 'V'
      vector<string> rewardsMeans
-               = parsing::getValues(argc, argv, "--rewards_means", nX*nU*nX);
+               = parsing::getValues(argc, argv, "--reward_means", nX*nU*nX);
      for (unsigned int i = 0; i < rewardsMeans.size(); ++i)
           R.push_back(atof(rewardsMeans[i].c_str()));
 
@@ -180,7 +180,7 @@ void mdpDistribGen(int argc, char* argv[]) throw (parsing::ParsingException,
      try
      {
           rewardsVariances = parsing::getValues(
-                    argc, argv, "--rewards_variances", nX*nU*nX);
+                    argc, argv, "--reward_variances", nX*nU*nX);
 
           for (unsigned int i = 0; i < rewardsVariances.size(); ++i)
                V.push_back(atof(rewardsVariances[i].c_str()));

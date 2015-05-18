@@ -13,7 +13,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2015-05-12
+	\date		2015-05-18
 */
 // ===========================================================================
 namespace utils
@@ -1267,6 +1267,10 @@ namespace utils
      }
      
      
+     /**
+          \brief    This namespace gathers several classes and functions
+                    to create latex tables.
+	*/
      namespace latex
      {
           // ==================================================================
