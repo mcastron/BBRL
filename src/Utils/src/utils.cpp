@@ -1,6 +1,7 @@
 
 #include "utils.h"
 #include "RandomGen.h"
+#include "Algorithm/StoSOO.h"
 
 using namespace std;
 
@@ -270,13 +271,64 @@ bool utils::parsing::hasFlag(int argc, char* argv[], string opt)
 //	Functions
 // ===========================================================================
 void utils::gnuplot::plot(utils::gnuplot::GnuplotOptions opt,
-                          const vector<vector<pair<double, double> > >& data,
+                          vector<vector<pair<double, double> > > data,
                           const vector<string>& titles,
                           vector<vector<pair<double, double> > > bounds)
 {
      //   'inBox' case
      vector<details::Polygon> polygons;
-     if (opt.getInBox()) { polygons  = details::getPolygons(data); }
+     if (opt.getInBox())
+     {
+          //   Retrieve the boxes
+          bool logScaleX = false, logScaleY = false;
+          
+          string options = opt.getScriptOptions();
+          
+          string tmp;
+          size_t f = options.find("logscale ");
+          if (f != string::npos)
+          {
+               tmp = options.substr(f);
+               f = tmp.find("\n");
+               if (f != string::npos) { tmp = tmp.substr(0, f); }
+          }
+          
+          if      (tmp == "logscale x")  { logScaleX = true; }
+          else if (tmp == "logscale y")  { logScaleY = true; }
+          else if (tmp == "logscale xy") { logScaleX = true; logScaleY = true; }
+          
+          polygons  = details::getPolygons(data, logScaleX, logScaleY);
+          
+          
+          //   Modify 'data'
+          for (unsigned int f = 0; f < data.size(); ++f) { data[f].clear(); }
+          for (unsigned int p = 0; p < polygons.size(); ++p)
+          {
+               details::Point centerP =
+                         polygons[p].getCenter(logScaleX, logScaleY);
+               set<unsigned int> list = polygons[p].getList();
+               
+               if (logScaleX) { centerP.applyLog10X(); }
+               if (logScaleY) { centerP.applyLog10Y(); }
+               
+               set<unsigned int>::iterator it  = list.begin();
+               set<unsigned int>::iterator end = list.end();
+               for (unsigned int c = 0; it != end; ++it, ++c)
+               {
+                    double r = (list.size() == 1) ? 0.0 : 0.15;
+                    double theta = c * (2.0*M_PI / (double) list.size());
+                    
+                    double x = centerP.getX() + r * cos(theta);
+                    double y = centerP.getY() + r * sin(theta);
+                    
+                    if (logScaleX) { x = pow(10.0, x); }
+                    if (logScaleY) { y = pow(10.0, y); }
+                    
+                    data[*it].push_back(
+                         pair<double, double>(x, y));
+               }
+          }
+     }
      
      
      //   1.   Write the data file
@@ -284,6 +336,9 @@ void utils::gnuplot::plot(utils::gnuplot::GnuplotOptions opt,
      ofstream datOS(dataFile.c_str());
      for (unsigned int i = 0; i < data.size(); ++i)
      {
+          if (data[i].empty())
+               data[i].push_back(pair<double, double>(-DBL_MAX, DBL_MAX));
+
           for (unsigned int j = 0; j < data[i].size(); ++j)
           {
                datOS << data[i][j].first << "\t" << data[i][j].second;
@@ -305,20 +360,30 @@ void utils::gnuplot::plot(utils::gnuplot::GnuplotOptions opt,
      scriptOS << opt.getScriptOptions();
      
           //   2.1  Polygons
+     unsigned int id = 1;
      for (unsigned int i = 0; i < polygons.size(); ++i)
      {
-          scriptOS << "set object " << (i + 1) << " poly from ";
+          vector<details::Path> loops = polygons[i].getIntLoops();
+          loops.push_back(polygons[i].getExtLoop());
           
-          pair<double, double> p0 = polygons[i].get(0);
-          scriptOS << p0.first << "," << p0.second;
-          
-          for (unsigned int j = 1; j < polygons[i].size(); ++j)
+          for (unsigned int j = 0; j < loops.size(); ++j)
           {
-               pair<double, double> p = polygons[i].get(j);
-               scriptOS << " to " << p.first << "," << p.second;
+               scriptOS << "set object " << id++ << " poly from ";
+               
+               details::Point p = loops[j].get(0).getFrom();
+               scriptOS << p.getX() << "," << p.getY();
+               
+               for (unsigned int k = 1; k < loops[j].size(); ++k)
+               {
+                    details::Point p = loops[j].get(k).getFrom();
+                    scriptOS << " to " << p.getX() << "," << p.getY();
+               }
+               
+               p = loops[j].get(0).getFrom();
+               scriptOS << " to " << p.getX() << "," << p.getY();
+               
+               scriptOS << " fs empty border 0\n";
           }
-          
-          scriptOS << " fs empty border 0\n";
      }
           
           //   2.2  Plot
@@ -363,15 +428,27 @@ void utils::gnuplot::plot(utils::gnuplot::GnuplotOptions opt,
      command += "\'\" ";
      command += scriptFile;
      
-     system(command.c_str());
+     if (system(command.c_str()) == -1)
+     {
+          cout << "\n\tError: Unable to create gnuplot graph!\n\n";
+          return;
+     }
      
      
      //   4.   Delete the temporary files
      command = "rm " + dataFile;
-     system(command.c_str());
+     if (system(command.c_str()) == -1)
+     {
+          cout << "\n\tWarning: Unable temporary files (gnuplot)!\n\n";
+          return;
+     }
      
      command = "rm " + scriptFile;
-     system(command.c_str());
+     if (system(command.c_str()) == -1)
+     {
+          cout << "\n\tWarning: Unable temporary files (gnuplot)!\n\n";
+          return;
+     }
 }
      
 
@@ -459,46 +536,580 @@ vector<pair<double, double> >
 // ===========================================================================
 //   'details' namespace
 // ===========================================================================
-bool utils::gnuplot::details::Polygon::mergeWith(const Polygon& poly) const
+//   LabelPositionOptim
+class utils::gnuplot::details::LabelPositionOptim : public algorithm::StoSOO
 {
-     //   Ensure we can merge the polygons
-//     vector<bool> inBoth(poly.size());
-//     bool canBeMerged = false;
-//     for (unsigned int i = 0; i < poly.size(); ++i)
-//     {
-//          for (unsigned int j = 0; j < size(); ++j)
-//          {
-//               pair<double, double> pi = poly.get(i);
-//               pair<double, double> pj = get(j);
-//               
-//               if (pi.first == pj.first && pi.second == pj.second)
-//               {
-//                    inBoth[i]   = true;
-//                    canBeMerged = true;
-//               }
-//               else { inBoth[i] = false; }
-//          }
-//     }
-//     
-//     
-//     
-//     //   Exit if we can't merge the polygons
-//     if (!canBeMerged) { return false; }
-//     
-//     
-//     for (unsigned int i = 0; i < poly.size(); ++i)
-//     {
-//          if (!inBoth[i]) { 
-//     }
-//     
-//     
-//     //   Merge the polygons
-//     return true;
-     return false;
+     public:
+          LabelPositionOptim(const vector<double>& x_,
+                             const vector<double>& y_,
+                             const vector<pair<double, double> >& bounds) :
+                                   StoSOO(2, 3,
+                                          getNbEvalPerNode(100),
+                                          getMaxDepth(100),
+                                          getDelta(100), bounds),
+                                   x(x_), y(y_) { precalcValues(x, y); }
+
+
+          vector<double> run() { return algorithm::StoSOO::run(100); }
+
+     protected:
+          double f(const vector<double>& p) const throw (exception)
+          {
+               if (!pointInPolygon(p)) { return -DBL_MAX; }
+               
+               double minDist, var;
+               getMinVarDistance(p, minDist, var);
+               
+               return (minDist - var);
+          }
+
+
+     private:
+          const vector<double>& x;
+          const vector<double>& y;
+          vector<double> constant, multiple;
+          vector<double> lengths;
+          
+          void precalcValues(const vector<double>& x,
+                             const vector<double>& y)
+          {
+               int polyCorners = x.size();
+               int i, j = polyCorners - 1;
+               constant.resize(polyCorners);
+               multiple.resize(polyCorners);
+               
+               const vector<double>& polyX = x;
+               const vector<double>& polyY = y;
+               for (i = 0; i < polyCorners; i++)
+               {
+                    if (polyY[j] == polyY[i])
+                    {
+                         constant[i] = polyX[i];
+                         multiple[i] = 0;
+                    }
+
+                    else
+                    {
+                         constant[i] = polyX[i]
+                              -(polyY[i]*polyX[j])/(polyY[j]-polyY[i])
+                              +(polyY[i]*polyX[i])/(polyY[j]-polyY[i]);
+
+                         multiple[i] = (polyX[j]-polyX[i])/(polyY[j]-polyY[i]);
+                    }
+
+                    j = i;
+               }
+               
+
+               for (unsigned int i = 0; i < x.size(); ++i)
+               {
+                    double xDist = (x[i] - x[(i + 1) % x.size()]);
+                    xDist *= xDist;
+                    
+                    double yDist = (y[i] - y[(i + 1) % y.size()]);
+                    yDist *= yDist;                    
+                    
+                    lengths.push_back(sqrt(xDist + yDist));
+               }
+          }
+          
+          
+          bool pointInPolygon(const vector<double>& p) const
+          {
+               int polyCorners = x.size();
+               int i, j = polyCorners - 1;
+               bool oddNodes = false;
+               
+               const vector<double>& polyX = x;
+               const vector<double>& polyY = y;
+               for (i = 0; i < polyCorners; i++)
+               {
+                    if ((polyY[i]< p[1] && polyY[j] >= p[1])
+                              || (polyY[j] < p[1] && polyY[i] >= p[1]))
+                    {
+                         oddNodes ^= (p[1]*multiple[i]+constant[i]<p[0]);
+                    }
+                    
+                    j = i;
+               }
+               
+               return oddNodes;
+          }
+
+
+          void getMinVarDistance(const vector<double>& p,
+                                 double& minDist, double& var) const
+          {
+               double c[2];
+               c[0] = p[0];
+               c[1] = p[1];
+           
+               vector<double> dist;    
+               for (unsigned int i = 0; i < x.size(); ++i)
+               {
+                    double a[2];
+                    a[0] = x[i];
+                    a[1] = y[i];  
+                
+                    double b[2];
+                    b[0] = x[(i + 1) % x.size()];
+                    b[1] = y[(i + 1) % x.size()];                  
+                    
+                    dist.push_back(LineToPointDistance2D(a, b, c, true));
+               }
+               
+
+               double sum = 0.0;
+               for (unsigned int i = 0; i < dist.size(); ++i)
+               {
+                    if (i == 0 || minDist > dist[i]) { minDist = dist[i]; }
+                    sum += dist[i];
+               }
+               
+               
+               var = 0.0;
+               double mean = (sum / (double) dist.size());
+               for (unsigned int i = 0; i < dist.size(); ++i)
+                    var += (mean - dist[i])*(mean - dist[i]);
+
+               var /= ((double) dist.size());
+          }
+          
+          
+          //Compute the dot product AB . AC
+          double DotProduct(double* pointA,
+                            double* pointB,
+                            double* pointC) const
+          {
+              double AB[2];
+              double BC[2];
+              AB[0] = pointB[0] - pointA[0];
+              AB[1] = pointB[1] - pointA[1];
+              BC[0] = pointC[0] - pointB[0];
+              BC[1] = pointC[1] - pointB[1];
+              double dot = AB[0] * BC[0] + AB[1] * BC[1];
+          
+              return dot;
+          }
+
+
+          //Compute the cross product AB x AC
+          double CrossProduct(double* pointA,
+                              double* pointB,
+                              double* pointC) const
+          {
+              double AB[2];
+              double AC[2];
+              AB[0] = pointB[0] - pointA[0];
+              AB[1] = pointB[1] - pointA[1];
+              AC[0] = pointC[0] - pointA[0];
+              AC[1] = pointC[1] - pointA[1];
+              double cross = AB[0] * AC[1] - AB[1] * AC[0];
+          
+              return cross;
+          }
+
+
+          //Compute the distance from A to B
+          double Distance(double* pointA, double* pointB) const
+          {
+              double d1 = pointA[0] - pointB[0];
+              double d2 = pointA[1] - pointB[1];
+          
+              return sqrt(d1 * d1 + d2 * d2);
+          }
+
+
+          //Compute the distance from AB to C
+          //if isSegment is true, AB is a segment, not a line.
+          double LineToPointDistance2D(double* pointA,
+                                       double* pointB,
+                                       double* pointC, 
+                                       bool isSegment) const
+          {
+              double dist = CrossProduct(pointA, pointB, pointC)
+                              / Distance(pointA, pointB);
+              if (isSegment)
+              {
+                  double dot1 = DotProduct(pointA, pointB, pointC);
+                  if (dot1 > 0) 
+                      return Distance(pointB, pointC);
+          
+                  double dot2 = DotProduct(pointB, pointA, pointC);
+                  if (dot2 > 0) 
+                      return Distance(pointA, pointC);
+              }
+              return fabs(dist);
+          }
+};
+
+
+//   Path
+std::vector<utils::gnuplot::details::Path>
+     utils::gnuplot::details::Path::split(std::vector<int> cuts) const
+{
+     sort(cuts.begin(), cuts.end());
+                              
+     std::vector<Path> paths;
+     Path cPath;
      
+     int c = 0;
+     for (unsigned int i = 0; i < size(); ++i)
+     {
+          if (i == cuts[c])
+          {
+               if (!cPath.empty())
+               {
+                    paths.push_back(cPath);
+                    cPath = Path();
+               }
+               ++c;
+          }
+          else { cPath.add(get(i)); }
+     }
+     
+     if (!cPath.empty()) { paths.push_back(cPath); }
+     
+     
+     if (paths.size() >= 2)
+     {
+          Path& a = paths.back();
+          Path& b = paths.front();
+          
+          Point tail = a.get(a.size() - 1).getTo();
+          Point head = b.get(0).getFrom();
+          
+          if (tail == head)
+          {
+               for (int j = 0; j < b.size(); ++j) { a.add(b.get(j)); }
+
+               paths[0] = a;
+               paths.pop_back();
+          }
+     }
+
+
+     return paths;
 }
 
 
+double utils::gnuplot::details::Path::computeSurface()
+{
+     if (!surfaceHasChanged) { return surface; }
+     surfaceHasChanged = false;
+     
+     if (!isLoop()) { surface = 0.0; return surface; }
+
+
+     // retrieve the points
+     std::vector<double> x, y;
+     for (unsigned int i = 0; i < edges.size(); ++i)
+     {
+          x.push_back(edges[i].getFrom().getX());
+          y.push_back(edges[i].getFrom().getY());
+     }
+
+
+     // "close" polygon
+     unsigned int N = x.size();
+     x.push_back(x[0]); //x[N] = x[0];
+     x.push_back(x[1]); //x[N+1] = x[1];
+     y.push_back(y[0]); //y[N] = y[0];
+     y.push_back(y[1]); //y[N+1] = y[1];
+
+
+     // compute area
+     double area = 0.0;
+     for( size_t i = 1; i <= N; ++i )
+          area += x[i]*( y[i+1] - y[i-1] );
+     area /= 2.0;
+
+
+     // return
+     surface = fabs(area);
+     return surface;
+}
+
+
+//   Polygon
+bool utils::gnuplot::details::Polygon::mergeWith(const Polygon& poly)
+{
+     //   List all loops
+     vector<Path> loops1;
+     loops1.push_back(extLoop);
+     for (unsigned int i = 0; i < intLoops.size(); ++i)
+          loops1.push_back(intLoops[i]);
+     
+     vector<Path> loops2;     
+     loops2.push_back(poly.getExtLoop());
+     vector<Path> intLoops2 = poly.getIntLoops();
+     for (unsigned int i = 0; i < intLoops2.size(); ++i)
+          loops2.push_back(intLoops2[i]);
+     
+     
+     //   Identify the list of common edges and the two loops colliding
+     vector<pair<int, int> > commonEdges;
+     int k, l;
+     
+          //   Check if external loop of polygon #1 touches another loop
+     k = 0;
+     for (l = 0; l < loops2.size(); ++l)
+     {
+          commonEdges = loops1[k].getCommonEdges(loops2[l]);
+          if (!commonEdges.empty()) { break; }
+     }
+     
+          //   Check if external loop of polygon #2 touches another loop
+     if (commonEdges.empty())
+     {
+          l = 0;
+          for (k = 0; k < loops1.size(); ++k)
+          {
+               commonEdges = loops1[k].getCommonEdges(loops2[l]);
+               if (!commonEdges.empty()) { break; }
+          }
+     }
+     
+          //   Exit if no common edges
+     if (commonEdges.empty()) { return false; }
+     
+     
+     //   Split the colliding loops in several paths
+     vector<int> cuts1, cuts2;
+     for (unsigned int i = 0; i < commonEdges.size(); ++i)
+     {
+          cuts1.push_back(commonEdges[i].first);
+          cuts2.push_back(commonEdges[i].second);
+     }
+     
+     vector<Path> paths1 = loops1[k].split(cuts1);
+     vector<Path> paths2 = loops2[l].split(cuts2);
+     
+     
+     //   Merge the paths in loops
+     vector<Path> mLoops;
+     while (!paths1.empty())
+     {
+          //   Loop case
+          if (paths1[0].isLoop())
+          {
+               mLoops.push_back(paths1[0]);
+               paths1[0] = paths1.back();
+               paths1.pop_back();
+               
+               continue;
+          }
+          
+          
+          //   Path case
+          Point head1 = paths1[0].get(0).getFrom();
+          Point tail1 = paths1[0].get(paths1[0].size() - 1).getTo();
+          
+          for (unsigned int i = 0; i < paths2.size(); ++i)
+          {
+               Point head2 = paths2[i].get(0).getFrom();
+               Point tail2 = paths2[i].get(paths2[i].size() - 1).getTo();
+               
+               if ((head1 == head2) && (tail1 == tail2))
+               {
+                    if (paths1[0].size() < paths2[i].size())
+                    {
+                         paths1[0].reverse();
+                         head1 = paths1[0].get(0).getFrom();
+                         tail1 = paths1[0].get(paths1[0].size() - 1).getTo();
+                    }
+                    
+                    else
+                    {
+                         paths2[i].reverse();
+                         head2 = paths2[i].get(0).getFrom();
+                         tail2 = paths2[i].get(paths2[i].size() - 1).getTo();
+                    }
+               }
+               
+               if ((tail1 == head2) && (tail2 == head1))
+               {
+                    //   Merge
+                    for (unsigned int j = 0; j < paths2[i].size(); ++j)
+                         paths1[0].add(paths2[i].get(j));
+
+
+                    //   Save the loop
+                    mLoops.push_back(paths1[0]);
+                    
+                    
+                    //   Next iteration
+                    paths1[0] = paths1.back();
+                    paths1.pop_back();
+                    
+                    paths2[i] = paths2.back();
+                    paths2.pop_back();
+
+                    break;
+               }
+          }
+     }
+     
+     
+     //   Identify the external loop
+     int max = -1;
+     double maxS = 0.0;
+     for (unsigned int i = 0; i < mLoops.size(); ++i)
+     {
+          double curS = mLoops[i].computeSurface();
+          if ((max == -1) || (maxS < curS))
+          {
+               max = i;
+               maxS = curS;
+          }
+     }
+     extLoop = mLoops[max];
+
+
+     //   Gather the internal loops
+     intLoops.clear();
+     for (unsigned int i = 0; i < loops1.size(); ++i)
+     {
+          if (i != k) { intLoops.push_back(loops1[i]); }
+     }
+     
+     for (unsigned int i = 0; i < loops2.size(); ++i)
+     {
+          if (i != l) { intLoops.push_back(loops2[i]); }
+     }
+     
+     for (unsigned int i = 0; i < mLoops.size(); ++i)
+     {
+          if (i != max) { intLoops.push_back(mLoops[i]); }
+     }
+
+
+     //   Return
+     return true;
+}
+
+
+utils::gnuplot::details::Point
+     utils::gnuplot::details::Polygon::getCenter(bool logScaleX,
+                                                 bool logScaleY) const
+{
+     //   Simplify the polygon and retrieve the coordinates of each edge
+     unsigned int N = extLoop.size();
+     vector<double> x, y;
+     for (int i = 0; i < N; ++i)
+     {
+          Point p = extLoop.get((i - 1 + N) % N).getFrom();
+          Point q = extLoop.get((i + 1)     % N).getFrom();
+          Point r = extLoop.get(i).getFrom();
+
+          bool accept;
+          
+          if (p.getX() == q.getX())
+               accept = fabs(r.getX() - p.getX()) >= 1e-9;
+
+          else
+          {
+               double a = ((p.getY() - q.getY()) / (p.getX() - q.getX()));
+               double b = p.getY() - a*p.getX();
+               
+               accept = (fabs(r.getY() - (a*r.getX() + b)) >= 1e-9);
+          }
+
+          
+          if (accept)
+          {
+               if (logScaleX) { r.applyLog10X(); }
+               if (logScaleY) { r.applyLog10Y(); }
+               
+               x.push_back(r.getX());
+               y.push_back(r.getY());
+          }
+     }
+     
+     
+     //   Uses StoSOO to identify the best spot for the center     
+     vector<pair<double, double> > bounds = getBounds();
+     bounds[0].first  = log10(bounds[0].first);
+     bounds[0].second = log10(bounds[0].second);
+     bounds[1].first  = log10(bounds[1].first);
+     bounds[1].second = log10(bounds[1].second);
+
+     LabelPositionOptim alg(x, y, bounds);
+     vector<double> c = alg.run();
+
+     Point centerP(c[0], c[1], extLoop.get(0).getFrom().getList());
+     if (logScaleX) { centerP.apply10PowX(); }
+     if (logScaleY) { centerP.apply10PowY(); }
+     
+     
+     //   Return
+     return centerP;
+}
+
+
+void utils::gnuplot::details::Polygon::print() const
+{
+     std::cout << "Ext Loop:\n";
+     const Path& l = extLoop;
+     for (int i = 0; i < l.size(); ++i)
+     {
+          Point p = l.get(i).getFrom();
+          
+          double x = p.getX();
+          double y = p.getY();
+          
+          std::cout << "\t";
+          std::cout << x << ", " << y;
+
+          std::cout << " <";
+          std::set<unsigned int> list = p.getList();
+          std::set<unsigned int>::iterator it, end;
+          it  = list.begin();
+          end = list.end();
+          for (int c = 0; it != end; ++it, ++c)
+          {
+               std::cout << *it;
+               if (c < (list.size() - 1))
+                    std::cout << ", ";
+          }
+          
+          
+          std::cout << ">\n";
+     }
+     
+     double x = l.get(l.size() - 1).getTo().getX();
+     double y = l.get(l.size() - 1).getTo().getY();
+     std::cout << "\t";
+     std::cout << x << ", " << y << "\n";
+     std::cout << "\n";
+
+
+     std::cout << "\n";
+     for (unsigned int j = 0; j < intLoops.size(); ++j)
+     {
+          std::cout << "Int Loop #" << j << "\n";
+          const Path& l = intLoops[j];
+          for (int i = 0; i < l.size(); ++i)
+          {
+               double x = l.get(i).getFrom().getX();
+               double y = l.get(i).getFrom().getY();
+               
+               std::cout << "\t";
+               std::cout << x << ", " << y << "\n";
+          }
+          
+          double x = l.get(l.size() - 1).getTo().getX();
+          double y = l.get(l.size() - 1).getTo().getY();
+          std::cout << "\t";
+          std::cout << x << ", " << y << "\n";
+          std::cout << "\n";
+     }
+     
+     if (!intLoops.empty()) { std::cout << "\n"; }
+}
+
+
+//   Functions
 vector<pair<double, double> >
      utils::gnuplot::details::getFirstPack(
           const vector<pair<double, double> >& dataV, double epsilon)
@@ -519,7 +1130,8 @@ vector<pair<double, double> >
 
 std::vector<utils::gnuplot::details::Polygon>
      utils::gnuplot::details::getPolygons(
-          const std::vector<std::vector<std::pair<double, double> > >& data)
+          const std::vector<std::vector<std::pair<double, double> > >& data,
+          bool logScaleX, bool logScaleY)
 {
      //   List all points of the space, and associate to each one:
      //        - Its coordinates.
@@ -542,12 +1154,17 @@ std::vector<utils::gnuplot::details::Polygon>
      sort(xList.begin(), xList.end());
      sort(yList.begin(), yList.end());
      
-     vector<vector<PointData> > grid;
+     vector<vector<Point> > grid;
      for (unsigned int i = 0; i < yList.size(); ++i)
      {
-          grid.push_back(vector<PointData>());
+          grid.push_back(vector<Point>());
           for (unsigned int j = 0; j < xList.size(); ++j)
-               grid[i].push_back(PointData(xList[j], yList[i]));
+          {
+               grid[i].push_back(Point(xList[j], yList[i]));
+               
+               if (logScaleX) { grid[i].back().applyLog10X(); }
+               if (logScaleY) { grid[i].back().applyLog10Y(); }
+          }
      }
      
           //   Associate the function to each point of the space
@@ -556,9 +1173,14 @@ std::vector<utils::gnuplot::details::Polygon>
           for (unsigned int j = 0; j < data[i].size(); ++j)
           {
                const unsigned int& f = i;
-               const double&       x = data[i][j].first;
-               const double&       y = data[i][j].second;
+
+               double x = data[i][j].first;
+               double y = data[i][j].second;
                
+               if (logScaleX) { x = log10(x); }
+               if (logScaleY) { y = log10(y); }
+
+
                for (unsigned int k = 0; k < grid.size(); ++k)
                {
                     for (unsigned int l = 0; l < grid[k].size(); ++l)
@@ -575,39 +1197,12 @@ std::vector<utils::gnuplot::details::Polygon>
      }
      
      
-     //
-     for (int i = (int) grid.size() - 1; i >= 0; --i)
-     {
-          for (unsigned int j = 0; j < grid[i].size(); ++j)
-          {
-               cout << "(";
-               
-               const set<unsigned int>& list = grid[i][j].getList();
-               
-               set<unsigned int>::const_iterator it  = list.begin();
-               set<unsigned int>::const_iterator end = list.end();
-               for (; it != end; ++it)
-               {
-                    if (it != list.begin()) { cout << ","; }
-                    cout << *it;
-               }
-               cout << ")\t";  
-          }
-          cout << "\n";
-     }
-     
-     cout << "---" << endl;
-     //
-     
-     
      //   Build a polygon around each point
      vector<Polygon> polygons;
      for (unsigned int i = 0; i < grid.size(); ++i)
      {
           for (unsigned int j = 0; j < grid[i].size(); ++j)
-          {
-               Polygon poly;
-               
+          {               
                unsigned int nX = grid[i].size();
                unsigned int nY = grid.size();
                
@@ -615,52 +1210,99 @@ std::vector<utils::gnuplot::details::Polygon>
                unsigned int y0 = ((int) i - 1) <   0 ?  0       : (i - 1);
                unsigned int x1 = ((int) j + 1) >= nX ? (nX - 1) : (j + 1);
                unsigned int y1 = ((int) i + 1) >= nY ? (nY - 1) : (i + 1);
+               
+               set<unsigned int> list = grid[i][j].getList();
+               
+               //   Points
+               Point topLeft(
+                         (grid[y0][x0].getX() + grid[i][j].getX()) / 2.0,
+                         (grid[y0][x0].getY() + grid[i][j].getY()) / 2.0,
+                         list);            
+               
+               Point topRight(
+                         (grid[y0][x1].getX() + grid[i][j].getX()) / 2.0,
+                         (grid[y0][x1].getY() + grid[i][j].getY()) / 2.0,
+                         list);
+               
+               Point bottomRight(
+                         (grid[y1][x1].getX() + grid[i][j].getX()) / 2.0,
+                         (grid[y1][x1].getY() + grid[i][j].getY()) / 2.0,
+                         list);
+               
+               Point bottomLeft(
+                         (grid[y1][x0].getX() + grid[i][j].getX()) / 2.0,
+                         (grid[y1][x0].getY() + grid[i][j].getY()) / 2.0,
+                         list);
+               
+               if (logScaleX)
+               {
+                    topLeft.apply10PowX();
+                    topRight.apply10PowX();
+                    bottomRight.apply10PowX();
+                    bottomLeft.apply10PowX();
+               }
+               
+               if (logScaleY)
+               {
+                    topLeft.apply10PowY();
+                    topRight.apply10PowY();
+                    bottomRight.apply10PowY();
+                    bottomLeft.apply10PowY();
+               }
 
                
-               //   Top-left
-               poly.add((grid[y0][x0].getX() + grid[i][j].getX()) / 2.0,
-                        (grid[y0][x0].getY() + grid[i][j].getY()) / 2.0);            
+               //   Edges
+               Edge topE(topLeft, topRight);
+               Edge rightE(topRight, bottomRight);
+               Edge bottomE(bottomRight, bottomLeft);
+               Edge leftE(bottomLeft, topLeft);
                
-               //   Top-right
-               poly.add((grid[y0][x1].getX() + grid[i][j].getX()) / 2.0,
-                        (grid[y0][x1].getY() + grid[i][j].getY()) / 2.0);
                
-               //   Bottom-right
-               poly.add((grid[y1][x1].getX() + grid[i][j].getX()) / 2.0,
-                        (grid[y1][x1].getY() + grid[i][j].getY()) / 2.0);
+               //   External loop
+               Path extLoop;
+               extLoop.add(topE);
+               extLoop.add(rightE);
+               extLoop.add(bottomE);
+               extLoop.add(leftE);
                
-               //   Bottom-left
-               poly.add((grid[y1][x0].getX() + grid[i][j].getX()) / 2.0,
-                        (grid[y1][x0].getY() + grid[i][j].getY()) / 2.0);
-                        
-               //   Top-left
-               poly.add((grid[y0][x0].getX() + grid[i][j].getX()) / 2.0,
-                        (grid[y0][x0].getY() + grid[i][j].getY()) / 2.0);                        
-                        
+               
+               //   Polygon
+               Polygon poly;
+               poly.setExtLoop(extLoop);
                polygons.push_back(poly);
           }
      }
      
      
      //   Merge the polygons
-     for (unsigned int i = 0; i < polygons.size();)
+     int count = 0;
+     bool merged;
+     do
      {
-          bool merged = false;
-          for (unsigned int j = (i + 1); j < polygons.size(); ++j)
-          {              
-               //   Try to merge polygons 'i' and 'j'
-               if (polygons[i].mergeWith(polygons[j]))  
+          merged = false;
+          for (unsigned int i = 0; i < polygons.size(); ++i)
+          {               
+               for (unsigned int j = 0; j < polygons.size(); ++j)
                {
-                    polygons[j] = polygons.back();
-                    polygons.pop_back();
+                    if (i == j) { continue; }
+
                     
-                    merged = true;
-                    break;
+                    //   Try to merge polygons 'i' and 'j'
+                    merged = polygons[i].mergeWith(polygons[j]);
+                    if (merged)  
+                    {
+                         for (int k = (j + 1); k < polygons.size(); ++k)
+                              polygons[k - 1] = polygons[k];
+
+                         polygons.pop_back();
+                         break;
+                    }
                }
+               
+               if (merged) { break; }
           }
-          
-          if (!merged) { ++i; }
      }
+     while (merged);
      
      
      //   Return the remaining polygons

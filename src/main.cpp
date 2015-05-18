@@ -21,7 +21,7 @@ using namespace utils::formula;
 	
 	\author	Castronovo Michael
 
-	\date	2015-01-20
+	\date	2015-05-14
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -34,6 +34,8 @@ inline bool fileExists(const std::string& name)
 }
 
 void help();
+void mdpDistribGen(int argc, char* argv[])   throw (parsing::ParsingException,
+                                                    MDPException);
 void formulaVGen(int argc, char* argv[])     throw (parsing::ParsingException);
 void offlineLearning(int argc, char* argv[])
                     throw (AgentException, parsing::ParsingException);
@@ -65,6 +67,9 @@ int main(int argc, char* argv[])
      bool modeIsFormulaVGen =
           parsing::hasFlag(argc, argv, "--formula_set_generation");
 
+     bool modeIsMDPDistribGen =
+          parsing::hasFlag(argc, argv, "--mdp_distrib_generation");
+
      bool modeIsOfflineLearning =
           parsing::hasFlag(argc, argv, "--offline_learning");
 
@@ -80,6 +85,7 @@ int main(int argc, char* argv[])
      {
           if      (modeIsHelp)           { help();                        }
           else if (modeIsFormulaVGen)    { formulaVGen(argc, argv);       }
+          else if (modeIsMDPDistribGen)  { mdpDistribGen(argc, argv);     }
           else if (modeIsOfflineLearning){ offlineLearning(argc, argv);   }
           else if (modeIsNewExperiment)  { newExperiment(argc, argv);     }
           else if (modeIsRunExperiment)  { runExperiment(argc, argv);     }
@@ -89,6 +95,12 @@ int main(int argc, char* argv[])
      catch (AgentException& e)
      {
           cout << "\nagent exception: " << e.what();
+          cout << "\n\n";
+     }
+     
+     catch (MDPException& e)
+     {
+          cout << "\nMDP exception: " << e.what();
           cout << "\n\n";
      }
      
@@ -107,6 +119,85 @@ void help()
 {
      ifstream is("doc/command-line manual (TinyBRL-DDS).txt");
      for (string tmp; getline(is, tmp);) { cout << tmp << "\n"; }
+}
+
+
+void mdpDistribGen(int argc, char* argv[]) throw (parsing::ParsingException,
+                                                  MDPException)
+{
+     //   Create a Dirichlet MDP distribution
+          //   The name to give to the distribution
+     string name      = parsing::getValue(argc, argv, "--name");
+     string shortName = parsing::getValue(argc, argv, "--short_name");
+
+
+          //   The number of states/actions
+     unsigned int nX = atoi(
+               parsing::getValue(argc, argv, "--n_states").c_str());
+     unsigned int nU = atoi(
+               parsing::getValue(argc, argv, "--n_actions").c_str());
+
+
+          //   The initial state
+     int iniState = atoi(parsing::getValue(argc, argv, "--ini_state").c_str());
+
+
+          //   The vector representing the counters of the Dirichlet
+          //   distribution, where 'theta[nU*nX*x + nX*u + y]' represents
+          //   the counter associated to the transition '(x, u, y)'.
+     vector<double> theta;
+
+
+          //   The vectors representing the reward function, where
+          //   'R[nU*nX*x + nX*u + y]' and 'V[nU*nX*x + nX*u + y]' are the
+          //   mean and the variance of the rewards associated to the
+          //   transition '(x, u, y)' respectively.
+          //
+          //   If the rewards are constant, you do not have to fill the
+          //   'V' vector (but you have to provide an empty vector).
+     vector<double> R, V;
+
+
+          //   Fill 'theta'
+     vector<string> counts
+               = parsing::getValues(argc, argv, "--counts", nX*nU*nX);
+     for (unsigned int i = 0; i < counts.size(); ++i)
+          theta.push_back(atof(counts[i].c_str()));
+
+
+     //   The type of rewards
+     RewardType rType = MDP::getRewardType(
+               parsing::getValue(argc, argv, "--reward_type"));
+
+
+     //   Fill 'R' and 'V'
+     vector<string> rewardsMeans
+               = parsing::getValues(argc, argv, "--rewards_means", nX*nU*nX);
+     for (unsigned int i = 0; i < rewardsMeans.size(); ++i)
+          R.push_back(atof(rewardsMeans[i].c_str()));
+
+     vector<string> rewardsVariances;
+     try
+     {
+          rewardsVariances = parsing::getValues(
+                    argc, argv, "--rewards_variances", nX*nU*nX);
+
+          for (unsigned int i = 0; i < rewardsVariances.size(); ++i)
+               V.push_back(atof(rewardsVariances[i].c_str()));
+     }
+     catch (parsing::ParsingException&) {}
+
+
+     //   Instantiation
+     DirMultiDistribution distrib(
+               name, shortName, nX, nU, iniState, theta, rType, R, V);
+
+
+     //   Export
+     string output = parsing::getValue(argc, argv, "--output");
+     ofstream os(output.c_str());
+     distrib.serialize(os);
+     os.close();
 }
 
 

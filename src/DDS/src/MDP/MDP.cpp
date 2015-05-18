@@ -51,6 +51,17 @@ MDP::MDP(	string name,
 // ===========================================================================
 //	Public static methods
 // ===========================================================================
+RewardType MDP::getRewardType(string str) throw (MDPException)
+{
+     if (str == "RT_CONSTANT") { return RT_CONSTANT; }
+     if (str == "RT_GAUSSIAN") { return RT_GAUSSIAN; }
+     
+     string msg;
+     msg += "Unable to identify the type of reward \'" + str + "\'!";
+     throw MDPException(msg);
+}
+
+
 void MDP::checkRewardType(const RewardType rType_) throw (MDPException)
 {
 	switch (rType_)

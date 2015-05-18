@@ -25,15 +25,61 @@ using namespace xport;
 	
 	\author	Castronovo Michael
 
-	\date	2015-04-14
+	\date	2015-05-15
 */
 // ===========================================================================
+void help();
+void generateReport(string folderStr,
+                    string prefixStr, string suffixStr, unsigned int nbExp,
+                    bool noPdf);
+
+
 // ---------------------------------------------------------------------------
 //   Main function
 // ---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+     //   Display help
+     if (parsing::hasFlag(argc, argv, "--help"))
+     {
+          help();
+          return 0;
+     }
+     
+     
+     //   Initialize TinyBRL
      init();
+
+
+     //   Retrive the prefix and suffix of the output files
+     string prefixStr, suffixStr;
+     
+     try { prefixStr = parsing::getValue(argc, argv, "--prefix"); }
+     catch (parsing::ParsingException& e) {}
+     
+     try { suffixStr = parsing::getValue(argc, argv, "--suffix"); }
+     catch (parsing::ParsingException& e) {}
+     
+     bool noPdf = parsing::hasFlag(argc, argv, "--no-pdf");
+     
+     
+     //   Create a folder for the generated files
+     string folderStr;
+     if (!prefixStr.empty()) { folderStr = prefixStr; }
+     if (!suffixStr.empty())
+     {
+          if (!folderStr.empty()) { folderStr += "-"; }
+          folderStr += suffixStr;
+     }
+     if (folderStr.empty()) { folderStr = "files"; }
+     folderStr += "/";
+
+     if (system(("mkdir data/export/" + folderStr).c_str()) == -1)
+     {
+          cout << "\n\tError: Unable to create folder:";
+          cout << "\"data/export/\"" << folderStr << "\n\n";
+          return -1;
+     }
 
      
      //   Retrieve the data
@@ -49,7 +95,12 @@ int main(int argc, char* argv[])
      unsigned int fontSize = 12;
      string xLabel = "Offline computation cost (in m)";
      string yLabel = "Mean score";
-     string output = "data/export/graph-offline";
+     
+     string output = ("data/export/" + folderStr);
+     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
+     output += "graph-offline";
+     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
+     
      double xCoeff = (1.0 / 1000.0 / 60.0);
      
      //   For each experiment, create a graph
@@ -74,8 +125,7 @@ int main(int argc, char* argv[])
 
 
           //   For each type of agent, create a curve
-          vector<string> classStrList;         
-          classStrList = getList(c, db, CLASS_NAME);
+          vector<string> classStrList = getList(c, db, CLASS_NAME);
           vector<vector<pair<double, double> > > data, bounds;
           for (unsigned int j = 0; j < classStrList.size(); ++j)
           {
@@ -100,59 +150,9 @@ int main(int argc, char* argv[])
                }
                
                
-               //   Remove noise
-//               dataV = removeNoise(dataV, (500 * xCoeff), NFT_MAX);
-
-
-               //   Retrieve the bounds of each point
-//               for (unsigned int p = 0; p < dataV.size(); ++p)
-//               {
-//                    unsigned int k = 0;
-//                    for (; k < sortedList.size(); ++k)
-//                    {
-//                         double x = sortedList[k].getField(xField) * xCoeff;
-//                         double y = sortedList[k].getField(yField);
-//                         if ((x == dataV[p].first) && (y == dataV[p].second))
-//                              break;
-//                    }
-//
-//                    boundsV.push_back(pair<double, double>(
-//                              sortedList[k].getField(lBField),
-//                              sortedList[k].getField(uBField)));
-//               }
-               
-               
-               //   Add the (0, 0) point
-//               dataV.push_back(pair<double, double>(0, 0));
-//               boundsV.push_back(pair<double, double>(0, 0));
-//               for (unsigned int k = 0; k < dataV.size(); ++k)
-//               {
-//                    pair<double, double> tmp = dataV[k];
-//                    dataV[k] = dataV.back();
-//                    dataV[dataV.size() - 1] = tmp;
-//
-//                    tmp = boundsV[k];
-//                    boundsV[k] = boundsV.back();
-//                    boundsV[boundsV.size() - 1] = tmp;
-//               }
-               
-               
-               //   Add a point for the last 'x' value (if necessary)
-//               if (xMax > dataV.back().first)
-//               {
-//                    double y = dataV.back().second;
-//                    dataV.push_back(pair<double, double>(xMax, y));
-//                    
-//                    double lBound = boundsV.back().first;
-//                    double uBound = boundsV.back().second;
-//                    boundsV.push_back(pair<double, double>(lBound, uBound));
-//               }
-               
-               
                //   Add the data points associated to this type of agent
                //   to the list
                data.push_back(dataV);
-//               bounds.push_back(boundsV);
           }
           
           
@@ -169,12 +169,10 @@ int main(int argc, char* argv[])
           opt.unsetOption("colorbox");
           
                //   Set 'with'
-//          opt.setWith("linespoints");
           opt.setWith("points");
           
                //   Change y range to ensure that legend is not
                //   overlapping the graph
-          // set key above width -8 vertical maxrows 1 -- fix nb rows to 1
           unsigned int n = (classStrList.size() + 1);
           double lW = (0.03 * (fontSize / 12.0));
           yMin -= (lW*n * (yMax - yMin))/(1.0 - lW*n);      
@@ -212,7 +210,12 @@ int main(int argc, char* argv[])
      fontSize = 12;
      xLabel = "Online computation cost (in ms)";
      yLabel = "Mean score";
-     output = "data/export/graph-online";
+
+     output = ("data/export/" + folderStr);
+     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
+     output += "graph-online";
+     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
+     
      xCoeff = (1.0);
      
      //   For each experiment, create a graph
@@ -239,8 +242,7 @@ int main(int argc, char* argv[])
 
 
           //   For each type of agent, create a curve
-          vector<string> classStrList;         
-          classStrList = getList(c, db, CLASS_NAME);
+          vector<string> classStrList = getList(c, db, CLASS_NAME);
           vector<vector<pair<double, double> > > data, bounds;
           for (unsigned int j = 0; j < classStrList.size(); ++j)
           {
@@ -264,60 +266,10 @@ int main(int argc, char* argv[])
                     dataV.push_back(pair<double, double>(x, y));
                }
                
-               
-               //   Remove noise
-//               dataV = removeNoise(dataV, (500 * xCoeff), NFT_MAX);
-               
-               
-               //   Retrieve the bounds of each point
-//               for (unsigned int p = 0; p < dataV.size(); ++p)
-//               {
-//                    unsigned int k = 0;
-//                    for (; k < sortedList.size(); ++k)
-//                    {
-//                         double x = sortedList[k].getField(xField) * xCoeff;
-//                         double y = sortedList[k].getField(yField);
-//                         if ((x == dataV[p].first) && (y == dataV[p].second))
-//                              break;
-//                    }
-//
-//                    boundsV.push_back(pair<double, double>(
-//                              sortedList[k].getField(lBField),
-//                              sortedList[k].getField(uBField)));
-//               }
-               
-               
-               //   Add the (0, 0) point
-//               dataV.push_back(pair<double, double>(0, 0));
-//               boundsV.push_back(pair<double, double>(0, 0));
-//               for (unsigned int i = 0; i < dataV.size(); ++i)
-//               {
-//                    pair<double, double> tmp = dataV[i];
-//                    dataV[i] = dataV.back();
-//                    dataV[dataV.size() - 1] = tmp;
-//                    
-//                    tmp = boundsV[i];
-//                    boundsV[i] = boundsV.back();
-//                    boundsV[boundsV.size() - 1] = tmp;
-//               }
-               
-               
-               //   Add a point for the last 'x' value (if necessary)
-//               if (xMax > dataV.back().first)
-//               {
-//                    double y = dataV.back().second;
-//                    dataV.push_back(pair<double, double>(xMax, y));
-//                    
-//                    double lBound = boundsV.back().first;
-//                    double uBound = boundsV.back().second;
-//                    boundsV.push_back(pair<double, double>(lBound, uBound));
-//               }
-               
-               
+                              
                //   Add the data points associated to this type of agent
                //   to the list
                data.push_back(dataV);
-//               bounds.push_back(boundsV);
           }
           
           
@@ -334,12 +286,10 @@ int main(int argc, char* argv[])
           opt.unsetOption("colorbox");
           
                //   Set 'with'
-//          opt.setWith("linespoints");
           opt.setWith("points");
           
                //   Change y range to ensure that legend is not
                //   overlapping the graph
-          // set key above width -8 vertical maxrows 1 -- fix nb rows to 1
           unsigned int n = (classStrList.size() + 1);
           double lW = (0.03 * (fontSize / 12.0));
           yMin -= (lW*n * (yMax - yMin))/(1.0 - lW*n);      
@@ -375,10 +325,14 @@ int main(int argc, char* argv[])
      fontSize = 12;
      xLabel = "Online time bound (in ms)";
      yLabel = "Offline time bound (in m)";
-     output = "data/export/graph-online-offline";
      
-     double xStepP = 0.02;
-     double yStepP = 0.02;
+     output = ("data/export/" + folderStr);
+     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
+     output += "graph-online-offline";
+     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
+     
+     double xStepCoeff = 5.0;
+     double yStepCoeff = 5.0;
      
      xCoeff = (1.0);
      double yCoeff = (1.0 / 1000.0 / 60.0);
@@ -399,36 +353,31 @@ int main(int argc, char* argv[])
 
 
           //   Retrieve the minimal and maximal 'x' value
-//          double xMin = 0.0;
-          double xMin = 0.01;
-          double xMax = db[getMax(c, db, xField)].getField(xField);
+          double xMin = 0.01, xMax = 0.01;
+          double xLimit = db[getMax(c, db, xField)].getField(xField);
 
           //   Retrieve the minimal and maximal 'y' values
-          double yMin = 0.01;
-          double yMax = db[getMax(c, db, yField)].getField(yField);
+          double yMin = 0.01, yMax = 0.01;
+          double yLimit = db[getMax(c, db, yField)].getField(yField);
           yMax /= 300.0;
-
-          //   Compute 'xStep' and 'yStep'
-          double xStep = xStepP*(xMax - xMin);
-          double yStep = yStepP*(yMax - yMin);
 
 
           //   For each point, determine to which agent it belongs
-          vector<vector<pair<double, double> > > data;
-          vector<string> titles;
-          data.push_back(vector<pair<double, double> >());
-          titles.push_back("NONE");
+          vector<string> classStrList = getList(c, db, CLASS_NAME);
+          vector<vector<pair<double, double> > > data(classStrList.size());
           
           unsigned int maxTitleSize = 0;
-          vector<string> classStrList;         
-          classStrList = getList(c, db, CLASS_NAME);
-          for (double x = xMin; x <= xMax; x *= 1.8)
+          for (double x = xMin; x <= xLimit; x *= xStepCoeff)
           {
+               xMax = x;
+
                vector<unsigned int> cc =
                          filter(c, db, xField, DBL_BELOW_EQUAL, x);
 
-               for (double y = yMin; y < yMax; y *= 1.8)
+               for (double y = yMin; y < yLimit; y *= yStepCoeff)
                {
+                    yMax = y;
+                    
                     vector<unsigned int> ccc
                               = filter(cc, db, yField, DBL_BELOW_EQUAL, y);
 
@@ -478,56 +427,32 @@ int main(int argc, char* argv[])
                     }
 
 
-                    //   Check if an entry already exist for this list
-                    for (int j = 0; j < (int) chosenList.size(); ++j)
+                    //   Add the point for each selected algorithm
+                    for (unsigned int j = 0; j < chosenList.size(); ++j)
                     {
-                         for (int k = (j + 1); k < (int) chosenList.size(); ++k)
+                         unsigned int s = chosenList[j];
+                         string classStr = db[s].getField(CLASS_NAME);
+                         
+                         for (unsigned int k = 0; k < classStrList.size(); ++k)
                          {
-                              string strJ =
-                                        db[chosenList[j]].getField(CLASS_NAME);
-                                        
-                              string strK =
-                                        db[chosenList[k]].getField(CLASS_NAME);
-
-                              if (strK < strJ)
-                              {                                   
-                                   unsigned int tmp = chosenList[j];
-                                   chosenList[j]    = chosenList[k];
-                                   chosenList[k]    = tmp;
-                              }
+                              if (classStr == classStrList[k])
+                              {
+                                   data[k].push_back(
+                                             pair<double, double>(xCoeff*x,
+                                                                  yCoeff*y));
+                                   break;
+                              }                        
                          }
                     }
-                    
-                    string chosenStr = db[chosenList[0]].getField(CLASS_NAME);
-                    for (int j = 1; j < (int) chosenList.size(); ++j)
-                    {
-                         chosenStr +=
-                              (", " + db[chosenList[j]].getField(CLASS_NAME));
-                    }
-                    
-                    int s = -1;
-                    for (unsigned int j = 0; j < titles.size(); ++j)
-                         if (chosenStr == titles[j]) { s = j; break; }
-
-                         //   No entry found
-                    if (s == -1)
-                    {
-                         titles.push_back(chosenStr);
-                         if (maxTitleSize < chosenStr.size())
-                              maxTitleSize = chosenStr.size();
-
-                         data.push_back(vector<pair<double, double> >());
-                         s = (titles.size() - 1);
-                    }
-                    
-                         //   Add the point
-                    data[s].push_back(pair<double, double>(xCoeff*x, yCoeff*y));
                }
           }
           
           
           //   Create the graph
           GnuplotOptions opt(fontSize);
+          
+               //   Set 'inBox'
+          opt.setInBox(true);
           
                //   Set a palette
           opt.setOption("palette",
@@ -559,7 +484,6 @@ int main(int argc, char* argv[])
           opt.setOption("xtics",  sstr.str());
           
           opt.setOption("format", "xy \"%.e\"");
-//          opt.setOption("format", "y \"%.e\"");
           sstr.str(string());
           sstr << 0.5437063+(0.2062937*(maxTitleSize / 17.0)) << "," << 0.75;
           opt.setOption("size", sstr.str());
@@ -572,12 +496,15 @@ int main(int argc, char* argv[])
           sstr << "\'" << output << "-" << i << ".eps\'";
           opt.setOption("output", sstr.str());
 
-          plot(opt, data, titles);
+          plot(opt, data, classStrList);
      }
 
 
      //   OFFLINE/ONLINE/SCORE table ------------------------------------------
-     output = "data/export/table";
+     output = ("data/export/" + folderStr);
+     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
+     output += "table";
+     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
      
      //   For each experiment, create a table
      for (unsigned int i = 0; i < expStrList.size(); ++i)
@@ -671,8 +598,133 @@ int main(int argc, char* argv[])
                for (unsigned int l = 0; l < grid[k].size(); ++l)
                     delete grid[k][l];
      }
+     
+     
+     //   Generate latex report
+     generateReport(folderStr, prefixStr, suffixStr, expStrList.size(), noPdf);
 
      
      //   Return
      return 0;
+}
+
+
+// ---------------------------------------------------------------------------
+//	Extra functions implementation
+// ---------------------------------------------------------------------------
+void help()
+{
+     ifstream is("doc/command-line manual (TinyBRL-export).txt");
+     for (string tmp; getline(is, tmp);) { cout << tmp << "\n"; }
+}
+
+
+void generateReport(string folderStr,
+                    string prefixStr, string suffixStr, unsigned int nbExp,
+                    bool noPdf)
+{
+     string reportStr;
+     if (!prefixStr.empty()) { reportStr += (prefixStr + "-"); }
+     reportStr += "report";
+     if (!suffixStr.empty()) { reportStr += ("-" + suffixStr); }
+     reportStr += ".tex";
+     
+     string output = "data/export/";
+     output += reportStr;
+     
+     ofstream file(output.c_str());
+     file << "\\documentclass[10pt,a4paper]{article}\n";
+     file << "\\usepackage[utf8]{inputenc}\n";
+     file << "\\usepackage[english]{babel}\n";
+     file << "\\usepackage{amsmath}\n";
+     file << "\\usepackage{amsfonts}\n";
+     file << "\\usepackage{amssymb}\n";
+     file << "\\usepackage{graphicx}\n";
+     file << "\\usepackage{longtable}\n";
+     file << "\\usepackage{pdflscape}\n";
+     file << "\\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}\n";
+     file << "\n";
+     file << "\\begin{document}\n";
+     file << "\\section*{Report}\n";
+     
+     for (unsigned int i = 0; i < nbExp; ++i)
+     {
+          stringstream offGraph;
+          offGraph << folderStr;
+          if (!prefixStr.empty()) { offGraph << prefixStr << "-"; }
+          offGraph << "graph-offline";
+          if (!suffixStr.empty()) { offGraph << "-" << suffixStr; }
+          offGraph << "-" << i;
+
+          stringstream onGraph;
+          onGraph << folderStr;
+          if (!prefixStr.empty()) { onGraph << prefixStr << "-"; }
+          onGraph << "graph-online";
+          if (!suffixStr.empty()) { onGraph << "-" << suffixStr; }
+          onGraph << "-" << i;
+
+          stringstream onOffGraph;
+          onOffGraph << folderStr;
+          if (!prefixStr.empty()) { onOffGraph << prefixStr << "-"; }
+          onOffGraph << "graph-online-offline";
+          if (!suffixStr.empty()) { onOffGraph << "-" << suffixStr; }
+          onOffGraph << "-" << i;
+
+          stringstream table;
+          table << folderStr;
+          if (!prefixStr.empty()) { table << prefixStr << "-"; }
+          table << "table";
+          if (!suffixStr.empty()) { table << "-" << suffixStr; }
+          table << "-" << i;
+          
+          
+          file << "\\subsection*{Experiment \\#" << i << "}\n";
+          file << "\n";
+          file << "\\begin{figure}[!ht]\n";
+          file << "\t\\centering\\includegraphics[scale=1.5]{" << offGraph.str() << "}\n";
+          file << "\t\\caption{Offline computation cost Vs. Performance}\n";
+          file << "\\end{figure}\n";
+          file << "\n";
+          file << "\\begin{figure}[!ht]\n";
+          file << "\t\\centering\\includegraphics[scale=1.5]{" << onGraph.str() << "}\n";
+          file << "\t\\caption{Online computation cost Vs. Performance}\n";
+          file << "\\end{figure}\n";
+          file << "\n";
+          file << "\\begin{figure}[!ht]\n";
+          file << "\t\\centering\\includegraphics[scale=1.5]{" << onOffGraph.str() << "}\n";
+          file << "\t\\caption{Best algorithms w.r.t offline/online time periods}\n";
+          file << "\\end{figure}\n";
+          file << "\n";
+          file << "\\begin{landscape}\n";
+          file << "\\input{" << table.str() << ".tex}\n";
+          file << "\\end{landscape}\n";
+          file << "\n";
+     }
+     file << "\\end{document}\n";
+     file.close();
+     
+     
+     //   Exit if necessary
+     if (noPdf) { return; }
+
+
+     //   Build pdf
+     string command;
+     command = "cd data/export/";
+     command += ("; latexmk -pdf -quiet -silent " + reportStr + " >> tmp.log");
+     if (system(command.c_str()) == -1)
+     {
+          cout << "\n\tError: Unable to build report!\n\n";
+          return;
+     }
+
+     command = "cd data/export/";
+     command += ("; latexmk -c -quiet -silent " + reportStr + " >> tmp.log"); 
+     if (system(command.c_str()) == -1)
+          cout << "\n\tWarning: Unable to delete temporary files!\n\n";
+     
+     command = "cd data/export/";
+     command += ("; rm " + folderStr + "*eps-converted-to*.pdf; rm tmp.log");
+     if (system(command.c_str()) == -1)
+          cout << "\n\tWarning: Unable to delete temporary files!\n\n";
 }

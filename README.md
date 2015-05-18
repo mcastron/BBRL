@@ -4,6 +4,20 @@ TinyBRL
 
 TinyBRL is a C++ open-source library for bayesian reinforcement learning. For more information, you can visit the official [wiki](http://www.montefiore.ulg.ac.be/~mcastron/tinybrl-wiki/index.php) or our [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
 
+1.4
+ - Bug fix: 'SBOSSAgent' parsing was parsing '--delta' by using '--C' flag instead.
+ - Bug fix: 'IExperiment' was not measuring the time elapsed anymore.
+ - Bug fix: 'FormulaAgentFactory' was not deserialized correctly.
+ - Minor fix: 'OPPSCSAgent' output name had a typing error.
+ - Minor fix: 'IExperiment:checkIntegrity()' was not implemented correctly.
+ - Added 'Formula:getStr()' method (used to represent 'nicely' the formula when exported in Latex, Gnuplot, ...). 'FormulaAgent:getName()' modified to use this function instead of 'Formula:getRPNStr()'.
+ - Minor changes in Agents name ('getName()' methods).
+ - Added method 'Agent::getExportName()' and ’Agent::getExportClassName()'.
+ - 'xport' namespace added: provide methods to load, filter and sort the results of the experiments.
+ - 'utils::gnuplot' namespace added: provide methods to create gnuplot graphs.
+ - 'utils::latex' namespace added: provide methods to create latex tables.
+ - 'TinyBRL-export' has drastically changed. The user will only provide all the data, and TinyBRL-export will create a neat Latex report. More information on the corresponding wiki page.
+
 1.3.2
  - Minor fix: 'FormulaAgentFactory' was printing out the tested formula.
  - Bug fix: 'FormulaAgentFactory' was not registered with 'Serializable::checkIn(...)' (which is necessary during the deserialization of an 'OPPSCSAgent').

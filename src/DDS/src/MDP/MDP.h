@@ -7,8 +7,8 @@
 
 
 //	Note:
-//		Update 'checkRewardType()' private method whenever this enum type
-//		is modified.
+//		Update 'getRewardType()' and 'checkRewardType()' methods whenever
+//        this enum type is modified.
 enum RewardType
 {
 	RT_CONSTANT,
@@ -27,7 +27,7 @@ enum RewardType
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 			
-	\date 	2013-12-13
+	\date 	2015-05-14
 */
 // ===========================================================================
 class dds::MDP : public IMDP
@@ -77,6 +77,22 @@ class dds::MDP : public IMDP
 		// =================================================================
 		//	Public static methods
 		// =================================================================
+		/**
+               \brief         Return the RewardType represented by the string
+                              'str'.
+
+                              Throw a MDPException if the string 'str' does
+                              not represent a RewardType.
+
+               \param[str     The string representing the RewardType to
+                              retrieve.
+
+               \return        The RewardType represented by the string 'str'.
+	     */
+		static RewardType getRewardType(std::string str)
+		                                             throw (MDPException);
+		
+		
 		/**
 			\brief		Throw a MDPException if the given RewardType
 						element is invalid.

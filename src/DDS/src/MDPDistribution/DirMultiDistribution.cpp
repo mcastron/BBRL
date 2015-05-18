@@ -191,7 +191,7 @@ void DirMultiDistribution::deserialize(istream& is) throw (SerializableException
 
 	//	'rType', 'R', 'V'
 	if (!getline(is, tmp)) { throwEOFMsg("rType"); }
-	rType = (RewardType) atoi(tmp.c_str());	
+	rType = (RewardType) atoi(tmp.c_str());
 	try					{ MDP::checkRewardType(rType);			}
 	catch (MDPException e)	{ throw SerializableException(e.what());	}
 	++i;

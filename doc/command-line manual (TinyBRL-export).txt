@@ -7,6 +7,15 @@ NAME
 
 
 USAGE OVERVIEW
+     This program will generate several graphs and latex tables corresponding to
+     the results you provide.
+     
+     TinyBRL-export will also generate a report file (in latex), and will
+     compile directly to generate a readable pdf file.
+     (depends on 'texlive' and 'latexmk' packages)
+     If you do not want to compile the report, use the flag '--no-pdf'.
+
+
      --help
 
      [
@@ -16,6 +25,20 @@ USAGE OVERVIEW
           --experiment
                --experiment_file
      ]*
+     [--prefix <string>]
+     [--suffix <string>]
+     [--no-pdf]
+
+
+OPTIONS DESCRIPTION
+     --prefix <string>
+          Add a prefix to all generated files.
+
+     --suffix <string>
+          Add a suffix to all generated files.
+
+     --no-pdf
+          If specified, do not create a pdf file for the report.
     
 
 USAGE EXAMPLES
@@ -36,3 +59,5 @@ USAGE EXAMPLES
                     --agent_file "data/agents/egreedy_agent(0.5).dat" \
                --experiment \
                     --experiment_file "data/results/GC-1000-egreedy_agent(0.5).dat.zz"
+               --suffix "test"
+

@@ -13,7 +13,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2015-04-21
+	\date		2015-05-12
 */
 // ===========================================================================
 namespace utils
@@ -30,7 +30,7 @@ namespace utils
 	
 	/**
           \class    RandomGen
-          \brief    A generator of random numbers.
+          \brief    A generator of random numberÒs.
 	*/
 	class RandomGen;
 	
@@ -866,21 +866,45 @@ namespace utils
 		// =================================================================
 		namespace details
 		{
-		     // Information on a particular point of the space
-		     class PointData
+		     // Uses 'StoSOO' algorithm to find the best spot for putting
+               // a label into a polygon.
+               class LabelPositionOptim;
+		   
+		   
+		     // Represent a point of the space
+		     class Point
 		     {
 		          public:
-                         PointData(double x_, double y_) : x(x_), y(y_) {}
+                         Point(double x_, double y_,
+                               std::set<unsigned int> list_ =
+                                        std::set<unsigned int>()) :
+                                             x(x_), y(y_), list(list_) {}
+
 
                          double getX() const { return x; }
-                         
                          double getY() const { return y; }
+
+                         void applyLog10X() { x = log10(x); }
+                         void applyLog10Y() { y = log10(y); }
+
+                         void apply10PowX() { x = pow(10.0, x); }
+                         void apply10PowY() { y = pow(10.0, y); }
 
                          void addToList(unsigned int f) { list.insert(f); }
                          
-                         const std::set<unsigned int>& getList() const
+                         
+                         std::set<unsigned int> getList() const
                          {
                               return list;
+                         }
+                         
+
+                         bool operator==(const Point& p) const
+                         {
+                              if (p.getX() == x && p.getY() == y)
+                                   return (list == p.list);
+                              
+                              return false;
                          }
 		        
 		        
@@ -890,36 +914,298 @@ namespace utils
 		     };
 		     
 		     
+		     // Represent an edge
+		     class Edge
+		     {
+                    public:
+                         Edge(Point from_, Point to_) : from(from_), to(to_) {}
+
+
+                         const Point& getFrom() const { return from; }
+                         const Point& getTo()   const { return to;   }
+                         
+                         
+                         void reverse()
+                         {
+                              Point tmp = from;
+                              from      = to;
+                              to        = tmp;
+                         }
+
+
+                         bool operator==(const Edge& e)
+                         {    
+                              return ((from == e.getFrom() && to == e.getTo())
+                                             || (from == e.getTo()
+                                                       && to == e.getFrom()));
+                         }
+
+
+                    private:
+                         Point from, to;
+		     };
+		     
+		     
+		     // Represent a path
+		     class Path
+		     {
+                    public:
+                         Path() : surfaceHasChanged(true) {}
+                         
+                         
+                         bool add(Edge e)
+                         {
+                              if (empty())
+                              {
+                                   edges.push_back(e);
+                                   surfaceHasChanged = true;
+                                   
+                                   double x1 = e.getFrom().getX();
+                                   double x2 = e.getTo().getX();
+                                   double y1 = e.getFrom().getY();
+                                   double y2 = e.getTo().getY();
+                                   
+                                   xMin = min(x1, x2);
+                                   xMax = max(x1, x2);
+                                   yMin = min(y1, y2);
+                                   yMax = max(y1, y2);
+                                   
+                                   return true;
+                              }
+
+
+                              Edge& lastEdge = edges.back();
+                              if (lastEdge.getTo() == e.getFrom())
+                              {
+                                   edges.push_back(e);
+                                   surfaceHasChanged = true;
+                                   
+                                   double x1 = e.getFrom().getX();
+                                   double x2 = e.getTo().getX();
+                                   double y1 = e.getFrom().getY();
+                                   double y2 = e.getTo().getY();
+                                   
+                                   xMin = min(xMin, x1, x2);
+                                   xMax = max(xMax, x1, x2);
+                                   yMin = min(yMin, y1, y2);
+                                   yMax = max(yMax, y1, y2);
+                                   
+                                   return true;
+                              }
+
+
+                              return false;                              
+                         }
+                         
+                         
+                         bool isLoop() const
+                         {
+                              if (empty()) { return false; }
+
+                              return (edges.back().getTo()
+                                        == edges[0].getFrom());
+                         }
+                         
+                         
+                         void reverse()
+                         {
+                              std::vector<Edge> nEdges;
+                              for (int i = size() - 1; i >= 0; --i)
+                              {
+                                   Edge e = edges[i];
+                                   e.reverse();
+                                   nEdges.push_back(e);
+                              }
+                              
+                              edges = nEdges;
+                         }
+                         
+                         
+                         std::vector<std::pair<int, int> >
+                                   getCommonEdges(Path path) const
+                         {
+                              //   Optimization trick #1
+                              if (empty() || path.empty()
+                                        || get(0).getTo().getList()
+                                             != path.get(0).getTo().getList())
+                              {
+                                   return std::vector<std::pair<int, int> >();
+                              }
+                              
+                              
+                              //   Optimization trick #2
+                              std::vector<std::pair<double, double> > bounds;
+                              bounds = path.getBounds();
+                              
+                              double xMin2 = bounds[0].first;
+                              double xMax2 = bounds[0].second;
+                              double yMin2 = bounds[1].first;
+                              double yMax2 = bounds[1].second;
+                              
+                              if (xMax < xMin2 || xMax2 < xMin
+                                        || yMax < yMin2 || yMax2 < yMin)
+                              {
+                                   return std::vector<std::pair<int, int> >();
+                              }
+                              
+                              
+                              //   Check all edges
+                              std::vector<std::pair<int, int> > commonEdges;
+                              for (int i = 0; i < size(); ++i)
+                              {
+                                   for (int j = 0; j < path.size(); ++j)
+                                   {
+                                        if (get(i) == path.get(j))
+                                        {
+                                             std::pair<int, int> p(i, j);
+                                             commonEdges.push_back(p);
+                                        }
+                                   }
+                              }
+
+                              return commonEdges;
+                         }
+
+
+                         std::vector<std::pair<double, double> >
+                                   getBounds() const
+                         {
+                              std::vector<std::pair<double, double> > bounds;
+
+                              bounds.push_back(
+                                   std::pair<double, double>(xMin, xMax));
+
+                              bounds.push_back(
+                                   std::pair<double, double>(yMin, yMax));
+
+                              return bounds;
+                         }
+
+
+                         std::vector<Path> split(std::vector<int> cuts) const;
+                         double computeSurface();
+
+          
+                         Edge get(unsigned int i) const { return edges[i]; }
+                         unsigned int size() const { return edges.size(); }
+                         bool empty() const { return edges.empty(); }
+
+
+                    private:
+                         std::vector<Edge> edges;
+                         double surface;
+                         bool surfaceHasChanged;
+                         double xMin, xMax, yMin, yMax;
+                         
+                         double min(double a, double b) const
+                         {
+                              return (a < b) ? a : b;
+                         }
+                         
+                         double min(double a, double b, double c) const
+                         {
+                              return min(min(a, b), c);
+                         }
+                         
+                         double max(double a, double b) const
+                         {
+                              return (a > b) ? a : b;
+                         }
+                         
+                         double max(double a, double b, double c) const
+                         {
+                              return max(max(a, b), c);
+                         }
+		     };
+		     
+		     
 		     // Represent a polygon
 		     class Polygon
 		     {
                     public:
-                         void add(double x, double y)
+                         Polygon() {}
+                         
+                         
+                         bool isValid() const
                          {
-                              vertices.push_back(
-                                        std::pair<double, double>(x, y));
+                              if (extLoop.empty() || !extLoop.isLoop())
+                                   return false;
+
+                              for (int i = 0; i < intLoops.size(); ++i)
+                              {
+                                   const Path& cur = intLoops[i];
+                                   if (cur.empty() || !cur.isLoop())
+                                        return false;
+                              }
+
+                              return true;
+                         }
+                    
+                         
+                         Path getExtLoop() const { return extLoop; }
+
+
+                         //   Does not check if 'nExtLoop' is external
+                         bool setExtLoop(Path nExtLoop)
+                         {
+                              if (nExtLoop.empty() || !nExtLoop.isLoop())
+                                   return false;
+
+                              extLoop = nExtLoop;
+                              return true;
                          }
                          
                          
-                         std::pair<double, double> get(unsigned int i)
+                         std::vector<Path> getIntLoops() const
                          {
-                              return vertices[i];
+                              return intLoops;
                          }
                          
-                         bool mergeWith(const Polygon& poly) const;
+                         
+                         //   Does not check if all loops in 'nIntLoops' are
+                         //   internal
+                         bool setIntLoops(std::vector<Path> nIntLoops)
+                         {
+                              for (int i = 0; i < nIntLoops.size(); ++i)
+                              {
+                                   Path& cur = nIntLoops[i];
+                                   if (cur.empty() || !cur.isLoop())
+                                        return false;
+                              }
+                              
+                              intLoops = nIntLoops;
+                              return true;
+                         }
+
+                         
+                         bool mergeWith(const Polygon& poly);
+                    
+                         
+                         Point getCenter(bool logScaleX, bool logScaleY) const;
                          
                          
-                         unsigned int size() const { return vertices.size(); }
+                         std::set<unsigned int> getList() const
+                         {
+                              return extLoop.get(0).getFrom().getList();
+                         }
                          
                          
-                         void clear() { vertices.clear(); }
+                         void print() const;
                     
                     
                     private:
-                         std::vector<std::pair<double, double> > vertices;
+                         Path extLoop;
+                         std::vector<Path> intLoops;
+                         
+                         
+                         std::vector<std::pair<double, double> >
+                                   getBounds() const
+                         {
+                              return extLoop.getBounds();
+                         }
 		     };
-		   
-		   
+
+
 		     // Return a pack corresponding to similar points. A point is
 		     // part of the pack if the shortest distance between this point
 		     // and a point of the pack is at most 'epsilon'
@@ -931,7 +1217,8 @@ namespace utils
                          
                // The 'plot' function for handling 'inBox' case.
                std::vector<Polygon> getPolygons(const std::vector<
-                         std::vector<std::pair<double, double> > >& data);
+                         std::vector<std::pair<double, double> > >& data,
+                         bool logScaleX = false, bool logScaleY = false);
 		}
          
          
@@ -947,8 +1234,8 @@ namespace utils
 	                        each curve.
 	     */
           void plot(GnuplotOptions opt,
-                    const std::vector<
-                              std::vector<std::pair<double, double> > >& data,
+                    std::vector<
+                              std::vector<std::pair<double, double> > > data,
                     const std::vector<std::string>& titles,
                     std::vector<std::vector<
                               std::pair<double, double> > > bounds
