@@ -2,7 +2,8 @@ BBRL
 =======
 ![alt tag](https://travis-ci.org/mcastron/BBRL.svg)
 
-BBRL is a C++ open-source library for bayesian reinforcement learning. For more information about my research, visit my [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
+BBRL (**B**enchmarking for **B**ayesian **R**einforcement **L**earning) is a C++ open-source library used to compare Bayesian reinforcement learning algorithms.
+For more information about my research, visit my [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
 
 1.4
  - Bug fix: 'SBOSSAgent' parsing was parsing '--delta' by using '--C' flag instead.
