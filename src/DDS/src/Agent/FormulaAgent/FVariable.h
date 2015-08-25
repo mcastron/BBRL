@@ -96,6 +96,14 @@ class dds::FVariable : public Serializable
 
 
           /**
+			\brief	Return a clone of this FVariable.
+			
+			\return	A clone of this FVariable.
+		*/
+		virtual FVariable* clone() const =  0;
+
+
+          /**
 			\brief	Return the name of the class of this object.
 					This method should be overloaded by any derived class.
 			

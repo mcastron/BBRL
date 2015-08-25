@@ -9,6 +9,8 @@
 #include "src/Agent/VDBEEGreedyAgent.h"
 #include "src/Agent/FormulaAgent/FormulaAgent.h"
 #include "src/Agent/FormulaAgent/FormulaVector.h"
+#include "src/Agent/FormulaAgent/FVariable.h"
+#include "src/Agent/FormulaAgent/FVariableVector.h"
 #include "src/Agent/BAMCPAgent.h"
 #include "src/Agent/BFS3Agent.h"
 #include "src/Agent/SBOSSAgent.h"

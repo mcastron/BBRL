@@ -104,112 +104,229 @@ int main(int argc, char* argv[])
      double xCoeff = (1.0 / 1000.0 / 60.0);
      
      //   For each experiment, create a graph
-     for (unsigned int i = 0; i < expStrList.size(); ++i)
-     {
-          string expName = expStrList[i];
+//     for (unsigned int i = 0; i < expStrList.size(); ++i)
+//     {
+//          string expName = expStrList[i];
+//
+//
+//          //   Apply a filter to get the data related to the current
+//          //   experiment
+//          vector<unsigned int> c = filter(db, EXP_NAME, STR_EQUAL, expName);
+//          if (c.empty()) { continue; }
+//
+//
+//          //   Retrieve the maximal 'x' value
+//          double xMax = xCoeff * db[getMax(c, db, xField)].getField(xField);
+//
+//
+//          //   Retrieve the minimal and maximal 'y' values
+//          double yMin = db[getMin(c, db, yField)].getField(yField);
+//          double yMax = db[getMax(c, db, yField)].getField(yField);
+//
+//
+//          //   For each type of agent, create a curve
+//          vector<string> classStrList = getList(c, db, CLASS_NAME);
+//          vector<vector<pair<double, double> > > data, bounds;
+//          for (unsigned int j = 0; j < classStrList.size(); ++j)
+//          {
+//               string className = classStrList[j];
+//
+//
+//               //   Apply a filter to get the data related to the current
+//               //   type of agent
+//               vector<unsigned int> cc = 
+//                         filter(c, db, CLASS_NAME, STR_EQUAL, className);
+//
+//
+//               //   For each sample, create a point
+//               vector<pair<double, double> > dataV, boundsV;               
+//               vector<unsigned int> sortedList = sort(cc, db, xField);
+//
+//               for (unsigned int k = 0; k < sortedList.size(); ++k)
+//               {
+//                    double x = db[sortedList[k]].getField(xField) * xCoeff;
+//                    double y = db[sortedList[k]].getField(yField);
+//                    dataV.push_back(pair<double, double>(x, y));
+//               }
+//               
+//               
+//               //   Add the data points associated to this type of agent
+//               //   to the list
+//               data.push_back(dataV);
+//          }
+//          
+//          
+//          //   Create the graph
+//          GnuplotOptions opt(fontSize);
+//          
+//               //   Add grid
+//          opt.setOption("grid", "lc \"#ED000000\"");
+//          
+//               //   Set a palette
+//          opt.setOption("palette",
+//                         "defined ( 0 \"green\", 1 \"blue\", 2 \"red\","
+//                         " 3 \"orange\" ) ");
+//          opt.unsetOption("colorbox");
+//          
+//               //   Set 'with'
+//          opt.setWith("points");
+//          
+//               //   Change y range to ensure that legend is not
+//               //   overlapping the graph
+//          unsigned int n = (classStrList.size() + 1);
+//          double lW = (0.03 * (fontSize / 12.0));
+//          yMin -= (lW*n * (yMax - yMin))/(1.0 - lW*n);      
+//          
+//          stringstream sstr;
+//          sstr << "[" << yMin << ":" << yMax + 0.05*(yMax-yMin) << "]";  
+//          opt.setOption("yrange", sstr.str());
+//          opt.setOption("title", "\"" + expName + "\"");
+//          opt.setOption("xlabel", "\"" + xLabel + "\"");
+//          opt.setOption("ylabel", "\"" + yLabel + "\"");
+//          opt.setOption("logscale", "x");
+//          
+//          sstr.str(string());
+//          double x0 = pow(10, log(xMax) - pow(10, 8));
+//          double x1 = pow(10, log(xMax) + 1);
+//          sstr << x0 << ",100," << x1;
+//          opt.setOption("xtics",  sstr.str());
+//          opt.setOption("format", "x \"%.e\"");
+//          opt.setOption("size", "0.75,0.75");
+//
+//          
+//               //   Plot
+//          sstr.clear(); sstr.str(string());
+//          sstr << "\'" << output << "-" << i << ".eps\'";
+//          opt.setOption("output", sstr.str());
+//          plot(opt, data, classStrList, bounds);
+//     }
 
 
-          //   Apply a filter to get the data related to the current
-          //   experiment
-          vector<unsigned int> c = filter(db, EXP_NAME, STR_EQUAL, expName);
-          if (c.empty()) { continue; }
+//     //   ONLINE/SCORE graph --------------------------------------------------
+//     xField = ONLINE_TIME;
+//     yField = MEAN;
+//     lBField = LOWER_BOUND;
+//     uBField = UPPER_BOUND;
+//     fontSize = 12;
+//     xLabel = "Online computation cost (in ms)";
+//     yLabel = "Mean score";
+//
+//     output = ("data/export/" + folderStr);
+//     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
+//     output += "graph-online";
+//     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
+//     
+//     xCoeff = (1.0);
+//     
+//     //   For each experiment, create a graph
+//     for (unsigned int i = 0; i < expStrList.size(); ++i)
+//     {
+//          double T = 250.0;
+//          xCoeff /= T;
+//          string expName = expStrList[i];
+//
+//
+//          //   Apply a filter to get the data related to the current
+//          //   experiment
+//          vector<unsigned int> c = filter(db, EXP_NAME, STR_EQUAL, expName);
+//          if (c.empty()) { continue; }
+//
+//
+//          //   Retrieve the maximal 'x' value
+//          double xMax = xCoeff * db[getMax(c, db, xField)].getField(xField);
+//
+//
+//          //   Retrieve the minimal and maximal 'y' values
+//          double yMin = db[getMin(c, db, yField)].getField(yField);
+//          double yMax = db[getMax(c, db, yField)].getField(yField);
+//
+//
+//          //   For each type of agent, create a curve
+//          vector<string> classStrList = getList(c, db, CLASS_NAME);
+//          vector<vector<pair<double, double> > > data, bounds;
+//          for (unsigned int j = 0; j < classStrList.size(); ++j)
+//          {
+//               string className = classStrList[j];
+//
+//
+//               //   Apply a filter to get the data related to the current
+//               //   type of agent
+//               vector<unsigned int> cc =
+//                         filter(c, db, CLASS_NAME, STR_EQUAL, className);
+//
+//
+//               //   For each sample, create a point
+//               vector<pair<double, double> > dataV, boundsV;
+//               vector<unsigned int> sortedList = sort(cc, db, xField);
+//
+//               for (unsigned int k = 0; k < sortedList.size(); ++k)
+//               {
+//                    double x = db[sortedList[k]].getField(xField) * xCoeff;
+//                    double y = db[sortedList[k]].getField(yField);
+//                    dataV.push_back(pair<double, double>(x, y));
+//               }
+//               
+//                              
+//               //   Add the data points associated to this type of agent
+//               //   to the list
+//               data.push_back(dataV);
+//          }
+//          
+//          
+//          //   Create the graph
+//          GnuplotOptions opt(fontSize);
+//          
+//               //   Add grid
+//          opt.setOption("grid", "lc \"#ED000000\"");
+//          
+//               //   Set a palette
+//          opt.setOption("palette",
+//                         "defined ( 0 \"green\", 1 \"blue\", 2 \"red\","
+//                         " 3 \"orange\" ) ");
+//          opt.unsetOption("colorbox");
+//          
+//               //   Set 'with'
+//          opt.setWith("points");
+//          
+//               //   Change y range to ensure that legend is not
+//               //   overlapping the graph
+//          unsigned int n = (classStrList.size() + 1);
+//          double lW = (0.03 * (fontSize / 12.0));
+//          yMin -= (lW*n * (yMax - yMin))/(1.0 - lW*n);      
+//          
+//          stringstream sstr;
+//          sstr << "[" << yMin << ":" << yMax + 0.05*(yMax-yMin) << "]";          
+//          opt.setOption("yrange", sstr.str());
+//          opt.setOption("title", "\"" + expName + "\"");
+//          opt.setOption("xlabel", "\"" + xLabel + "\"");
+//          opt.setOption("ylabel", "\"" + yLabel + "\"");
+//          opt.setOption("logscale", "x");
+//          
+//          sstr.str(string());
+//          double x0 = pow(10, log(xMax) - pow(10, 8));
+//          double x1 = pow(10, log(xMax) + 1);
+//          sstr << x0 << ",100," << x1;
+//          opt.setOption("xtics",  sstr.str());
+//          opt.setOption("format", "x \"%.e\"");
+//          opt.setOption("size", "0.75,0.75");
+//
+//          
+//               //   Plot
+//          sstr.clear(); sstr.str(string());
+//          sstr << "\'" << output << "-" << i << ".eps\'";
+//          opt.setOption("output", sstr.str());
+//          plot(opt, data, classStrList, bounds);
+//     }
 
 
-          //   Retrieve the maximal 'x' value
-          double xMax = xCoeff * db[getMax(c, db, xField)].getField(xField);
-
-
-          //   Retrieve the minimal and maximal 'y' values
-          double yMin = db[getMin(c, db, yField)].getField(yField);
-          double yMax = db[getMax(c, db, yField)].getField(yField);
-
-
-          //   For each type of agent, create a curve
-          vector<string> classStrList = getList(c, db, CLASS_NAME);
-          vector<vector<pair<double, double> > > data, bounds;
-          for (unsigned int j = 0; j < classStrList.size(); ++j)
-          {
-               string className = classStrList[j];
-
-
-               //   Apply a filter to get the data related to the current
-               //   type of agent
-               vector<unsigned int> cc = 
-                         filter(c, db, CLASS_NAME, STR_EQUAL, className);
-
-
-               //   For each sample, create a point
-               vector<pair<double, double> > dataV, boundsV;               
-               vector<unsigned int> sortedList = sort(cc, db, xField);
-
-               for (unsigned int k = 0; k < sortedList.size(); ++k)
-               {
-                    double x = db[sortedList[k]].getField(xField) * xCoeff;
-                    double y = db[sortedList[k]].getField(yField);
-                    dataV.push_back(pair<double, double>(x, y));
-               }
-               
-               
-               //   Add the data points associated to this type of agent
-               //   to the list
-               data.push_back(dataV);
-          }
-          
-          
-          //   Create the graph
-          GnuplotOptions opt(fontSize);
-          
-               //   Add grid
-          opt.setOption("grid", "lc \"#ED000000\"");
-          
-               //   Set a palette
-          opt.setOption("palette",
-                         "defined ( 0 \"green\", 1 \"blue\", 2 \"red\","
-                         " 3 \"orange\" ) ");
-          opt.unsetOption("colorbox");
-          
-               //   Set 'with'
-          opt.setWith("points");
-          
-               //   Change y range to ensure that legend is not
-               //   overlapping the graph
-          unsigned int n = (classStrList.size() + 1);
-          double lW = (0.03 * (fontSize / 12.0));
-          yMin -= (lW*n * (yMax - yMin))/(1.0 - lW*n);      
-          
-          stringstream sstr;
-          sstr << "[" << yMin << ":" << yMax + 0.05*(yMax-yMin) << "]";  
-          opt.setOption("yrange", sstr.str());
-          opt.setOption("title", "\"" + expName + "\"");
-          opt.setOption("xlabel", "\"" + xLabel + "\"");
-          opt.setOption("ylabel", "\"" + yLabel + "\"");
-          opt.setOption("logscale", "x");
-          
-          sstr.str(string());
-          double x0 = pow(10, log(xMax) - pow(10, 8));
-          double x1 = pow(10, log(xMax) + 1);
-          sstr << x0 << ",100," << x1;
-          opt.setOption("xtics",  sstr.str());
-          opt.setOption("format", "x \"%.e\"");
-          opt.setOption("size", "0.75,0.75");
-
-          
-               //   Plot
-          sstr.clear(); sstr.str(string());
-          sstr << "\'" << output << "-" << i << ".eps\'";
-          opt.setOption("output", sstr.str());
-          plot(opt, data, classStrList, bounds);
-     }
-
-
-     //   ONLINE/SCORE graph --------------------------------------------------
+     //   ONLINE/SCORE graph bis ----------------------------------------------
      xField = ONLINE_TIME;
      yField = MEAN;
      lBField = LOWER_BOUND;
      uBField = UPPER_BOUND;
      fontSize = 12;
      xLabel = "Online computation cost (in ms)";
-     yLabel = "Mean score";
+     yLabel = "Best Mean score";
 
      output = ("data/export/" + folderStr);
      if (!prefixStr.empty()) { output += (prefixStr + "-"); }
@@ -259,19 +376,53 @@ int main(int argc, char* argv[])
                vector<pair<double, double> > dataV, boundsV;
                vector<unsigned int> sortedList = sort(cc, db, xField);
 
+               unsigned lastK = 0;
                for (unsigned int k = 0; k < sortedList.size(); ++k)
                {
                     double x = db[sortedList[k]].getField(xField) * xCoeff;
                     double y = db[sortedList[k]].getField(yField);
-                    dataV.push_back(pair<double, double>(x, y));
+                    
+                    double lY = db[sortedList[k]].getField(LOWER_BOUND);
+                    double uY = db[sortedList[k]].getField(UPPER_BOUND);
+                    
+                    if (dataV.empty() || y > dataV.back().second)
+                    {
+                         dataV.push_back(pair<double, double>(log(x), y));
+                         boundsV.push_back(pair<double, double>(lY, uY));
+                    }
                }
+               
+               
+               //   Remove noise
+               vector<pair<double, double> > nDataV, nBoundsV;
+               nDataV = removeNoise(dataV, 0.2, NFT_MAX);
+               unsigned int nJ = 0;
+               for (unsigned int i = 0; i < nDataV.size(); ++i)
+               {
+                    for (unsigned int j = nJ; j < dataV.size(); ++j)
+                    {
+                         if (nDataV[i] == dataV[j])
+                         {
+                              nBoundsV.push_back(boundsV[j]);
+                              nJ = (j + 1);
+                              break;                              
+                         }
+                    }
+               }
+               
+               for (unsigned int i = 0; i < nDataV.size(); ++i)
+                    nDataV[i].first = exp(nDataV[i].first);
+
+               dataV = nDataV;
+               boundsV = nBoundsV;
                
                               
                //   Add the data points associated to this type of agent
                //   to the list
                data.push_back(dataV);
+               bounds.push_back(boundsV);
           }
-          
+
           
           //   Create the graph
           GnuplotOptions opt(fontSize);
@@ -320,288 +471,288 @@ int main(int argc, char* argv[])
 
 
      //   ONLINE/OFFLINE graph ------------------------------------------------
-     xField = ONLINE_TIME;
-     yField = OFFLINE_TIME;
-     fontSize = 12;
-     xLabel = "Online time bound (in ms)";
-     yLabel = "Offline time bound (in m)";
-     
-     output = ("data/export/" + folderStr);
-     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
-     output += "graph-online-offline";
-     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
-     
-     double xStepCoeff = 5.0;
-     double yStepCoeff = 5.0;
-     
-     xCoeff = (1.0);
-     double yCoeff = (1.0 / 1000.0 / 60.0);
-     
-     
-     //   For each experiment, create a graph
-     for (unsigned int i = 0; i < expStrList.size(); ++i)
-     {
-          double T = 250.0;
-          xCoeff /= T;
-          string expName = expStrList[i];
-
-
-          //   Apply a filter to get the data related to the current
-          //   experiment
-          vector<unsigned int> c = filter(db, EXP_NAME, STR_EQUAL, expName);
-          if (c.empty()) { continue; }
-
-
-          //   Retrieve the minimal and maximal 'x' value
-          double xMin = 0.01, xMax = 0.01;
-          double xLimit = db[getMax(c, db, xField)].getField(xField);
-
-          //   Retrieve the minimal and maximal 'y' values
-          double yMin = 0.01, yMax = 0.01;
-          double yLimit = db[getMax(c, db, yField)].getField(yField);
-          yMax /= 300.0;
-
-
-          //   For each point, determine to which agent it belongs
-          vector<string> classStrList = getList(c, db, CLASS_NAME);
-          vector<vector<pair<double, double> > > data(classStrList.size());
-          
-          unsigned int maxTitleSize = 0;
-          for (double x = xMin; x <= xLimit; x *= xStepCoeff)
-          {
-               xMax = x;
-
-               vector<unsigned int> cc =
-                         filter(c, db, xField, DBL_BELOW_EQUAL, x);
-
-               for (double y = yMin; y < yLimit; y *= yStepCoeff)
-               {
-                    yMax = y;
-                    
-                    vector<unsigned int> ccc
-                              = filter(cc, db, yField, DBL_BELOW_EQUAL, y);
-
-                    //   If no agent remains, mark the point as 'NONE'
-                    if (ccc.empty())
-                    {
-                         data[0].push_back(pair<double, double>(
-                              x*xCoeff, y*yCoeff));
-                         continue;
-                    }
-
-
-                    //   Get the best instance of each type of agent
-                    vector<unsigned int> bestList;
-                    for (unsigned int j = 0; j < classStrList.size(); ++j)
-                    {
-                         vector<unsigned int> tmp =
-                                   filter(ccc, db, CLASS_NAME, STR_EQUAL,
-                                          classStrList[j]);
-
-                         int s = getMax(tmp, db, MEAN);
-                         if (s != -1) { bestList.push_back(s); }
-                    }
-                    
-                    
-                    //   Sort them by score by descending order
-                    bestList = sort(bestList, db, MEAN, false);
-                    
-                    
-                    //   Build a list of instances such that the agents
-                    //   which are statistically different from the first
-                    //   agent are not part of it
-                    vector<double> p = db[bestList[0]].getDSRList();
-                    
-                    vector<unsigned int> chosenList;
-                    chosenList.push_back(bestList[0]);
-                    for (unsigned int j = 1; j < bestList.size(); ++j)
-                    {
-                         vector<double> q = db[bestList[j]].getDSRList();
-                         double z = computePairedZ<double>(p, q);
-                         
-                         //   Determine if it is significantly different
-                         if (z < getBilateralPairedZThreshold95())
-                              chosenList.push_back(bestList[j]);
-                         
-                         else { break; }
-                    }
-
-
-                    //   Add the point for each selected algorithm
-                    for (unsigned int j = 0; j < chosenList.size(); ++j)
-                    {
-                         unsigned int s = chosenList[j];
-                         string classStr = db[s].getField(CLASS_NAME);
-                         
-                         for (unsigned int k = 0; k < classStrList.size(); ++k)
-                         {
-                              if (classStr == classStrList[k])
-                              {
-                                   data[k].push_back(
-                                             pair<double, double>(xCoeff*x,
-                                                                  yCoeff*y));
-                                   break;
-                              }                        
-                         }
-                    }
-               }
-          }
-          
-          
-          //   Create the graph
-          GnuplotOptions opt(fontSize);
-          
-               //   Set 'inBox'
-          opt.setInBox(true);
-          
-               //   Set a palette
-          opt.setOption("palette",
-                         "defined ( 0 \"green\", 1 \"blue\", 2 \"red\","
-                         " 3 \"orange\" ) ");
-          opt.unsetOption("colorbox");
-          
-               //   Set xrange/yrange
-          stringstream sstr;
-          sstr << "[" << xMin*xCoeff << ":" << xMax*xCoeff << "]";
-          opt.setOption("xrange", sstr.str());
-          sstr.clear(); sstr.str(string());
-          sstr << "[" << yMin*yCoeff << ":" << yMax*yCoeff << "]";
-          opt.setOption("yrange", sstr.str());
-          
-          
-               //   Set 'with' option
-          opt.setWith("points");
-
-          opt.setOption("title",  "\"" + expName + "\"");
-          opt.setOption("xlabel", "\"" + xLabel  + "\"");
-          opt.setOption("ylabel", "\"" + yLabel  + "\"");
-          opt.setOption("logscale", "xy");
-          
-          sstr.str(string());
-          double x0 = pow(10, log(xMax) - pow(10, 8));
-          double x1 = pow(10, log(xMax) + 1);
-          sstr << x0 << ",100," << x1;
-          opt.setOption("xtics",  sstr.str());
-          
-          opt.setOption("format", "xy \"%.e\"");
-          sstr.str(string());
-          sstr << 0.5437063+(0.2062937*(maxTitleSize / 17.0)) << "," << 0.75;
-          opt.setOption("size", sstr.str());
-          
-          opt.setOption("key", "outside right top");
-
-          
-               //   Plot
-          sstr.clear(); sstr.str(string());
-          sstr << "\'" << output << "-" << i << ".eps\'";
-          opt.setOption("output", sstr.str());
-
-          plot(opt, data, classStrList);
-     }
+//     xField = ONLINE_TIME;
+//     yField = OFFLINE_TIME;
+//     fontSize = 12;
+//     xLabel = "Online time bound (in ms)";
+//     yLabel = "Offline time bound (in m)";
+//     
+//     output = ("data/export/" + folderStr);
+//     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
+//     output += "graph-online-offline";
+//     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
+//     
+//     double xStepCoeff = 5.0;
+//     double yStepCoeff = 5.0;
+//     
+//     xCoeff = (1.0);
+//     double yCoeff = (1.0 / 1000.0 / 60.0);
+//     
+//     
+//     //   For each experiment, create a graph
+//     for (unsigned int i = 0; i < expStrList.size(); ++i)
+//     {
+//          double T = 250.0;
+//          xCoeff /= T;
+//          string expName = expStrList[i];
+//
+//
+//          //   Apply a filter to get the data related to the current
+//          //   experiment
+//          vector<unsigned int> c = filter(db, EXP_NAME, STR_EQUAL, expName);
+//          if (c.empty()) { continue; }
+//
+//
+//          //   Retrieve the minimal and maximal 'x' value
+//          double xMin = 0.01, xMax = 0.01;
+//          double xLimit = db[getMax(c, db, xField)].getField(xField);
+//
+//          //   Retrieve the minimal and maximal 'y' values
+//          double yMin = 0.01, yMax = 0.01;
+//          double yLimit = db[getMax(c, db, yField)].getField(yField);
+//          yMax /= 300.0;
+//
+//
+//          //   For each point, determine to which agent it belongs
+//          vector<string> classStrList = getList(c, db, CLASS_NAME);
+//          vector<vector<pair<double, double> > > data(classStrList.size());
+//          
+//          unsigned int maxTitleSize = 0;
+//          for (double x = xMin; x <= xLimit; x *= xStepCoeff)
+//          {
+//               xMax = x;
+//
+//               vector<unsigned int> cc =
+//                         filter(c, db, xField, DBL_BELOW_EQUAL, x);
+//
+//               for (double y = yMin; y < yLimit; y *= yStepCoeff)
+//               {
+//                    yMax = y;
+//                    
+//                    vector<unsigned int> ccc
+//                              = filter(cc, db, yField, DBL_BELOW_EQUAL, y);
+//
+//                    //   If no agent remains, mark the point as 'NONE'
+//                    if (ccc.empty())
+//                    {
+//                         data[0].push_back(pair<double, double>(
+//                              x*xCoeff, y*yCoeff));
+//                         continue;
+//                    }
+//
+//
+//                    //   Get the best instance of each type of agent
+//                    vector<unsigned int> bestList;
+//                    for (unsigned int j = 0; j < classStrList.size(); ++j)
+//                    {
+//                         vector<unsigned int> tmp =
+//                                   filter(ccc, db, CLASS_NAME, STR_EQUAL,
+//                                          classStrList[j]);
+//
+//                         int s = getMax(tmp, db, MEAN);
+//                         if (s != -1) { bestList.push_back(s); }
+//                    }
+//                    
+//                    
+//                    //   Sort them by score by descending order
+//                    bestList = sort(bestList, db, MEAN, false);
+//                    
+//                    
+//                    //   Build a list of instances such that the agents
+//                    //   which are statistically different from the first
+//                    //   agent are not part of it
+//                    vector<double> p = db[bestList[0]].getDSRList();
+//                    
+//                    vector<unsigned int> chosenList;
+//                    chosenList.push_back(bestList[0]);
+//                    for (unsigned int j = 1; j < bestList.size(); ++j)
+//                    {
+//                         vector<double> q = db[bestList[j]].getDSRList();
+//                         double z = computePairedZ<double>(p, q);
+//                         
+//                         //   Determine if it is significantly different
+//                         if (z < getBilateralPairedZThreshold95())
+//                              chosenList.push_back(bestList[j]);
+//                         
+//                         else { break; }
+//                    }
+//
+//
+//                    //   Add the point for each selected algorithm
+//                    for (unsigned int j = 0; j < chosenList.size(); ++j)
+//                    {
+//                         unsigned int s = chosenList[j];
+//                         string classStr = db[s].getField(CLASS_NAME);
+//                         
+//                         for (unsigned int k = 0; k < classStrList.size(); ++k)
+//                         {
+//                              if (classStr == classStrList[k])
+//                              {
+//                                   data[k].push_back(
+//                                             pair<double, double>(xCoeff*x,
+//                                                                  yCoeff*y));
+//                                   break;
+//                              }                        
+//                         }
+//                    }
+//               }
+//          }
+//          
+//          
+//          //   Create the graph
+//          GnuplotOptions opt(fontSize);
+//          
+//               //   Set 'inBox'
+//          opt.setInBox(true);
+//          
+//               //   Set a palette
+//          opt.setOption("palette",
+//                         "defined ( 0 \"green\", 1 \"blue\", 2 \"red\","
+//                         " 3 \"orange\" ) ");
+//          opt.unsetOption("colorbox");
+//          
+//               //   Set xrange/yrange
+//          stringstream sstr;
+//          sstr << "[" << xMin*xCoeff << ":" << xMax*xCoeff << "]";
+//          opt.setOption("xrange", sstr.str());
+//          sstr.clear(); sstr.str(string());
+//          sstr << "[" << yMin*yCoeff << ":" << yMax*yCoeff << "]";
+//          opt.setOption("yrange", sstr.str());
+//          
+//          
+//               //   Set 'with' option
+//          opt.setWith("points");
+//
+//          opt.setOption("title",  "\"" + expName + "\"");
+//          opt.setOption("xlabel", "\"" + xLabel  + "\"");
+//          opt.setOption("ylabel", "\"" + yLabel  + "\"");
+//          opt.setOption("logscale", "xy");
+//          
+//          sstr.str(string());
+//          double x0 = pow(10, log(xMax) - pow(10, 8));
+//          double x1 = pow(10, log(xMax) + 1);
+//          sstr << x0 << ",100," << x1;
+//          opt.setOption("xtics",  sstr.str());
+//          
+//          opt.setOption("format", "xy \"%.e\"");
+//          sstr.str(string());
+//          sstr << 0.5437063+(0.2062937*(maxTitleSize / 17.0)) << "," << 0.75;
+//          opt.setOption("size", sstr.str());
+//          
+//          opt.setOption("key", "outside right top");
+//
+//          
+//               //   Plot
+//          sstr.clear(); sstr.str(string());
+//          sstr << "\'" << output << "-" << i << ".eps\'";
+//          opt.setOption("output", sstr.str());
+//
+//          plot(opt, data, classStrList);
+//     }
 
 
      //   OFFLINE/ONLINE/SCORE table ------------------------------------------
-     output = ("data/export/" + folderStr);
-     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
-     output += "table";
-     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
-     
-     //   For each experiment, create a table
-     for (unsigned int i = 0; i < expStrList.size(); ++i)
-     {
-          double T = 250.0;
-          string expName = expStrList[i];
-
-
-          //   Apply a filter to get the data related to the current
-          //   experiment
-          vector<unsigned int> c = filter(db, EXP_NAME, STR_EQUAL, expName);
-          if (c.empty()) { continue; }
-
-          
-          //   Retrieve the best agent for each class
-          vector<string> bestNameList;
-          vector<string> classNameList = getList(c, db, CLASS_NAME);
-          for (unsigned int j = 0; j < classNameList.size(); ++j)
-          {
-               string className = classNameList[j];
-               
-               vector<unsigned int> cc =
-                         filter(c, db, CLASS_NAME, STR_EQUAL, className);
-                         
-               int s = getMax(cc, db, MEAN);
-               if (s != -1)
-                    bestNameList.push_back(db[s].getField(NAME));
-          }
-
-          
-          //   Create the table
-          vector<vector<Cell*> > grid;
-
-               //   First Line
-          vector<Cell*> firstLine;
-          firstLine.push_back(new StrCell("Agent"));
-          firstLine.push_back(new StrCell("Offline time"));
-          firstLine.push_back(new StrCell("Mean online time (per decision)"));
-          firstLine.push_back(new StrCell("Score"));
-          grid.push_back(firstLine);
-          
-               //   For each agent, add an entry
-          for (unsigned int j = 0; j < c.size(); ++j)
-          {
-               const AgentData& agentData = db[c[j]];
-               
-               vector<Cell*> line;
-               line.push_back(new StrCell(agentData.getField(NAME)));
-               line.push_back(new TimeCell(agentData.getField(OFFLINE_TIME)));
-               line.push_back(
-                         new TimeCell(agentData.getField(ONLINE_TIME) / T));
-               
-               double lowerBound = agentData.getField(LOWER_BOUND);
-               double upperBound = agentData.getField(UPPER_BOUND);
-               line.push_back(new NumberIntervalCell(lowerBound, upperBound));
-               
-               for (unsigned int k = 0; k < bestNameList.size(); ++k)
-               {
-                    string cName = agentData.getField(NAME);
-                    if (cName == bestNameList[k])
-                    {
-                         for (unsigned int l = 0; l < line.size(); ++l)
-                              line[l]->setBold();
-                         
-                         break;
-                    }
-               }
-               
-               grid.push_back(line);
-          }
-          
-               //   'hLines'
-          vector<unsigned int> hLines(grid.size() + 1);
-          for (unsigned int j = 0; j < hLines.size(); ++j) { hLines[j] = 0; }
-          hLines[1] = 1;
-          
-               //   'vLines'
-          vector<unsigned int> vLines(grid[0].size() + 1);
-          for (unsigned int j = 0; j < vLines.size(); ++j) { vLines[j] = 0; }
-          vLines[1] = 1;
-          vLines[2] = 1;
-          vLines[3] = 1;
-          
-               //   Make the table
-          stringstream sstr;
-          sstr << output << "-" << i << ".tex";
-          table(grid, sstr.str(), hLines, vLines);
-
-               //   Free the cells
-          for (unsigned int k = 0; k < grid.size(); ++k)
-               for (unsigned int l = 0; l < grid[k].size(); ++l)
-                    delete grid[k][l];
-     }
+//     output = ("data/export/" + folderStr);
+//     if (!prefixStr.empty()) { output += (prefixStr + "-"); }
+//     output += "table";
+//     if (!suffixStr.empty()) { output += ("-" + suffixStr); }
+//     
+//     //   For each experiment, create a table
+//     for (unsigned int i = 0; i < expStrList.size(); ++i)
+//     {
+//          double T = 250.0;
+//          string expName = expStrList[i];
+//
+//
+//          //   Apply a filter to get the data related to the current
+//          //   experiment
+//          vector<unsigned int> c = filter(db, EXP_NAME, STR_EQUAL, expName);
+//          if (c.empty()) { continue; }
+//
+//          
+//          //   Retrieve the best agent for each class
+//          vector<string> bestNameList;
+//          vector<string> classNameList = getList(c, db, CLASS_NAME);
+//          for (unsigned int j = 0; j < classNameList.size(); ++j)
+//          {
+//               string className = classNameList[j];
+//               
+//               vector<unsigned int> cc =
+//                         filter(c, db, CLASS_NAME, STR_EQUAL, className);
+//                         
+//               int s = getMax(cc, db, MEAN);
+//               if (s != -1)
+//                    bestNameList.push_back(db[s].getField(NAME));
+//          }
+//
+//          
+//          //   Create the table
+//          vector<vector<Cell*> > grid;
+//
+//               //   First Line
+//          vector<Cell*> firstLine;
+//          firstLine.push_back(new StrCell("Agent"));
+//          firstLine.push_back(new StrCell("Offline time"));
+//          firstLine.push_back(new StrCell("Mean online time (per decision)"));
+//          firstLine.push_back(new StrCell("Score"));
+//          grid.push_back(firstLine);
+//          
+//               //   For each agent, add an entry
+//          for (unsigned int j = 0; j < c.size(); ++j)
+//          {
+//               const AgentData& agentData = db[c[j]];
+//               
+//               vector<Cell*> line;
+//               line.push_back(new StrCell(agentData.getField(NAME)));
+//               line.push_back(new TimeCell(agentData.getField(OFFLINE_TIME)));
+//               line.push_back(
+//                         new TimeCell(agentData.getField(ONLINE_TIME) / T));
+//               
+//               double lowerBound = agentData.getField(LOWER_BOUND);
+//               double upperBound = agentData.getField(UPPER_BOUND);
+//               line.push_back(new NumberIntervalCell(lowerBound, upperBound));
+//               
+//               for (unsigned int k = 0; k < bestNameList.size(); ++k)
+//               {
+//                    string cName = agentData.getField(NAME);
+//                    if (cName == bestNameList[k])
+//                    {
+//                         for (unsigned int l = 0; l < line.size(); ++l)
+//                              line[l]->setBold();
+//                         
+//                         break;
+//                    }
+//               }
+//               
+//               grid.push_back(line);
+//          }
+//          
+//               //   'hLines'
+//          vector<unsigned int> hLines(grid.size() + 1);
+//          for (unsigned int j = 0; j < hLines.size(); ++j) { hLines[j] = 0; }
+//          hLines[1] = 1;
+//          
+//               //   'vLines'
+//          vector<unsigned int> vLines(grid[0].size() + 1);
+//          for (unsigned int j = 0; j < vLines.size(); ++j) { vLines[j] = 0; }
+//          vLines[1] = 1;
+//          vLines[2] = 1;
+//          vLines[3] = 1;
+//          
+//               //   Make the table
+//          stringstream sstr;
+//          sstr << output << "-" << i << ".tex";
+//          table(grid, sstr.str(), hLines, vLines);
+//
+//               //   Free the cells
+//          for (unsigned int k = 0; k < grid.size(); ++k)
+//               for (unsigned int l = 0; l < grid[k].size(); ++l)
+//                    delete grid[k][l];
+//     }
      
      
      //   Generate latex report
-     generateReport(folderStr, prefixStr, suffixStr, expStrList.size(), noPdf);
+//     generateReport(folderStr, prefixStr, suffixStr, expStrList.size(), noPdf);
 
      
      //   Return

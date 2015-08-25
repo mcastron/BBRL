@@ -33,6 +33,25 @@ FormulaAgent::FormulaAgent(Formula* f_, const vector<string>& varNameList_) :
 }
 
 
+FormulaAgent::FormulaAgent(Formula* f_,
+                           const vector<FVariable*>& varList_) : f(f_)
+{
+     assert(f_);
+     
+     
+     for (unsigned int i = 0; i < varList_.size(); ++i)
+          varList.push_back(varList_[i]->clone());
+     
+     setName("Formula (" + f->getRPNStr() + ")");
+
+
+     //	Check integrity
+	#ifndef NDEBUG
+	checkIntegrity();
+	#endif
+}
+
+
 FormulaAgent::~FormulaAgent()
 {
      if (f) { delete f; }
@@ -251,7 +270,7 @@ void FormulaAgent::deserialize(istream& is) throw (SerializableException)
 // ===========================================================================
 void FormulaAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
 											throw (AgentException)
-{
+{     
      //   Error case
      if (varNameList.size() < (f->getMaxRank() + 1))
      {
@@ -260,19 +279,30 @@ void FormulaAgent::learnOffline_aux(const MDPDistribution* mdpDistrib)
           msg += "\t'" + f->getRPNStr() + "'\n";
      }
      
-     
-     //   Add the variables
-     try
+
+     //   Load the variables given by their names
+     if (!varNameList.empty())
      {
-          for (unsigned int i = 0; i < varNameList.size(); ++i)
-          {    
-               if (f->isVarUsed(i))
-                    varList.push_back(FVariable::getFVariable(varNameList[i]));
-     
-               else { varList.push_back(0); }
+          try
+          {
+               for (int i = 0; i < varList.size(); ++i) { delete varList[i]; }
+               varList.clear();
+               
+               for (unsigned int i = 0; i < varNameList.size(); ++i)
+               {    
+                    if (f->isVarUsed(i))
+                    {
+                         varList.push_back(
+                                   FVariable::getFVariable(varNameList[i]));
+                    }
+          
+                    else { varList.push_back(0); }
+               }
+               
+               varNameList.clear();
           }
+          catch (FVariableException& e) { throw AgentException(e.what()); }
      }
-     catch (FVariableException& e) { throw AgentException(e.what()); }
      
 
      //   Init the variables

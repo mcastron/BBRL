@@ -15,7 +15,7 @@
 	\brief 	A variable for the FormulaAgent's, which represents a
 	          Q-function based on the mean model of a prior distribution.
 
-	\date 	2014-12-13
+	\date 	2015-06-05
 */
 // ===========================================================================
 /* final */ class dds::QMean : public QVar
@@ -66,6 +66,17 @@
 		*/
 		void init(const dds::MDPDistribution* mdpDistrib)
                                                   throw (FVariableException);
+
+
+          /**
+			\brief	Return a clone of this QMean.
+			
+			\return	A clone of this QMean.
+		*/
+		QMean* clone() const
+		{
+               return cloneInstance<QMean>(this);
+		}
 
 
           /**

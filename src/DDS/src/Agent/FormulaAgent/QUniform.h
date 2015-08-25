@@ -16,7 +16,7 @@
 	          Q-function based on the 'uniform' model of a prior distribution
 	          (each state is reachable from the other states).
 
-	\date 	2015-01-19
+	\date 	2015-06-05
 */
 // ===========================================================================
 /* final */ class dds::QUniform : public QVar
@@ -67,6 +67,17 @@
 		*/
 		void init(const dds::MDPDistribution* mdpDistrib)
                                                   throw (FVariableException);
+
+
+          /**
+			\brief	Return a clone of this QUniform.
+			
+			\return	A clone of this QUniform.
+		*/
+		QUniform* clone() const
+		{
+               return cloneInstance<QUniform>(this);
+		}
 
 
           /**

@@ -30,12 +30,22 @@
 -- ============================================================================
 local gridComputing =
 {
-     SLURM_TEST =
+     SLURM_CECI =
      {
           name = "SLURM",
-          user = "user",
+          user = "mcastron",
+          libPath = "$LD_LIBRARY_PATH:/u/mcastron/lib",
+          path = "/home/ulg/sysmod/mcastron/home/TinyBRL/",
+          nbCores = 1,
+          submitCommand = "sbatch"
+     },
+
+     SLURM_AZURA =
+     {
+          name = "SLURM",
+          user = "kira",
           libPath = "$LD_LIBRARY_PATH",
-          path = "/home/user/TinyBRL/",
+          path = "/home/kira/TinyBRL/",
           nbCores = 1,
           submitCommand = "sbatch"
      }

@@ -55,7 +55,7 @@
 							generate.
 			\param[iniState_	The initial state of the MDPs to generate.
 							(-1: drawn randomly)
-			\param[theta_	The list of prior observations used to
+			\param[theta_	     The list of prior observations used to
 							initialize the Dirichlet counters.
 							(size: nX * nU * nX)
 			\param[rType_		The type of rewards.

@@ -16,7 +16,7 @@
 	          Q-function based on the 'self' model of a prior distribution
 	          (each state is only reachable from itself).
 
-	\date 	2015-01-19
+	\date 	2015-06-05
 */
 // ===========================================================================
 /* final */ class dds::QSelf : public QVar
@@ -67,6 +67,17 @@
 		*/
 		void init(const dds::MDPDistribution* mdpDistrib)
                                                   throw (FVariableException);
+
+
+          /**
+			\brief	Return a clone of this QSelf.
+			
+			\return	A clone of this QSelf.
+		*/
+		QSelf* clone() const
+		{
+               return cloneInstance<QSelf>(this);
+		}
 
 
           /**

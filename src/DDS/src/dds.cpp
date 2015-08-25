@@ -93,6 +93,9 @@ void dds::init(unsigned int seed)
 
      Serializable::checkIn<QUniform>(
 			&Serializable::createInstance<QUniform>);
+
+     Serializable::checkIn<QCounterVar>(
+			&Serializable::createInstance<QCounterVar>);
 			
 			
 	//  AgentFactorys

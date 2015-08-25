@@ -1253,7 +1253,7 @@ namespace utils
                               depending of the type of filter used
                               (chosen by 'nft').
                
-               \param[data    The data to filter (must be SORTED by their first
+               \param[dataV   The data to filter (must be SORTED by their first
                               coordinate).
 
                \param[epsilon The filtering threshold value.

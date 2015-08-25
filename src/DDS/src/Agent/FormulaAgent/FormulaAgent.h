@@ -6,6 +6,7 @@
 #include "QMean.h"
 #include "QSelf.h"
 #include "QUniform.h"
+#include "QCounterVar.h"
 #include "../Agent.h"
 #include "../../MDP/CModel.h"
 #include "../../MDPDistribution/MDPDistribution.h"
@@ -29,7 +30,7 @@
 		     are computed through Q-iteration on specific models
 		     (updated during the interaction).
 
-	\date 	2015-02-27
+	\date 	2015-06-08
 */
 // ===========================================================================
 /* final */ class dds::FormulaAgent : public dds::Agent
@@ -56,6 +57,16 @@
 		*/
 		FormulaAgent(utils::formula::Formula* f_,
 		             const std::vector<std::string>& varNameList_);
+		
+		
+		/**
+               \brief    Constructor.
+               
+               \param[f_           A formula.
+               \param[varList_     The list of variables.
+		*/
+		FormulaAgent(utils::formula::Formula* f_,
+		             const std::vector<FVariable*>& varList_);
 		
 		
 		/**
@@ -127,7 +138,6 @@
 		*/
 		Agent* clone() const
 		{
-		     /* TODO - call 'Serializable::checkIn<>()' in 'dds::init()' */
 			return cloneInstance<FormulaAgent>(this);
 		}
 		

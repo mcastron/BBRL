@@ -211,7 +211,7 @@ function getRECommand(task, options)
 
 
      --   Output command
-     local outputFileName = "data/results/" .. task.exp.exp
+     local outputFileName = "data/results/" .. task.exp.exp .. task.exp.N
      outputFileName = outputFileName .. "-" .. task.exp.prior
      outputFileName = outputFileName .. "-" .. task.agent.name
      for i, v in ipairs(task.vIndex) do

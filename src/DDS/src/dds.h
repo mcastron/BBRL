@@ -17,7 +17,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2015-02-09
+	\date		2015-06-04
 */
 // ===========================================================================
 namespace dds
@@ -165,6 +165,14 @@ namespace dds
      
      
      /**
+          \class    FVariableVector
+          \brief 	Defines a std::vector of FVariables which also add
+                    serialization.
+     */
+     class FVariableVector;
+     
+     
+     /**
           \class    FVariableException
           \brief    Exception.
      */
@@ -203,6 +211,14 @@ namespace dds
 	               distribution.
      */
 	class QUniform;
+	
+	
+	/**
+          \class    QCounterVar
+          \brief    A variable for the FormulaAgent's, which represents a
+	               Q-function based on counter model.
+     */
+	class QCounterVar;
 	
 	
 	/**

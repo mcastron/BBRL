@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a Serializable Object.
 			
-	\date 	2013-08-13
+	\date 	2015-06-05
 */
 // ===========================================================================
 class Serializable
@@ -188,7 +188,7 @@ class Serializable
 		/**
 			\brief	Clone an instance 'x' of class T and return a pointer
 					of type Serializable pointing to it.
-					Class T must fullfil the those conditions:
+					Class T must fullfil those conditions:
 						- class T must be derived from Serializable.
 						- class T must admit a 'T(std::istream)'
 						  public constructor.
