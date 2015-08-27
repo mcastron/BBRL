@@ -1,8 +1,4 @@
 // in 'custom.cpp'
-//   (mu == 1.0, sigma == 1.0)
-//        'alpha = 1.0' & 'beta'  =   0.19 --> Ini distance ~= Update distance (first iteration only)
-//        'alpha + beta' == 22.5  --> Score ~= Min distance (first iteration)
-
 
 #include <assert.h>
 #include <iostream>
@@ -30,8 +26,6 @@ int main(int argc, char* argv[])
      else { init(); }
 
 
-     /* YOUR CODE HERE */
-     
      /* YOUR CODE HERE */
 
 

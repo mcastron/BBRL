@@ -18,8 +18,8 @@
 --        -- The path to the libraries
 --        libPath = "<library path>",
 --
---        -- The path to 'TinyBRL' folder
---        path = "<TinyBRL path>",
+--        -- The path to 'BBRL' folder
+--        path = "<BBRL path>",
 --
 --        -- The number of cores to reserve for each job
 --        nbCores = <number of core per job>,
@@ -35,7 +35,7 @@ local gridComputing =
           name = "SLURM",
           user = "mcastron",
           libPath = "$LD_LIBRARY_PATH:/u/mcastron/lib",
-          path = "/home/ulg/sysmod/mcastron/home/TinyBRL/",
+          path = "/home/ulg/sysmod/mcastron/home/BBRL/",
           nbCores = 1,
           submitCommand = "sbatch"
      },
@@ -45,7 +45,7 @@ local gridComputing =
           name = "SLURM",
           user = "kira",
           libPath = "$LD_LIBRARY_PATH",
-          path = "/home/kira/TinyBRL/",
+          path = "/home/kira/BBRL/",
           nbCores = 1,
           submitCommand = "sbatch"
      }

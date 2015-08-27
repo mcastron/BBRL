@@ -17,11 +17,11 @@ using namespace utils::formula;
 
 // ===========================================================================
 /**	
-	\brief	A simple command-line program for TinyBRL library
+	\brief	A simple command-line program for BBRL library
 	
 	\author	Castronovo Michael
 
-	\date	2015-05-14
+	\date	2015-08-27
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
 // ---------------------------------------------------------------------------
 void help()
 {
-     ifstream is("doc/command-line manual (TinyBRL-DDS).txt");
+     ifstream is("doc/command-line manual (BBRL-DDS).txt");
      for (string tmp; getline(is, tmp);) { cout << tmp << "\n"; }
 }
 

@@ -7,7 +7,7 @@ set(CMAKE_CXX_COMPILER g++)
 # ============================================================================
 #	Project configuration
 # ============================================================================
-project(TinyBRL)
+project(BBRL)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BUILD_TYPE})
 
 
@@ -54,16 +54,16 @@ add_subdirectory(src/Xport)
 # ============================================================================
 #	Executables declaration
 # ============================================================================
-add_executable(TinyBRL-DDS 	src/main.cpp)
-add_executable(TinyBRL-custom	src/custom.cpp)
-add_executable(TinyBRL-zlib	src/main-zlib.cpp)
-add_executable(TinyBRL-export src/main-export.cpp)
+add_executable(BBRL-DDS src/main.cpp)
+add_executable(BBRL-custom src/custom.cpp)
+add_executable(BBRL-zlib	src/main-zlib.cpp)
+add_executable(BBRL-export src/main-export.cpp)
 
 
 # ============================================================================
 #	Linkage
 # ============================================================================
-target_link_libraries(TinyBRL-DDS
+target_link_libraries(BBRL-DDS
 					DDS
 					IAgent
 					IMDP
@@ -73,7 +73,7 @@ target_link_libraries(TinyBRL-DDS
 					Serializable
 					Utils)		#	uses Boost 1.52 if possible.
 
-target_link_libraries(TinyBRL-export
+target_link_libraries(BBRL-export
 					DDS
 					IAgent
 					IMDP
@@ -84,7 +84,7 @@ target_link_libraries(TinyBRL-export
 					Utils          #	uses Boost 1.52 if possible.
 					Xport)
 
-target_link_libraries(TinyBRL-custom
+target_link_libraries(BBRL-custom
 					DDS
 					IAgent
 					IMDP
@@ -95,4 +95,4 @@ target_link_libraries(TinyBRL-custom
 					Utils          #	uses Boost 1.52 if possible.
 					Xport)
 
-target_link_libraries(TinyBRL-zlib Utils)
+target_link_libraries(BBRL-zlib Utils)

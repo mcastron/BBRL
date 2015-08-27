@@ -29,7 +29,7 @@ end
            -- Formulas sets
 print()
 for _, fSet in ipairs(formulaSets) do
-     print("./TinyBRL-DDS --formula_set_generation \\")
+     print("./BBRL-DDS --formula_set_generation \\")
      print(getTab(1) .. "--n_variables " .. fSet.nVariables .. " \\")
      
      tokensStr = "--tokens " .. #(fSet.tokens)
@@ -65,7 +65,7 @@ for _, exp in ipairs(experiments) do
      end
      
      if (not alreadyDone) then
-          print("./TinyBRL-DDS --new_experiment \\")
+          print("./BBRL-DDS --new_experiment \\")
           print(getTab(1) .. "--name \"" .. exp.exp .. " Experiment\" \\")
           print(getTab(1) .. "--mdp_distribution \"DirMultiDistribution\" \\")
           print(getTab(2) .. "--mdp_distribution_file \"data/distributions/"

@@ -2,7 +2,7 @@
                               Command-line manual
 
 NAME
-     TinyBRL-export -- A tool for exporting results (by Castronovo Michael)
+     BBRL-export -- A tool for exporting results (by Castronovo Michael)
 
 
 
@@ -10,7 +10,7 @@ USAGE OVERVIEW
      This program will generate several graphs and latex tables corresponding to
      the results you provide.
      
-     TinyBRL-export will also generate a report file (in latex), and will
+     BBRL-export will also generate a report file (in latex), and will
      compile directly to generate a readable pdf file.
      (depends on 'texlive' and 'latexmk' packages)
      If you do not want to compile the report, use the flag '--no-pdf'.
@@ -42,7 +42,7 @@ OPTIONS DESCRIPTION
     
 
 USAGE EXAMPLES
-          ./TinyBRL-export \
+          ./BBRL-export \
                --agent RandomAgent \
                     --agent_file "data/agents/random_agent.dat" \
                --experiment \

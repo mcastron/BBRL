@@ -60,7 +60,7 @@ end
 
 function getOLCommand(task)
      --   Program
-     local programStr = "./TinyBRL-DDS --offline_learning \\\n"
+     local programStr = "./BBRL-DDS --offline_learning \\\n"
 
 
      --   Agent

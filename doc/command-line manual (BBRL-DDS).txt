@@ -2,7 +2,7 @@
                               Command-line manual
 
 NAME
-     TinyBRL-DDS -- A bayesian reinforcement learning library (by Castronovo Michael)
+     BBRL-DDS -- A bayesian reinforcement learning library (by Castronovo Michael)
 
 
 
@@ -478,7 +478,7 @@ USAGE EXAMPLES
 
      --- Offline Learning mode ---
      
-          ./TinyBRL-DDS --offline_learning \
+          ./BBRL-DDS --offline_learning \
                --agent EGreedyAgent --epsilon 0.25 \
                --mdp_distribution "DirMultiDistribution" \
                     --mdp_distribution_file "data/distributions/distrib.dat" \
@@ -487,7 +487,7 @@ USAGE EXAMPLES
      
      --- New Experiment mode ---
      
-          ./TinyBRL-DDS --new_experiment \
+          ./BBRL-DDS --new_experiment \
                --name "GC Experiment" \
                --mdp_distribution "DirMultiDistribution" \
                     --mdp_distribution_file "data/distributions/distrib.dat" \
@@ -499,7 +499,7 @@ USAGE EXAMPLES
      
      --- Run Experiment mode ---
 
-          ./TinyBRL-DDS --run_experiment \
+          ./BBRL-DDS --run_experiment \
                --experiment \
                     --experiment_file "data/experiments/exp.dat.zz" \
                --agent EGreedyAgent \
@@ -511,7 +511,7 @@ USAGE EXAMPLES
 
      --- Formula set generation mode ---
 
-          ./TinyBRL-DDS --formula_set_generation \
+          ./BBRL-DDS --formula_set_generation \
                --n_variables 3 \
                --tokens 4 ADD2 42 AVG3 MUL2 \
                --max_size 5 \
@@ -521,7 +521,7 @@ USAGE EXAMPLES
 
      --- MDP distribution generation mode ---
 
-          ./TinyBRL-DDS --mdp_distrib_generation \
+          ./BBRL-DDS --mdp_distrib_generation \
                --name "GChain distribution" \
                --short_name "GC" \
                --n_states 5 --n_actions 3 \

@@ -63,7 +63,7 @@ end
 
 function getRECommand(task, options)
      --   Program
-     local programStr = "./TinyBRL-DDS --run_experiment \\\n"
+     local programStr = "./BBRL-DDS --run_experiment \\\n"
 
 
      --   Experiment

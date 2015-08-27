@@ -16,7 +16,7 @@ using namespace utils::compression;
 	
 	\author	Castronovo Michael
 
-	\date	2014-12-13
+	\date	2015-08-27
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -182,7 +182,7 @@ string parsingErr(string msg)
 
 void help()
 {
-	ifstream is("doc/command-line manual (TinyBRL-zlib).txt");
+	ifstream is("doc/command-line manual (BBRL-zlib).txt");
 	string line;
 	cout << "\n";
 	while (!is.eof()) { getline(is, line); cout << line << "\n"; }

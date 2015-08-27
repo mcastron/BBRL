@@ -94,7 +94,7 @@ end
 
 function getOLCommand(task)
      --   Program
-     local programStr = "./TinyBRL-DDS --offline_learning \\\n"
+     local programStr = "./BBRL-DDS --offline_learning \\\n"
 
 
      --   Agent
@@ -167,7 +167,7 @@ end
 
 function getRECommand(task, options)
      --   Program
-     local programStr = "./TinyBRL-DDS --run_experiment \\\n"
+     local programStr = "./BBRL-DDS --run_experiment \\\n"
 
 
      --   Experiment
@@ -290,7 +290,7 @@ for i, experiments in ipairs({ experiments_accurate, experiments_inaccurate }) d
      
           --   Generate the export command
      print()
-     print("./TinyBRL-export \\")
+     print("./BBRL-export \\")
      for _, exp in ipairs(experiments) do
           local prefix = exp.exp .. "-" .. exp.prior .. "-"
                          .. experiments.shortName .. "-"

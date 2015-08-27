@@ -2,7 +2,7 @@
                               Command-line manual
 
 NAME
-     TinyBRL-zlib -- A simple compression/uncompression program based on zlib (by Castronovo Michael)
+     BBRL-zlib -- A simple compression/uncompression program based on zlib (by Castronovo Michael)
 
 
 
@@ -21,17 +21,17 @@ USAGE OVERVIEW
 USAGE EXAMPLES
      --- Compress ---
           
-          ./TinyBRL-zlib --compress --compression_level "compression level" "file to compress"
+          ./BBRL-zlib --compress --compression_level "compression level" "file to compress"
           
                          or
           
-          ./TinyBRL-zlib -z  -cl "compression level" "file to compress"
+          ./BBRL-zlib -z  -cl "compression level" "file to compress"
 
 
      --- Uncompress ---
           
-          ./TinyBRL-zlib --uncompress "file to uncompress"
+          ./BBRL-zlib --uncompress "file to uncompress"
      
                          or
      
-          ./TinyBRL-zlib -d "file to uncompress"
+          ./BBRL-zlib -d "file to uncompress"
