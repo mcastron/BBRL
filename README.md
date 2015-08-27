@@ -2,7 +2,7 @@ BBRL
 =======
 ![alt tag](https://travis-ci.org/mcastron/BBRL.svg)
 
-BBRL (**B**enchmarking for **B**ayesian **R**einforcement **L**earning) is a C++ open-source library used to compare Bayesian reinforcement learning algorithms.
+BBRL (**B**enchmarking tools for **B**ayesian **R**einforcement **L**earning) is a C++ open-source library used to compare Bayesian reinforcement learning algorithms.
 For more information about my research, visit my [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
 
 1.4
