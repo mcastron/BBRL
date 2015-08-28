@@ -13,7 +13,7 @@ USAGE OVERVIEW
           --compression_level (-cl) [possible values: Z_NO_COMPRESSION, Z_BEST_COMPRESSION, Z_BEST_SPEED, Z_DEFAULT_COMPRESSION]
           "input file"
      
-     --uncompress             (-d)
+     --decompress             (-d)
           "output file".zz
 
 
@@ -28,10 +28,10 @@ USAGE EXAMPLES
           ./BBRL-zlib -z  -cl "compression level" "file to compress"
 
 
-     --- Uncompress ---
+     --- Decompress ---
           
-          ./BBRL-zlib --uncompress "file to uncompress"
+          ./BBRL-zlib --decompress "file to decompress"
      
                          or
      
-          ./BBRL-zlib -d "file to uncompress"
+          ./BBRL-zlib -d "file to decompress"
