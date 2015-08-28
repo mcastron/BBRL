@@ -2,7 +2,7 @@
                               Command-line manual
 
 NAME
-     BBRL-zlib -- A simple compression/uncompression program based on zlib (by Castronovo Michael)
+     BBRL-zlib -- A simple compression/decompression program based on zlib (by Castronovo Michael)
 
 
 
