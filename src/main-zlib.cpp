@@ -12,11 +12,11 @@ using namespace utils::compression;
 
 // ===========================================================================
 /**	
-	\brief	Simple program to compress/uncompress zlib files.
+	\brief	Simple program to compress/decompress zlib files.
 	
 	\author	Castronovo Michael
 
-	\date	2015-08-27
+	\date	2015-08-28
 */
 // ===========================================================================
 // ---------------------------------------------------------------------------
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 {
 	cout << "\n";
 	
-	//	Retrieve the request task (compress or uncompress)
+	//	Retrieve the request task (compress or decompress)
 	if (argc < 2)
 	{
 		string msg;
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
 			
 	}
 	
-	else if ((mode == "--uncompress") || (mode == "-d"))
+	else if ((mode == "--decompress") || (mode == "-d"))
 	{
 		//	'input'		
 		if (argc < 2)
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 		string input(argv[2]);
 		
 		
-		//	Uncompress
+		//	Decompress
 		string ext = input.substr(input.find_last_of("."));
 		if (ext != ".zz")
 		{
@@ -144,20 +144,20 @@ int main(int argc, char *argv[])
 		string output = input.substr(0, input.find_last_of("."));
 		
 		Chrono openTime;
-		cout << "\tOpen the file to uncompress..." << flush;
+		cout << "\tOpen the file to decompress..." << flush;
 		ifstream is(input.c_str());
 		istreambuf_iterator<char> eos;
 		string cStr(istreambuf_iterator<char>(is), eos);
 		is.close();
 		cout << "done! (in " << openTime.get() << "ms)\n";
 		
-		Chrono uncompressTime;
-		cout << "\tUncompress the data and save them intot a file...";
+		Chrono decompressTime;
+		cout << "\tDecompress the data and save them intot a file...";
 		cout << flush;
 		ofstream os(output.c_str());
-		os << uncompressStr(cStr);
+		os << decompressStr(cStr);
 		os.close();
-		cout << "done! (in " << uncompressTime.get() << "ms)\n\n";
+		cout << "done! (in " << decompressTime.get() << "ms)\n\n";
 			
 	}
 	
