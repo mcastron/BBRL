@@ -177,7 +177,7 @@ string utils::compression::compressStr(
 }
 
 
-string utils::compression::uncompressStr(const string& str)
+string utils::compression::decompressStr(const string& str)
 										throw (runtime_error)
 {
     z_stream zs;                        // z_stream is zlib's control structure

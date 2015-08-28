@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a Serializable Object.
 			
-	\date 	2015-06-05
+	\date 	2015-08-28
 */
 // ===========================================================================
 class Serializable

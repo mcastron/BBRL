@@ -77,7 +77,7 @@ void Serializable::dDeserialize(istream& is) throw (SerializableException)
 	{
 		istreambuf_iterator<char> eos;
 		string cStr(istreambuf_iterator<char>(is), eos);
-		dStr = uncompressStr(cStr);
+		dStr = decompressStr(cStr);
 	}
 	
 	catch (runtime_error e)

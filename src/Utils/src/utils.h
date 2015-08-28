@@ -13,7 +13,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2015-05-18
+	\date		2015-08-28
 */
 // ===========================================================================
 namespace utils
@@ -364,7 +364,7 @@ namespace utils
 			
 			\return		The original string.
 		*/
-		std::string uncompressStr(const std::string& str)
+		std::string decompressStr(const std::string& str)
 										throw (std::runtime_error);
 	}
 	
