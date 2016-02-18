@@ -5,6 +5,15 @@ BBRL
 BBRL (**B**enchmarking tools for **B**ayesian **R**einforcement **L**earning) is a C++ open-source library used to compare Bayesian reinforcement learning algorithms.
 For more information about my research, visit my [website](http://www.montefiore.ulg.ac.be/~mcastron/index.html).
 
+2.0
+ - Added a modified version of 'fann' library in 'utils' (from version 2.2.0).
+ - Added 'EAgent' and 'ANNAgent' agents.
+ - Added 'ANNAgentFactory' agent factory.
+ - Updated 'BBRL-export' in order to handle agent and experiment files listed in two separated files.
+ - Added '--sl_samples_generation' to 'BBRL-DDS' for generating the data required by 'ANNAgent'.
+ - Added '--new_agent_factory' to 'BBRL-DDS' for allowing the creation of an 'ANNAgentFactory' (which is based on another 'AgentFactory'),
+ - 'xport::getAgentDataList()' will now list all possible missing files when called.
+
 1.5
  - TinyBRL has been renamed BBRL.
 
