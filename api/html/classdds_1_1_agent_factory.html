@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -107,11 +107,13 @@ Inheritance diagram for dds::AgentFactory:</div>
  <div class="center">
   <img src="classdds_1_1_agent_factory.png" usemap="#dds::AgentFactory_map" alt=""/>
   <map id="dds::AgentFactory_map" name="dds::AgentFactory_map">
-<area href="class_serializable.html" title="Interface of a Serializable Object. " alt="Serializable" shape="rect" coords="313,0,512,24"/>
+<area href="class_serializable.html" title="Interface of a Serializable Object. " alt="Serializable" shape="rect" coords="418,0,617,24"/>
 <area href="classdds_1_1_e_greedy_agent_factory.html" title="An AgentFactory which generates EGreedyAgent&#39;s. " alt="dds::EGreedyAgentFactory" shape="rect" coords="0,112,199,136"/>
 <area href="classdds_1_1_formula_agent_factory.html" title="An AgentFactory which generates FormulaAgent&#39;s (where the formulas are polynomials). " alt="dds::FormulaAgentFactory" shape="rect" coords="209,112,408,136"/>
-<area href="classdds_1_1_soft_max_agent_factory.html" title="An AgentFactory which generates SoftMaxAgent&#39;s. " alt="dds::SoftMaxAgentFactory" shape="rect" coords="418,112,617,136"/>
-<area href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html" title="An AgentFactory which generates VDBEEGreedyAgent&#39;s. " alt="dds::VDBEEGreedyAgentFactory" shape="rect" coords="627,112,826,136"/>
+<area href="classdds_1_1_s_l_agent_factory.html" title="An AgentFactory which generates SLAgent&#39;s. (i) The SLAgentFactory use another AgentFactory for genera..." alt="dds::SLAgentFactory" shape="rect" coords="418,112,617,136"/>
+<area href="classdds_1_1_soft_max_agent_factory.html" title="An AgentFactory which generates SoftMaxAgent&#39;s. " alt="dds::SoftMaxAgentFactory" shape="rect" coords="627,112,826,136"/>
+<area href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html" title="An AgentFactory which generates VDBEEGreedyAgent&#39;s. " alt="dds::VDBEEGreedyAgentFactory" shape="rect" coords="836,112,1035,136"/>
+<area href="classdds_1_1_a_n_n_agent_factory.html" title="An AgentFactory which generates ANNAgent&#39;s. (i) The ANNAgentFactory use another AgentFactory for gene..." alt="dds::ANNAgentFactory" shape="rect" coords="418,168,617,192"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -127,9 +129,9 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a15efa43820f5df10e4b8620fdf2aa2b6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent_factory.html#a15efa43820f5df10e4b8620fdf2aa2b6">init</a> (const <a class="el" href="classdds_1_1_m_d_p_distribution.html">MDPDistribution</a> *mdpDistrib)=0  throw (AgentFactoryException)</td></tr>
 <tr class="memdesc:a15efa43820f5df10e4b8620fdf2aa2b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize this <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a> with respect to the given <a class="el" href="classdds_1_1_m_d_p.html" title="Represent a MDP problem. ">MDP</a> distribution.  <a href="#a15efa43820f5df10e4b8620fdf2aa2b6">More...</a><br /></td></tr>
 <tr class="separator:a15efa43820f5df10e4b8620fdf2aa2b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38b90b11dfd905b0d6f82614256fbc56"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classdds_1_1_agent.html">Agent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent_factory.html#a38b90b11dfd905b0d6f82614256fbc56">get</a> (const std::vector&lt; double &gt; &amp;paramList) const =0  throw (AgentFactoryException)</td></tr>
-<tr class="memdesc:a38b90b11dfd905b0d6f82614256fbc56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an agent parametrized by 'paramList'.  <a href="#a38b90b11dfd905b0d6f82614256fbc56">More...</a><br /></td></tr>
-<tr class="separator:a38b90b11dfd905b0d6f82614256fbc56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8313960270fb7f4830f777a63f6f1c18"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classdds_1_1_agent.html">Agent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent_factory.html#a8313960270fb7f4830f777a63f6f1c18">get</a> (const std::vector&lt; double &gt; &amp;paraSList) const =0  throw (AgentFactoryException)</td></tr>
+<tr class="memdesc:a8313960270fb7f4830f777a63f6f1c18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an agent parametrized by 'paraSList'.  <a href="#a8313960270fb7f4830f777a63f6f1c18">More...</a><br /></td></tr>
+<tr class="separator:a8313960270fb7f4830f777a63f6f1c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adde446aa5a89f189b4fade215b6d3a09"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent_factory.html#adde446aa5a89f189b4fade215b6d3a09">getNbParam</a> () const </td></tr>
 <tr class="memdesc:adde446aa5a89f189b4fade215b6d3a09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of parameters.  <a href="#adde446aa5a89f189b4fade215b6d3a09">More...</a><br /></td></tr>
 <tr class="separator:adde446aa5a89f189b4fade215b6d3a09"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,9 +170,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a773828afb0fcd889d4c1e9861593223a"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent_factory.html#a773828afb0fcd889d4c1e9861593223a">toString</a> ()</td></tr>
 <tr class="memdesc:a773828afb0fcd889d4c1e9861593223a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the string representation of this class name.  <a href="#a773828afb0fcd889d4c1e9861593223a">More...</a><br /></td></tr>
 <tr class="separator:a773828afb0fcd889d4c1e9861593223a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a483dd6994de6c42426e18caa7050849b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classdds_1_1_agent_factory.html">AgentFactory</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent_factory.html#a483dd6994de6c42426e18caa7050849b">parse</a> (int argc, char *argv[])  throw (utils::parsing::ParsingException)</td></tr>
-<tr class="memdesc:a483dd6994de6c42426e18caa7050849b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the standard program options in order to to instanciate an <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a>.  <a href="#a483dd6994de6c42426e18caa7050849b">More...</a><br /></td></tr>
-<tr class="separator:a483dd6994de6c42426e18caa7050849b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4063f95b344e4473e8edfef33ca51a32"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classdds_1_1_agent_factory.html">AgentFactory</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent_factory.html#a4063f95b344e4473e8edfef33ca51a32">parse</a> (int argc, char *argv[], bool fromFile=true, bool fromParameters=true)  throw (utils::parsing::ParsingException)</td></tr>
+<tr class="memdesc:a4063f95b344e4473e8edfef33ca51a32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the standard program options in order to to instanciate an <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a>.  <a href="#a4063f95b344e4473e8edfef33ca51a32">More...</a><br /></td></tr>
+<tr class="separator:a4063f95b344e4473e8edfef33ca51a32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_class_serializable"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_class_serializable')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="class_serializable.html">Serializable</a></td></tr>
 <tr class="memitem:af97150e4b80d7c28fc8fb85e6c7bf0c1 inherit pub_static_methods_class_serializable"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serializable.html#af97150e4b80d7c28fc8fb85e6c7bf0c1">toString</a> ()</td></tr>
 <tr class="memdesc:af97150e4b80d7c28fc8fb85e6c7bf0c1 inherit pub_static_methods_class_serializable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the string representation of this class name.  <a href="#af97150e4b80d7c28fc8fb85e6c7bf0c1">More...</a><br /></td></tr>
@@ -206,7 +208,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface of an <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a> to generate RL Agents. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a38b90b11dfd905b0d6f82614256fbc56"></a>
+<a class="anchor" id="a8313960270fb7f4830f777a63f6f1c18"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -217,7 +219,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="classdds_1_1_agent.html">Agent</a>* dds::AgentFactory::get </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
-          <td class="paramname"><em>paramList</em></td><td>)</td>
+          <td class="paramname"><em>paraSList</em></td><td>)</td>
           <td> const</td>
         </tr>
         <tr>
@@ -234,16 +236,16 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Return an agent parametrized by 'paramList'. </p>
+<p>Return an agent parametrized by 'paraSList'. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">paramList</td><td>The parameters to use.</td></tr>
+    <tr><td class="paramname">paraSList</td><td>The parameters to use.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>An agent parametrized by 'paramList'. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An agent parametrized by 'paraSList'. </dd></dl>
 
-<p>Implemented in <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#aca2af7bcc1d2024a5e164093d364727b">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#acf4e3da8a4bfc5377d867a1819619a4a">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a826d7bea34cf1e707fd1320a0175a497">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#ac55880d5b4aa5ac232f5033f19f5d77e">dds::SoftMaxAgentFactory</a>.</p>
+<p>Implemented in <a class="el" href="classdds_1_1_s_l_agent_factory.html#a992b893cb8b2605d77ec1fd948a97060">dds::SLAgentFactory</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#aca2af7bcc1d2024a5e164093d364727b">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#acf4e3da8a4bfc5377d867a1819619a4a">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a826d7bea34cf1e707fd1320a0175a497">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#ac55880d5b4aa5ac232f5033f19f5d77e">dds::SoftMaxAgentFactory</a>.</p>
 
 </div>
 </div>
@@ -277,7 +279,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Return the list of bounds on each parameter. </p>
 <dl class="section return"><dt>Returns</dt><dd>The list of bounds on each parameter. </dd></dl>
 
-<p>Implemented in <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#aac3208eaf2f9df673d830aea9c88089d">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#a36317f38e97cfd01dfafc21a09e5074e">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a48bed82211544302185a9f5f46c2bfcc">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a6227c1f51afc7fdcc0aa6937a563a0cf">dds::SoftMaxAgentFactory</a>.</p>
+<p>Implemented in <a class="el" href="classdds_1_1_s_l_agent_factory.html#a6c085a62bd9a5b77d8380d5364ee7bf1">dds::SLAgentFactory</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#aac3208eaf2f9df673d830aea9c88089d">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#a36317f38e97cfd01dfafc21a09e5074e">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a48bed82211544302185a9f5f46c2bfcc">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a6227c1f51afc7fdcc0aa6937a563a0cf">dds::SoftMaxAgentFactory</a>.</p>
 
 </div>
 </div>
@@ -307,7 +309,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_serializable.html#a999ec513a350a14a0b39640bca447662">Serializable</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#a1f1e9e050a4e705ac1cc6e08350ec466">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#a6611567b675b9dbf22ce3f50464b1065">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#ac17f39d4fc87830ede8205d2c43c422a">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#ae9082b2fd213fb8a147c6f590297b6f5">dds::SoftMaxAgentFactory</a>.</p>
+<p>Reimplemented in <a class="el" href="classdds_1_1_s_l_agent_factory.html#a65918bf02802382f484039baf537f88c">dds::SLAgentFactory</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#a1f1e9e050a4e705ac1cc6e08350ec466">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#a6611567b675b9dbf22ce3f50464b1065">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#ac17f39d4fc87830ede8205d2c43c422a">dds::EGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_soft_max_agent_factory.html#ae9082b2fd213fb8a147c6f590297b6f5">dds::SoftMaxAgentFactory</a>, and <a class="el" href="classdds_1_1_a_n_n_agent_factory.html#ae7ff67ff6efe374516b2b86f7d99ee34">dds::ANNAgentFactory</a>.</p>
 
 </div>
 </div>
@@ -335,7 +337,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Return the name of this <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>The name of this <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a>. </dd></dl>
 
-<p>Implemented in <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#abf843bb6e44a4f8eebc77efe7efc794d">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#a825eab44090d7bf723d5b29e61d53800">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#ab64672318e74875af09e29dcfa73e110">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a3828c2022094694fd1aea6e6af4f06e1">dds::SoftMaxAgentFactory</a>.</p>
+<p>Implemented in <a class="el" href="classdds_1_1_a_n_n_agent_factory.html#aa0f9a1d15acec17e21f430e63b44467c">dds::ANNAgentFactory</a>, <a class="el" href="classdds_1_1_s_l_agent_factory.html#ae09d030d35e0ff5d4f4557116abeba36">dds::SLAgentFactory</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#abf843bb6e44a4f8eebc77efe7efc794d">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#a825eab44090d7bf723d5b29e61d53800">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#ab64672318e74875af09e29dcfa73e110">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a3828c2022094694fd1aea6e6af4f06e1">dds::SoftMaxAgentFactory</a>.</p>
 
 </div>
 </div>
@@ -395,7 +397,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Return the list of split accuracies of each parameter. </p>
 <dl class="section return"><dt>Returns</dt><dd>The list of split accuracies of each parameter. </dd></dl>
 
-<p>Implemented in <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#ae98e1eb6c145404a0c507c57b269ce5a">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#ae57fa6e3bd53c697afcdf78d0c4b760a">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a3bbccb1ff8c7e9a19f42e90891f449f4">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a35c2df92bb2d860ddbe76485e24eb77d">dds::SoftMaxAgentFactory</a>.</p>
+<p>Implemented in <a class="el" href="classdds_1_1_s_l_agent_factory.html#ab86db7e32cd2b7a7c86d1828383f7d7f">dds::SLAgentFactory</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#ae98e1eb6c145404a0c507c57b269ce5a">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#ae57fa6e3bd53c697afcdf78d0c4b760a">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a3bbccb1ff8c7e9a19f42e90891f449f4">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a35c2df92bb2d860ddbe76485e24eb77d">dds::SoftMaxAgentFactory</a>.</p>
 
 </div>
 </div>
@@ -435,11 +437,11 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#acccd5047fcf7980186f0e70f47f639c5">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#ab4cff10e5fbb92404695e1e60e89d226">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a25c42babcf30d8a990c95b56f44da68f">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a81da9453f18a1652f28b0ffa86ab8ca3">dds::SoftMaxAgentFactory</a>.</p>
+<p>Implemented in <a class="el" href="classdds_1_1_s_l_agent_factory.html#a51e6dfaa3b3ce5dee2e5b575ab718bd2">dds::SLAgentFactory</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#acccd5047fcf7980186f0e70f47f639c5">dds::VDBEEGreedyAgentFactory</a>, <a class="el" href="classdds_1_1_formula_agent_factory.html#ab4cff10e5fbb92404695e1e60e89d226">dds::FormulaAgentFactory</a>, <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a25c42babcf30d8a990c95b56f44da68f">dds::EGreedyAgentFactory</a>, and <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a81da9453f18a1652f28b0ffa86ab8ca3">dds::SoftMaxAgentFactory</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a483dd6994de6c42426e18caa7050849b"></a>
+<a class="anchor" id="a4063f95b344e4473e8edfef33ca51a32"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -456,7 +458,19 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>argv</em>[]&#160;</td>
+          <td class="paramname"><em>argv</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>fromFile</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>fromParameters</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -478,7 +492,14 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parse the standard program options in order to to instanciate an <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a> found (0 if it fails). </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fromFile</td><td>True if the AgentFactories can be loaded from a file, false else. </td></tr>
+    <tr><td class="paramname">fromParameters</td><td>True if the AgentFactories can be created from parameters, false else.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a> found. </dd></dl>
 
 </div>
 </div>
@@ -509,13 +530,13 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/DDS/src/AgentFactory/<a class="el" href="_agent_factory_8h_source.html">AgentFactory.h</a></li>
-<li>src/DDS/src/AgentFactory/AgentFactory.cpp</li>
+<li>BBRL/src/DDS/src/AgentFactory/<a class="el" href="_agent_factory_8h_source.html">AgentFactory.h</a></li>
+<li>BBRL/src/DDS/src/AgentFactory/AgentFactory.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

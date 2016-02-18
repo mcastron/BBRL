@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -127,6 +127,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abacd11a0c48282374de074c7a0ba22da"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_experiment.html#abacd11a0c48282374de074c7a0ba22da">getClassName</a> () const </td></tr>
 <tr class="memdesc:abacd11a0c48282374de074c7a0ba22da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the class of this object. This method should be overloaded by any derived class.  <a href="#abacd11a0c48282374de074c7a0ba22da">More...</a><br /></td></tr>
 <tr class="separator:abacd11a0c48282374de074c7a0ba22da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae3ca03493781e8c67502ed959025278"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_experiment.html#aae3ca03493781e8c67502ed959025278">getSimGamma</a> () const </td></tr>
+<tr class="memdesc:aae3ca03493781e8c67502ed959025278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the discount factor used during the simulations.  <a href="#aae3ca03493781e8c67502ed959025278">More...</a><br /></td></tr>
+<tr class="separator:aae3ca03493781e8c67502ed959025278"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76731030206258ca8276aa6b05fd79af"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_experiment.html#a76731030206258ca8276aa6b05fd79af">getT</a> () const </td></tr>
+<tr class="memdesc:a76731030206258ca8276aa6b05fd79af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the horizon limit used during the simulations.  <a href="#a76731030206258ca8276aa6b05fd79af">More...</a><br /></td></tr>
+<tr class="separator:a76731030206258ca8276aa6b05fd79af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93d3b77a022793846db5971edfddfc31"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a93d3b77a022793846db5971edfddfc31"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_experiment.html#a93d3b77a022793846db5971edfddfc31">serialize</a> (std::ostream &amp;os) const </td></tr>
 <tr class="memdesc:a93d3b77a022793846db5971edfddfc31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize this Object. If overloaded, the new '<a class="el" href="classdds_1_1_experiment.html#a93d3b77a022793846db5971edfddfc31" title="Serialize this Object. If overloaded, the new &#39;serialize()&#39; method should call the &#39;serialize()&#39; meth...">serialize()</a>' method should call the '<a class="el" href="classdds_1_1_experiment.html#a93d3b77a022793846db5971edfddfc31" title="Serialize this Object. If overloaded, the new &#39;serialize()&#39; method should call the &#39;serialize()&#39; meth...">serialize()</a>' method of the base class before doing anything else. <br /></td></tr>
@@ -165,6 +171,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a39b5712c72ef062dd8c0747c38efb747 inherit pub_methods_class_i_experiment"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a39b5712c72ef062dd8c0747c38efb747">computeDSRList</a> (double gamma=-1.0) const</td></tr>
 <tr class="memdesc:a39b5712c72ef062dd8c0747c38efb747 inherit pub_methods_class_i_experiment"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute and return the list of discounted sum of rewards of the simulations discounted by 'gamma' (in ]0; 1]).  <a href="#a39b5712c72ef062dd8c0747c38efb747">More...</a><br /></td></tr>
 <tr class="separator:a39b5712c72ef062dd8c0747c38efb747 inherit pub_methods_class_i_experiment"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65eca0d3909adfdf596f7d8f30117f29 inherit pub_methods_class_i_experiment"><td class="memItemLeft" align="right" valign="top">std::vector&lt; MDP * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a65eca0d3909adfdf596f7d8f30117f29">getMDPList</a> () const</td></tr>
+<tr class="memdesc:a65eca0d3909adfdf596f7d8f30117f29 inherit pub_methods_class_i_experiment"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list of MDPs used by this <a class="el" href="class_i_experiment.html" title="Interface of a RL Experiment. ">IExperiment</a>.  <a href="#a65eca0d3909adfdf596f7d8f30117f29">More...</a><br /></td></tr>
+<tr class="separator:a65eca0d3909adfdf596f7d8f30117f29 inherit pub_methods_class_i_experiment"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25de5b5fff086dedd594bdb78f2855d5 inherit pub_methods_class_i_experiment"><td class="memItemLeft" align="right" valign="top">std::vector<br class="typebreak" />
 &lt; simulation::SimulationRecord * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a25de5b5fff086dedd594bdb78f2855d5">getSimRecList</a> () const</td></tr>
 <tr class="memdesc:a25de5b5fff086dedd594bdb78f2855d5 inherit pub_methods_class_i_experiment"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list of SimulationRecords from the last call of '<a class="el" href="class_i_experiment.html#acd34b13d0ebdfc3338a137ac33d3e111" title="Run the experiment for a certain amount of time &#39;timeLimit&#39;. Continue from when it stops since the la...">run()</a>'. (empty if vector if the trajectories haven't be saved).  <a href="#a25de5b5fff086dedd594bdb78f2855d5">More...</a><br /></td></tr>
@@ -410,6 +419,60 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 
 </div>
 </div>
+<a class="anchor" id="aae3ca03493781e8c67502ed959025278"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double dds::Experiment::getSimGamma </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the discount factor used during the simulations. </p>
+<dl class="section return"><dt>Returns</dt><dd>The discount factor used during the simulations. </dd></dl>
+
+<p>Implements <a class="el" href="class_i_experiment.html#a93764835a2add4abace113e3c8e1acab">IExperiment&lt; Agent, MDP, simulation::SimulationRecord &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a76731030206258ca8276aa6b05fd79af"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int dds::Experiment::getT </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the horizon limit used during the simulations. </p>
+<dl class="section return"><dt>Returns</dt><dd>The horizon limit used during the simulations. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a9301786ccfea0c6f853159a4bacfe8a9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -480,13 +543,13 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/DDS/src/Experiment/<a class="el" href="_experiment_8h_source.html">Experiment.h</a></li>
-<li>src/DDS/src/Experiment/Experiment.cpp</li>
+<li>BBRL/src/DDS/src/Experiment/<a class="el" href="_experiment_8h_source.html">Experiment.h</a></li>
+<li>BBRL/src/DDS/src/Experiment/Experiment.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

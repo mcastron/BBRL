@@ -2,7 +2,6 @@ var searchData=
 [
   ['ucb1',['UCB1',['../classdds_1_1opps_1_1_u_c_b1.html#a235ef173dcbc4f4ae5bebf43a210acbb',1,'dds::opps::UCB1::UCB1()'],['../classutils_1_1algorithm_1_1_u_c_b1.html#a73b29d4666e01c8aeb79be77bbc368e1',1,'utils::algorithm::UCB1::UCB1()']]],
   ['uct',['UCT',['../classdds_1_1opps_1_1_u_c_t.html#a7eae4e802998f0a0dc4db1288da0311c',1,'dds::opps::UCT::UCT()'],['../classutils_1_1algorithm_1_1_u_c_t.html#a822dd4c93792b27ceeecdfed6551d853',1,'utils::algorithm::UCT::UCT()']]],
-  ['uncompressstr',['uncompressStr',['../namespaceutils_1_1compression.html#aab7d85d6f6b1e19beac7125151749b1d',1,'utils::compression']]],
   ['unset',['unset',['../classutils_1_1formula_1_1_variable.html#a9b38052866ee4056bcfefe9a5d656ba5',1,'utils::formula::Variable']]],
   ['unsetbold',['unsetBold',['../classutils_1_1latex_1_1_cell.html#a6750d5420197389c44061f4e8e26c824',1,'utils::latex::Cell']]],
   ['unsetoption',['unsetOption',['../classutils_1_1gnuplot_1_1_gnuplot_options.html#a274aa4b08cd0a6084554dee6d7fc1e80',1,'utils::gnuplot::GnuplotOptions']]],

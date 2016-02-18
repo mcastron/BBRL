@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -101,14 +101,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="entry"><a class="el" href="class_serializable.html#ae3f6301bd727667bc1d0877960b67e08">createInstance</a>(std::string className, std::istream &amp;is)</td><td class="entry"><a class="el" href="class_serializable.html">Serializable</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_serializable.html#a64a0684cc6b22a3f62d732edef6c9dbf">dDeserialize</a>(std::istream &amp;is)</td><td class="entry"><a class="el" href="class_serializable.html">Serializable</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a76c35150b6db81e21636293dc91647d1">deserialize</a>(std::istream &amp;is)</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a38b90b11dfd905b0d6f82614256fbc56">get</a>(const std::vector&lt; double &gt; &amp;paramList) const =0</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a8313960270fb7f4830f777a63f6f1c18">get</a>(const std::vector&lt; double &gt; &amp;paraSList) const =0</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a0903c9ceb8c4e36058560b483b870326">getBounds</a>() const =0</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a57d828be98b15aa8c3e0a6d4c7b47480">getClassName</a>() const </td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#ac6b09cfa0336932dbf7831071a149e6e">getName</a>() const =0</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#adde446aa5a89f189b4fade215b6d3a09">getNbParam</a>() const </td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a88b24c967e4617114d7778b9c33aac1a">getSplitAcc</a>() const =0</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a15efa43820f5df10e4b8620fdf2aa2b6">init</a>(const MDPDistribution *mdpDistrib)=0</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a483dd6994de6c42426e18caa7050849b">parse</a>(int argc, char *argv[])</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a4063f95b344e4473e8edfef33ca51a32">parse</a>(int argc, char *argv[], bool fromFile=true, bool fromParameters=true)</td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_serializable.html#ae2b10a6d95c9873ede8c4562cc5105be">Serializable</a>()</td><td class="entry"><a class="el" href="class_serializable.html">Serializable</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
   <tr><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html#a279a8c7c554f05ee1d7f90ce7f4fd7b6">serialize</a>(std::ostream &amp;os) const </td><td class="entry"><a class="el" href="classdds_1_1_agent_factory.html">dds::AgentFactory</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_serializable.html#ac6b1313d543f58fe5237ac3f6e465aeb">throwEOFMsg</a>(std::string varName)</td><td class="entry"><a class="el" href="class_serializable.html">Serializable</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">static</span></td></tr>
@@ -119,7 +119,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

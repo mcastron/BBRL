@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -101,9 +101,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a73267d9fb7513cd2530ba16af97c472e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutils_1_1compression.html#a73267d9fb7513cd2530ba16af97c472e">compressStr</a> (const std::string &amp;str, int compressionlevel)  throw (std::runtime_error)</td></tr>
 <tr class="memdesc:a73267d9fb7513cd2530ba16af97c472e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compress a STL string using zlib with given compression level and return the binary data.  <a href="#a73267d9fb7513cd2530ba16af97c472e">More...</a><br /></td></tr>
 <tr class="separator:a73267d9fb7513cd2530ba16af97c472e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab7d85d6f6b1e19beac7125151749b1d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutils_1_1compression.html#aab7d85d6f6b1e19beac7125151749b1d">uncompressStr</a> (const std::string &amp;str)  throw (std::runtime_error)</td></tr>
-<tr class="memdesc:aab7d85d6f6b1e19beac7125151749b1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompress an STL string using zlib and return the original data.  <a href="#aab7d85d6f6b1e19beac7125151749b1d">More...</a><br /></td></tr>
-<tr class="separator:aab7d85d6f6b1e19beac7125151749b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d3d068888242e7e3092bb172672e7aa"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutils_1_1compression.html#a6d3d068888242e7e3092bb172672e7aa">decompressStr</a> (const std::string &amp;str)  throw (std::runtime_error)</td></tr>
+<tr class="memdesc:a6d3d068888242e7e3092bb172672e7aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompress an STL string using zlib and return the original data.  <a href="#a6d3d068888242e7e3092bb172672e7aa">More...</a><br /></td></tr>
+<tr class="separator:a6d3d068888242e7e3092bb172672e7aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This namespace gathers several functions related to the compression of a string (based on zlib) </p>
@@ -151,12 +151,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aab7d85d6f6b1e19beac7125151749b1d"></a>
+<a class="anchor" id="a6d3d068888242e7e3092bb172672e7aa"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string utils::compression::uncompressStr </td>
+          <td class="memname">string utils::compression::decompressStr </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>str</em></td><td>)</td>
@@ -186,7 +186,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

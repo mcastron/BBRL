@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -133,6 +133,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:acd5adef216112f19311132b223555d22"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#acd5adef216112f19311132b223555d22">getNbOfMDPs</a> () const </td></tr>
 <tr class="memdesc:acd5adef216112f19311132b223555d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of test MDPs used in this Experiment.  <a href="#acd5adef216112f19311132b223555d22">More...</a><br /></td></tr>
 <tr class="separator:acd5adef216112f19311132b223555d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93764835a2add4abace113e3c8e1acab"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a93764835a2add4abace113e3c8e1acab">getSimGamma</a> () const =0</td></tr>
+<tr class="memdesc:a93764835a2add4abace113e3c8e1acab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the discount factor used during the simulations.  <a href="#a93764835a2add4abace113e3c8e1acab">More...</a><br /></td></tr>
+<tr class="separator:a93764835a2add4abace113e3c8e1acab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51bd1643aea757e10e6fe00c877b5282"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a51bd1643aea757e10e6fe00c877b5282">getProgress</a> () const </td></tr>
 <tr class="memdesc:a51bd1643aea757e10e6fe00c877b5282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the progress of this Experiment (in [0; 1]).  <a href="#a51bd1643aea757e10e6fe00c877b5282">More...</a><br /></td></tr>
 <tr class="separator:a51bd1643aea757e10e6fe00c877b5282"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,6 +145,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a39b5712c72ef062dd8c0747c38efb747"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a39b5712c72ef062dd8c0747c38efb747">computeDSRList</a> (double gamma=-1.0) const </td></tr>
 <tr class="memdesc:a39b5712c72ef062dd8c0747c38efb747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute and return the list of discounted sum of rewards of the simulations discounted by 'gamma' (in ]0; 1]).  <a href="#a39b5712c72ef062dd8c0747c38efb747">More...</a><br /></td></tr>
 <tr class="separator:a39b5712c72ef062dd8c0747c38efb747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65eca0d3909adfdf596f7d8f30117f29"><td class="memItemLeft" align="right" valign="top">std::vector&lt; MDPType * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a65eca0d3909adfdf596f7d8f30117f29">getMDPList</a> () const </td></tr>
+<tr class="memdesc:a65eca0d3909adfdf596f7d8f30117f29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list of MDPs used by this <a class="el" href="class_i_experiment.html" title="Interface of a RL Experiment. ">IExperiment</a>.  <a href="#a65eca0d3909adfdf596f7d8f30117f29">More...</a><br /></td></tr>
+<tr class="separator:a65eca0d3909adfdf596f7d8f30117f29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25de5b5fff086dedd594bdb78f2855d5"><td class="memItemLeft" align="right" valign="top">std::vector<br class="typebreak" />
 &lt; SimulationRecordType * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a25de5b5fff086dedd594bdb78f2855d5">getSimRecList</a> () const </td></tr>
 <tr class="memdesc:a25de5b5fff086dedd594bdb78f2855d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list of SimulationRecords from the last call of '<a class="el" href="class_i_experiment.html#acd34b13d0ebdfc3338a137ac33d3e111" title="Run the experiment for a certain amount of time &#39;timeLimit&#39;. Continue from when it stops since the la...">run()</a>'. (empty if vector if the trajectories haven't be saved).  <a href="#a25de5b5fff086dedd594bdb78f2855d5">More...</a><br /></td></tr>
@@ -199,9 +205,6 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a93764835a2add4abace113e3c8e1acab"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a93764835a2add4abace113e3c8e1acab">getSimGamma</a> () const =0</td></tr>
-<tr class="memdesc:a93764835a2add4abace113e3c8e1acab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the discount factor used during the simulations.  <a href="#a93764835a2add4abace113e3c8e1acab">More...</a><br /></td></tr>
-<tr class="separator:a93764835a2add4abace113e3c8e1acab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a7492f50de215feebe07c5b2f54f047"><td class="memItemLeft" align="right" valign="top">virtual SimulationRecordType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_experiment.html#a6a7492f50de215feebe07c5b2f54f047">simulate</a> (AgentType *agent, MDPType *mdp) const =0</td></tr>
 <tr class="memdesc:a6a7492f50de215feebe07c5b2f54f047"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a single simulation.  <a href="#a6a7492f50de215feebe07c5b2f54f047">More...</a><br /></td></tr>
 <tr class="separator:a6a7492f50de215feebe07c5b2f54f047"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -284,7 +287,7 @@ class IExperiment&lt; AgentType, MDPType, SimulationRecordType &gt;</h3>
 
 <p>Interface of a RL Experiment. </p>
 <dl class="section author"><dt>Author</dt><dd>Castronovo Michael</dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2015-02-22 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2015-09-22 </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a6e783da3bc142efae8e7373bebe3897a"></a>
 <div class="memitem">
@@ -427,6 +430,34 @@ template&lt;typename AgentType, typename MDPType, typename SimulationRecordType&
 
 </div>
 </div>
+<a class="anchor" id="a65eca0d3909adfdf596f7d8f30117f29"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AgentType, typename MDPType, typename SimulationRecordType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;MDPType*&gt; <a class="el" href="class_i_experiment.html">IExperiment</a>&lt; AgentType, MDPType, SimulationRecordType &gt;::getMDPList </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the list of MDPs used by this <a class="el" href="class_i_experiment.html" title="Interface of a RL Experiment. ">IExperiment</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>The list of MDPs used by this <a class="el" href="class_i_experiment.html" title="Interface of a RL Experiment. ">IExperiment</a>. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a35d33908c06cd32d6d6d5517b4999a08"></a>
 <div class="memitem">
 <div class="memproto">
@@ -557,13 +588,15 @@ template&lt;typename AgentType, typename MDPType, typename SimulationRecordType&
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Return the discount factor used during the simulations. </p>
 <dl class="section return"><dt>Returns</dt><dd>The discount factor used during the simulations. </dd></dl>
+
+<p>Implemented in <a class="el" href="classdds_1_1_experiment.html#aae3ca03493781e8c67502ed959025278">dds::Experiment</a>.</p>
 
 </div>
 </div>
@@ -742,12 +775,12 @@ template&lt;typename AgentType, typename MDPType, typename SimulationRecordType&
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/IExperiment/src/<a class="el" href="_i_experiment_8h_source.html">IExperiment.h</a></li>
+<li>BBRL/src/IExperiment/src/<a class="el" href="_i_experiment_8h_source.html">IExperiment.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

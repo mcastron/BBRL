@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -126,10 +126,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classdds_1_1_q_counter_var.html#ab2b4a7524390e838e3fdcbdbf9a3b429">dds::QCounterVar</a>
 , <a class="el" href="classutils_1_1formula_1_1_formula.html#a4a5363eaf285f633c2747d0c4aee3951">utils::formula::Formula</a>
 </li>
+<li>generateSLSamples()
+: <a class="el" href="classdds_1_1_s_l_agent.html#a0ad15e81672ab934ae9a9e6c62ca6f5a">dds::SLAgent</a>
+</li>
 <li>get()
-: <a class="el" href="classdds_1_1_agent_factory.html#a38b90b11dfd905b0d6f82614256fbc56">dds::AgentFactory</a>
+: <a class="el" href="classdds_1_1_agent_factory.html#a8313960270fb7f4830f777a63f6f1c18">dds::AgentFactory</a>
 , <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a826d7bea34cf1e707fd1320a0175a497">dds::EGreedyAgentFactory</a>
 , <a class="el" href="classdds_1_1_formula_agent_factory.html#acf4e3da8a4bfc5377d867a1819619a4a">dds::FormulaAgentFactory</a>
+, <a class="el" href="classdds_1_1_s_l_agent_factory.html#a992b893cb8b2605d77ec1fd948a97060">dds::SLAgentFactory</a>
 , <a class="el" href="classdds_1_1_soft_max_agent_factory.html#ac55880d5b4aa5ac232f5033f19f5d77e">dds::SoftMaxAgentFactory</a>
 , <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#aca2af7bcc1d2024a5e164093d364727b">dds::VDBEEGreedyAgentFactory</a>
 , <a class="el" href="classutils_1_1_chrono.html#a4cf80794f4cb7a647479f066a50ae687">utils::Chrono</a>
@@ -139,6 +143,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#af6295d416c5250b1e4a3dbd756ffd407">dds::BAMCPAgent</a>
 , <a class="el" href="classdds_1_1_b_e_b_agent.html#ac395aea08358bd7d5dbd60ba295e06d5">dds::BEBAgent</a>
 , <a class="el" href="classdds_1_1_b_f_s3_agent.html#aa5b252fc4d4ec4eae42b1d73c8e4be41">dds::BFS3Agent</a>
+, <a class="el" href="classdds_1_1_e_agent.html#a65ed4289e1a91efb9b4bc16e9622d379">dds::EAgent</a>
 , <a class="el" href="classdds_1_1_e_greedy_agent.html#a054858eb57b01981b8f173d08c5bd248">dds::EGreedyAgent</a>
 , <a class="el" href="classdds_1_1_formula_agent.html#ae32037f8422cf567c1bab91654b60bc7">dds::FormulaAgent</a>
 , <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#aa385df4cb1049400be9b08da1ea8341c">dds::OPPSCSAgent</a>
@@ -146,6 +151,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classdds_1_1_optimal_agent.html#a86367880012418a3b2abf2ef2bf839e2">dds::OptimalAgent</a>
 , <a class="el" href="classdds_1_1_random_agent.html#aa607b21e822f54a6159298c61308a817">dds::RandomAgent</a>
 , <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a8be27ead3e39121d4a12bc592cd8a8c4">dds::SBOSSAgent</a>
+, <a class="el" href="classdds_1_1_s_l_agent.html#a9e1b871e47e9f3e5d9d8ccc937812649">dds::SLAgent</a>
 , <a class="el" href="classdds_1_1_soft_max_agent.html#aff7dbb9c4f2870ba602138fa885f89b0">dds::SoftMaxAgent</a>
 , <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a97cd1e6d7fc23a632a0684cda5084ea3">dds::VDBEEGreedyAgent</a>
 </li>
@@ -156,17 +162,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classdds_1_1_agent_factory.html#a0903c9ceb8c4e36058560b483b870326">dds::AgentFactory</a>
 , <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a48bed82211544302185a9f5f46c2bfcc">dds::EGreedyAgentFactory</a>
 , <a class="el" href="classdds_1_1_formula_agent_factory.html#a36317f38e97cfd01dfafc21a09e5074e">dds::FormulaAgentFactory</a>
+, <a class="el" href="classdds_1_1_s_l_agent_factory.html#a6c085a62bd9a5b77d8380d5364ee7bf1">dds::SLAgentFactory</a>
 , <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a6227c1f51afc7fdcc0aa6937a563a0cf">dds::SoftMaxAgentFactory</a>
 , <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#aac3208eaf2f9df673d830aea9c88089d">dds::VDBEEGreedyAgentFactory</a>
 </li>
 <li>getClassName()
 : <a class="el" href="classdds_1_1_agent.html#a4826add383609f4ac070237849226697">dds::Agent</a>
 , <a class="el" href="classdds_1_1_agent_factory.html#a57d828be98b15aa8c3e0a6d4c7b47480">dds::AgentFactory</a>
+, <a class="el" href="classdds_1_1_a_n_n_agent.html#ae9d56aa5a1bfaa98349ea17ae0dd1f7f">dds::ANNAgent</a>
+, <a class="el" href="classdds_1_1_a_n_n_agent_factory.html#ae7ff67ff6efe374516b2b86f7d99ee34">dds::ANNAgentFactory</a>
 , <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a4187b30dc0d8466f80e7624180e7b89b">dds::BAMCPAgent</a>
 , <a class="el" href="classdds_1_1_b_e_b_agent.html#acba4b638f358366a129285b56f55c4fb">dds::BEBAgent</a>
 , <a class="el" href="classdds_1_1_b_f_s3_agent.html#a0ab934ba07229fcd35e3a5f2325f3827">dds::BFS3Agent</a>
 , <a class="el" href="classdds_1_1_c_model.html#ac0c119bc0dfbca7927828c28c52d61ed">dds::CModel</a>
 , <a class="el" href="classdds_1_1_dir_multi_distribution.html#ad073f4191553b83cdb2fe67802dbec7e">dds::DirMultiDistribution</a>
+, <a class="el" href="classdds_1_1_e_agent.html#a8ecf8fc2fb9012527fa1c99403bd8e28">dds::EAgent</a>
 , <a class="el" href="classdds_1_1_e_greedy_agent.html#a103b8a8c5b388480cf5f97e5b2c96808">dds::EGreedyAgent</a>
 , <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#ac17f39d4fc87830ede8205d2c43c422a">dds::EGreedyAgentFactory</a>
 , <a class="el" href="classdds_1_1_experiment.html#abacd11a0c48282374de074c7a0ba22da">dds::Experiment</a>
@@ -188,6 +198,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classdds_1_1_q_var.html#a5c37b33d27e69c9b3215cecc87314a3d">dds::QVar</a>
 , <a class="el" href="classdds_1_1_random_agent.html#a0507d0b215f96333f0de0ee6f9bd7ab0">dds::RandomAgent</a>
 , <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a56ecb472599c3e2fcdac23f5e7d704db">dds::SBOSSAgent</a>
+, <a class="el" href="classdds_1_1_s_l_agent.html#a6af0ae4862d1b07187e59986d625d7de">dds::SLAgent</a>
+, <a class="el" href="classdds_1_1_s_l_agent_factory.html#a65918bf02802382f484039baf537f88c">dds::SLAgentFactory</a>
 , <a class="el" href="classdds_1_1_soft_max_agent.html#ae3f3b43acc92dc07cf5f3b3f0d3919eb">dds::SoftMaxAgent</a>
 , <a class="el" href="classdds_1_1_soft_max_agent_factory.html#ae9082b2fd213fb8a147c6f590297b6f5">dds::SoftMaxAgentFactory</a>
 , <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a5540049dfa9dbeaa98eee444f7f3a9a4">dds::VDBEEGreedyAgent</a>
@@ -212,9 +224,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classxport_1_1_agent_data.html#a466cb6fa5b097ec567fccd552c714a57">xport::AgentData</a>
 </li>
 <li>getExportClassName()
-: <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#adbf3caf4cc03f15a6b697792f00a46cc">dds::BAMCPAgent</a>
+: <a class="el" href="classdds_1_1_a_n_n_agent.html#a86662be970c9ba51aba5f52d4bd9fde4">dds::ANNAgent</a>
+, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#adbf3caf4cc03f15a6b697792f00a46cc">dds::BAMCPAgent</a>
 , <a class="el" href="classdds_1_1_b_e_b_agent.html#ac3af2632cad33e2f75f8a1348add0ef2">dds::BEBAgent</a>
 , <a class="el" href="classdds_1_1_b_f_s3_agent.html#a1cdb462df026193069ea845b46e581d4">dds::BFS3Agent</a>
+, <a class="el" href="classdds_1_1_e_agent.html#aac71cfe32a874a936e41d3c09aae0e91">dds::EAgent</a>
 , <a class="el" href="classdds_1_1_e_greedy_agent.html#a2687869f1f01ffe990383adf8562d02f">dds::EGreedyAgent</a>
 , <a class="el" href="classdds_1_1_formula_agent.html#aafa3eb16dfbc9a54a37ecbdc455e6f03">dds::FormulaAgent</a>
 , <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#a07d78650aff29d506a1446c158ce0c6a">dds::OPPSCSAgent</a>
@@ -222,6 +236,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classdds_1_1_optimal_agent.html#ac130e33bd251408a5621e5a7a42fd04d">dds::OptimalAgent</a>
 , <a class="el" href="classdds_1_1_random_agent.html#aede561e82f06ed0ee49ea7fe74afb815">dds::RandomAgent</a>
 , <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a771a0a8c5b93cc879a3d586a3375b1be">dds::SBOSSAgent</a>
+, <a class="el" href="classdds_1_1_s_l_agent.html#a6b8cda72ddde9b3ee1e9d049c01a2ec3">dds::SLAgent</a>
 , <a class="el" href="classdds_1_1_soft_max_agent.html#adcaeeda73166cfafe06a47e90bf21d75">dds::SoftMaxAgent</a>
 , <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a0a2082d4d159028ac726fab93b22e004">dds::VDBEEGreedyAgent</a>
 , <a class="el" href="class_i_agent.html#acf42f912564ca0f6aa811cb0326caafb">IAgent</a>
@@ -257,6 +272,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>getMDP()
 : <a class="el" href="classdds_1_1_agent.html#a8d0e376a8c725e0214167583d71ff528">dds::Agent</a>
 </li>
+<li>getMDPList()
+: <a class="el" href="class_i_experiment.html#a65eca0d3909adfdf596f7d8f30117f29">IExperiment&lt; AgentType, MDPType, SimulationRecordType &gt;</a>
+</li>
 <li>getMu()
 : <a class="el" href="classutils_1_1algorithm_1_1_u_c_b1.html#a8928286a227b1eb15bfc3bcbc19aa207">utils::algorithm::UCB1</a>
 </li>
@@ -266,8 +284,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>getName()
 : <a class="el" href="classdds_1_1_agent_factory.html#ac6b09cfa0336932dbf7831071a149e6e">dds::AgentFactory</a>
+, <a class="el" href="classdds_1_1_a_n_n_agent_factory.html#aa0f9a1d15acec17e21f430e63b44467c">dds::ANNAgentFactory</a>
 , <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#ab64672318e74875af09e29dcfa73e110">dds::EGreedyAgentFactory</a>
 , <a class="el" href="classdds_1_1_formula_agent_factory.html#a825eab44090d7bf723d5b29e61d53800">dds::FormulaAgentFactory</a>
+, <a class="el" href="classdds_1_1_s_l_agent_factory.html#ae09d030d35e0ff5d4f4557116abeba36">dds::SLAgentFactory</a>
 , <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a3828c2022094694fd1aea6e6af4f06e1">dds::SoftMaxAgentFactory</a>
 , <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#abf843bb6e44a4f8eebc77efe7efc794d">dds::VDBEEGreedyAgentFactory</a>
 , <a class="el" href="class_i_agent.html#ad24b2209cc6c303efc5bf683ea5d4fb1">IAgent</a>
@@ -342,15 +362,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="class_i_m_d_p_distribution.html#afea8b65b6b650cbbe345e059c09d5358">IMDPDistribution</a>
 </li>
 <li>getSimGamma()
-: <a class="el" href="class_i_experiment.html#a93764835a2add4abace113e3c8e1acab">IExperiment&lt; AgentType, MDPType, SimulationRecordType &gt;</a>
+: <a class="el" href="classdds_1_1_experiment.html#aae3ca03493781e8c67502ed959025278">dds::Experiment</a>
+, <a class="el" href="class_i_experiment.html#a93764835a2add4abace113e3c8e1acab">IExperiment&lt; AgentType, MDPType, SimulationRecordType &gt;</a>
 </li>
 <li>getSimRecList()
 : <a class="el" href="class_i_experiment.html#a25de5b5fff086dedd594bdb78f2855d5">IExperiment&lt; AgentType, MDPType, SimulationRecordType &gt;</a>
+</li>
+<li>getSLAgent()
+: <a class="el" href="classdds_1_1_s_l_agent_factory.html#a9abde8cad334542dcd9fbd093a681d12">dds::SLAgentFactory</a>
 </li>
 <li>getSplitAcc()
 : <a class="el" href="classdds_1_1_agent_factory.html#a88b24c967e4617114d7778b9c33aac1a">dds::AgentFactory</a>
 , <a class="el" href="classdds_1_1_e_greedy_agent_factory.html#a3bbccb1ff8c7e9a19f42e90891f449f4">dds::EGreedyAgentFactory</a>
 , <a class="el" href="classdds_1_1_formula_agent_factory.html#ae57fa6e3bd53c697afcdf78d0c4b760a">dds::FormulaAgentFactory</a>
+, <a class="el" href="classdds_1_1_s_l_agent_factory.html#ab86db7e32cd2b7a7c86d1828383f7d7f">dds::SLAgentFactory</a>
 , <a class="el" href="classdds_1_1_soft_max_agent_factory.html#a35c2df92bb2d860ddbe76485e24eb77d">dds::SoftMaxAgentFactory</a>
 , <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent_factory.html#ae98e1eb6c145404a0c507c57b269ce5a">dds::VDBEEGreedyAgentFactory</a>
 </li>
@@ -380,6 +405,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>getT()
 : <a class="el" href="classdds_1_1_agent.html#ab8e5617e469d21543d635434f87b12fc">dds::Agent</a>
+, <a class="el" href="classdds_1_1_experiment.html#a76731030206258ca8276aa6b05fd79af">dds::Experiment</a>
 </li>
 <li>getTheta()
 : <a class="el" href="classdds_1_1_dir_multi_distribution.html#ae53b4eae10d8b80fdc1ba8b756f64d81">dds::DirMultiDistribution</a>
@@ -410,7 +436,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:56 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:46 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.8"/>
-<title>BBRL: src/Utils/src/utils.h Source File</title>
+<title>BBRL: BBRL/src/Utils/src/utils.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -81,7 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a7363e98f9e0bdd87618633653859815.html">Utils</a></li><li class="navelem"><a class="el" href="dir_65b6e2cc4c716fc2d69f09a6e967d39f.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_eebd413aba481f6bdf5121db56f8b303.html">BBRL</a></li><li class="navelem"><a class="el" href="dir_e151126abea95c8497066fc70e48f920.html">src</a></li><li class="navelem"><a class="el" href="dir_11a575384893eceac9611e4f562b469d.html">Utils</a></li><li class="navelem"><a class="el" href="dir_5070780e55a2c2ebb57865afc072d216.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -128,8 +128,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        </div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">class </span><a class="code" href="classutils_1_1algorithm_1_1_u_c_t.html">UCT</a>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }   </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
 <div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="namespaceutils_1_1statistics.html">   86</a></span>&#160;    <span class="keyword">namespace </span>statistics</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
@@ -286,7 +286,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;                                        <span class="keywordflow">throw</span> (std::runtime_error);</div>
 <div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;        </div>
 <div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;        </div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        std::string <a class="code" href="namespaceutils_1_1compression.html#aab7d85d6f6b1e19beac7125151749b1d">uncompressStr</a>(<span class="keyword">const</span> std::string&amp; str)</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        std::string <a class="code" href="namespaceutils_1_1compression.html#a6d3d068888242e7e3092bb172672e7aa">decompressStr</a>(<span class="keyword">const</span> std::string&amp; str)</div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;                                        <span class="keywordflow">throw</span> (std::runtime_error);</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    }</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    </div>
@@ -720,9 +720,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l01051"></a><span class="lineno"> 1051</span>&#160;                              </div>
 <div class="line"><a name="l01052"></a><span class="lineno"> 1052</span>&#160;                              <span class="comment">//   Check all edges</span></div>
 <div class="line"><a name="l01053"></a><span class="lineno"> 1053</span>&#160;                              std::vector&lt;std::pair&lt;int, int&gt; &gt; commonEdges;</div>
-<div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160;                              <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; size(); ++i)</div>
+<div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160;                              <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int) size(); ++i)</div>
 <div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160;                              {</div>
-<div class="line"><a name="l01056"></a><span class="lineno"> 1056</span>&#160;                                   <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; path.size(); ++j)</div>
+<div class="line"><a name="l01056"></a><span class="lineno"> 1056</span>&#160;                                   <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; (int) path.size(); ++j)</div>
 <div class="line"><a name="l01057"></a><span class="lineno"> 1057</span>&#160;                                   {</div>
 <div class="line"><a name="l01058"></a><span class="lineno"> 1058</span>&#160;                                        <span class="keywordflow">if</span> (<span class="keyword">get</span>(i) == path.get(j))</div>
 <div class="line"><a name="l01059"></a><span class="lineno"> 1059</span>&#160;                                        {</div>
@@ -800,7 +800,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l01131"></a><span class="lineno"> 1131</span>&#160;                              <span class="keywordflow">if</span> (extLoop.empty() || !extLoop.isLoop())</div>
 <div class="line"><a name="l01132"></a><span class="lineno"> 1132</span>&#160;                                   <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01133"></a><span class="lineno"> 1133</span>&#160;</div>
-<div class="line"><a name="l01134"></a><span class="lineno"> 1134</span>&#160;                              <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; intLoops.size(); ++i)</div>
+<div class="line"><a name="l01134"></a><span class="lineno"> 1134</span>&#160;                              <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int) intLoops.size(); ++i)</div>
 <div class="line"><a name="l01135"></a><span class="lineno"> 1135</span>&#160;                              {</div>
 <div class="line"><a name="l01136"></a><span class="lineno"> 1136</span>&#160;                                   <span class="keyword">const</span> <a class="code" href="classutils_1_1gnuplot_1_1details_1_1_path.html">Path</a>&amp; cur = intLoops[i];</div>
 <div class="line"><a name="l01137"></a><span class="lineno"> 1137</span>&#160;                                   <span class="keywordflow">if</span> (cur.empty() || !cur.isLoop())</div>
@@ -835,7 +835,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l01166"></a><span class="lineno"> 1166</span>&#160;                         <span class="comment">//   internal</span></div>
 <div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160;                         <span class="keywordtype">bool</span> setIntLoops(std::vector&lt;Path&gt; nIntLoops)</div>
 <div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160;                         {</div>
-<div class="line"><a name="l01169"></a><span class="lineno"> 1169</span>&#160;                              <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; nIntLoops.size(); ++i)</div>
+<div class="line"><a name="l01169"></a><span class="lineno"> 1169</span>&#160;                              <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int) nIntLoops.size(); ++i)</div>
 <div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;                              {</div>
 <div class="line"><a name="l01171"></a><span class="lineno"> 1171</span>&#160;                                   <a class="code" href="classutils_1_1gnuplot_1_1details_1_1_path.html">Path</a>&amp; cur = nIntLoops[i];</div>
 <div class="line"><a name="l01172"></a><span class="lineno"> 1172</span>&#160;                                   <span class="keywordflow">if</span> (cur.empty() || !cur.isLoop())</div>
@@ -1166,6 +1166,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l01656"></a><span class="lineno"> 1656</span>&#160;</div>
 <div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;</div>
 <div class="line"><a name="l01658"></a><span class="lineno"> 1658</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="namespaceutils_1_1compression_html_a6d3d068888242e7e3092bb172672e7aa"><div class="ttname"><a href="namespaceutils_1_1compression.html#a6d3d068888242e7e3092bb172672e7aa">utils::compression::decompressStr</a></div><div class="ttdeci">std::string decompressStr(const std::string &amp;str)</div><div class="ttdoc">Decompress an STL string using zlib and return the original data. </div><div class="ttdef"><b>Definition:</b> utils.cpp:180</div></div>
 <div class="ttc" id="classutils_1_1formula_1_1_formula_html"><div class="ttname"><a href="classutils_1_1formula_1_1_formula.html">utils::formula::Formula</a></div><div class="ttdoc">Defines a Formula through a set of tokens, interpreted in RPN notation. </div><div class="ttdef"><b>Definition:</b> Formula.h:27</div></div>
 <div class="ttc" id="classutils_1_1latex_1_1_number_interval_cell_html_a5d68c05c184c3974f9cd804d8558abca"><div class="ttname"><a href="classutils_1_1latex_1_1_number_interval_cell.html#a5d68c05c184c3974f9cd804d8558abca">utils::latex::NumberIntervalCell::NumberIntervalCell</a></div><div class="ttdeci">NumberIntervalCell(double lowerBound_, double upperBound_)</div><div class="ttdoc">Constructor. </div><div class="ttdef"><b>Definition:</b> utils.h:1482</div></div>
 <div class="ttc" id="classutils_1_1algorithm_1_1_u_c_t_html"><div class="ttname"><a href="classutils_1_1algorithm_1_1_u_c_t.html">utils::algorithm::UCT</a></div><div class="ttdoc">An interface to specialize for UCT. </div><div class="ttdef"><b>Definition:</b> UCT.h:20</div></div>
@@ -1202,7 +1203,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="classutils_1_1algorithm_1_1_u_c_b1_html"><div class="ttname"><a href="classutils_1_1algorithm_1_1_u_c_b1.html">utils::algorithm::UCB1</a></div><div class="ttdoc">An interface to specialize for UCB1. </div><div class="ttdef"><b>Definition:</b> UCB1.h:20</div></div>
 <div class="ttc" id="namespaceutils_1_1statistics_html_add25e81c63cb8d023c7829663aab63b6"><div class="ttname"><a href="namespaceutils_1_1statistics.html#add25e81c63cb8d023c7829663aab63b6">utils::statistics::getBilateralPairedZThreshold95</a></div><div class="ttdeci">double getBilateralPairedZThreshold95()</div><div class="ttdoc">Return the threshold value of &#39;Z&#39; in the &#39;bilateral paired Z-test&#39; with 95% confidence. </div><div class="ttdef"><b>Definition:</b> utils.cpp:126</div></div>
 <div class="ttc" id="namespaceutils_1_1statistics_html_afe00c18a17993dd3fea6326ef2d4566c"><div class="ttname"><a href="namespaceutils_1_1statistics.html#afe00c18a17993dd3fea6326ef2d4566c">utils::statistics::computeCI68</a></div><div class="ttdeci">std::pair&lt; double, double &gt; computeCI68(double mean, double stDev, const std::vector&lt; T &gt; &amp;data)</div><div class="ttdoc">Compute the confidence interval of the mean of &#39;data&#39; with 68% confidence. </div></div>
-<div class="ttc" id="namespaceutils_1_1compression_html_aab7d85d6f6b1e19beac7125151749b1d"><div class="ttname"><a href="namespaceutils_1_1compression.html#aab7d85d6f6b1e19beac7125151749b1d">utils::compression::uncompressStr</a></div><div class="ttdeci">std::string uncompressStr(const std::string &amp;str)</div><div class="ttdoc">Decompress an STL string using zlib and return the original data. </div><div class="ttdef"><b>Definition:</b> utils.cpp:180</div></div>
 <div class="ttc" id="classutils_1_1gnuplot_1_1_gnuplot_options_html_a40884e13d9269d7e6c9f87ab772a1c03"><div class="ttname"><a href="classutils_1_1gnuplot_1_1_gnuplot_options.html#a40884e13d9269d7e6c9f87ab772a1c03">utils::gnuplot::GnuplotOptions::setWith</a></div><div class="ttdeci">void setWith(std::string value)</div><div class="ttdoc">When plotting a curve with &#39;plot()&#39;, add the following sequence to each curve: &#39;... with [value]&#39;. </div><div class="ttdef"><b>Definition:</b> utils.h:778</div></div>
 <div class="ttc" id="namespaceutils_1_1gnuplot_html_a7dd3fd51b029d971da6ed2a7ceea3a38"><div class="ttname"><a href="namespaceutils_1_1gnuplot.html#a7dd3fd51b029d971da6ed2a7ceea3a38">utils::gnuplot::plot</a></div><div class="ttdeci">void plot(GnuplotOptions opt, std::vector&lt; std::vector&lt; std::pair&lt; double, double &gt; &gt; &gt; data, const std::vector&lt; std::string &gt; &amp;titles, std::vector&lt; std::vector&lt; std::pair&lt; double, double &gt; &gt; &gt; bounds=std::vector&lt; std::vector&lt; std::pair&lt; double, double &gt; &gt; &gt;())</div><div class="ttdoc">Plot the data on a 2D graph. </div></div>
 <div class="ttc" id="classutils_1_1latex_1_1_number_cell_html_acb59acb011eb0005ef880928c634dd7c"><div class="ttname"><a href="classutils_1_1latex_1_1_number_cell.html#acb59acb011eb0005ef880928c634dd7c">utils::latex::NumberCell::getStr</a></div><div class="ttdeci">std::string getStr() const </div><div class="ttdoc">Return a string representing the content of this Cell, formatted for latex output. </div><div class="ttdef"><b>Definition:</b> utils.h:1438</div></div>
@@ -1212,7 +1212,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="classutils_1_1latex_1_1_number_cell_html"><div class="ttname"><a href="classutils_1_1latex_1_1_number_cell.html">utils::latex::NumberCell</a></div><div class="ttdoc">Represent a latex table cell containing a number. </div><div class="ttdef"><b>Definition:</b> utils.h:1414</div></div>
 <div class="ttc" id="classutils_1_1formula_1_1_opp_op_html"><div class="ttname"><a href="classutils_1_1formula_1_1_opp_op.html">utils::formula::OppOp</a></div><div class="ttdoc">A Token representing an operator (opposite). </div><div class="ttdef"><b>Definition:</b> Operators.h:63</div></div>
 <div class="ttc" id="classutils_1_1formula_1_1_variable_html"><div class="ttname"><a href="classutils_1_1formula_1_1_variable.html">utils::formula::Variable</a></div><div class="ttdoc">A Token representing a variable value. </div><div class="ttdef"><b>Definition:</b> Variable.h:20</div></div>
-<div class="ttc" id="namespaceutils_1_1latex_html_a3ab9ea52f1e09e537f7b549ac2da300c"><div class="ttname"><a href="namespaceutils_1_1latex.html#a3ab9ea52f1e09e537f7b549ac2da300c">utils::latex::table</a></div><div class="ttdeci">void table(const std::vector&lt; std::vector&lt; Cell * &gt; &gt; &amp;grid, std::string outputFile, std::vector&lt; unsigned int &gt; hLines=std::vector&lt; unsigned int &gt;(), std::vector&lt; unsigned int &gt; vLines=std::vector&lt; unsigned int &gt;(), std::vector&lt; double &gt; columnWidth=std::vector&lt; double &gt;())</div><div class="ttdoc">Create a latex table in &#39;outputFile&#39;. </div><div class="ttdef"><b>Definition:</b> utils.cpp:1346</div></div>
+<div class="ttc" id="namespaceutils_1_1latex_html_a3ab9ea52f1e09e537f7b549ac2da300c"><div class="ttname"><a href="namespaceutils_1_1latex.html#a3ab9ea52f1e09e537f7b549ac2da300c">utils::latex::table</a></div><div class="ttdeci">void table(const std::vector&lt; std::vector&lt; Cell * &gt; &gt; &amp;grid, std::string outputFile, std::vector&lt; unsigned int &gt; hLines=std::vector&lt; unsigned int &gt;(), std::vector&lt; unsigned int &gt; vLines=std::vector&lt; unsigned int &gt;(), std::vector&lt; double &gt; columnWidth=std::vector&lt; double &gt;())</div><div class="ttdoc">Create a latex table in &#39;outputFile&#39;. </div><div class="ttdef"><b>Definition:</b> utils.cpp:1348</div></div>
 <div class="ttc" id="classutils_1_1latex_1_1_time_cell_html"><div class="ttname"><a href="classutils_1_1latex_1_1_time_cell.html">utils::latex::TimeCell</a></div><div class="ttdoc">Represent a latex table cell containing a time value. </div><div class="ttdef"><b>Definition:</b> utils.h:1536</div></div>
 <div class="ttc" id="classutils_1_1latex_1_1_str_cell_html_ab96c36a34978f83473437404b775efef"><div class="ttname"><a href="classutils_1_1latex_1_1_str_cell.html#ab96c36a34978f83473437404b775efef">utils::latex::StrCell::StrCell</a></div><div class="ttdeci">StrCell(std::string str_)</div><div class="ttdoc">Constructor. </div><div class="ttdef"><b>Definition:</b> utils.h:1379</div></div>
 <div class="ttc" id="classutils_1_1latex_1_1_number_interval_cell_html"><div class="ttname"><a href="classutils_1_1latex_1_1_number_interval_cell.html">utils::latex::NumberIntervalCell</a></div><div class="ttdoc">Represent a latex table cell containing a bounded number. </div><div class="ttdef"><b>Definition:</b> utils.h:1468</div></div>
@@ -1248,7 +1248,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

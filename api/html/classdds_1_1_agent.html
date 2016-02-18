@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -113,15 +113,17 @@ Inheritance diagram for dds::Agent:</div>
 <area href="classdds_1_1_b_a_m_c_p_agent.html" title="A RL Agent following a BAMCP policy. " alt="dds::BAMCPAgent" shape="rect" coords="165,168,320,192"/>
 <area href="classdds_1_1_b_e_b_agent.html" title="A RL Agent following a BEB policy. " alt="dds::BEBAgent" shape="rect" coords="165,224,320,248"/>
 <area href="classdds_1_1_b_f_s3_agent.html" title="A RL Agent following a BFS3 policy. " alt="dds::BFS3Agent" shape="rect" coords="165,280,320,304"/>
-<area href="classdds_1_1_e_greedy_agent.html" title="A RL Agent following an e-greedy policy. " alt="dds::EGreedyAgent" shape="rect" coords="165,336,320,360"/>
-<area href="classdds_1_1_formula_agent.html" title="A RL Agent following a policy parametrized by a formula. " alt="dds::FormulaAgent" shape="rect" coords="165,392,320,416"/>
-<area href="classdds_1_1_o_p_p_s_c_s_agent.html" title="A RL agent which applies the OPPS meta-learning algorithm during its offline phase (continuous case)..." alt="dds::OPPSCSAgent" shape="rect" coords="165,448,320,472"/>
-<area href="classdds_1_1_o_p_p_s_d_s_agent.html" title="A RL agent which applies the OPPS meta-learning algorithm during its offline phase (discrete case)..." alt="dds::OPPSDSAgent" shape="rect" coords="165,504,320,528"/>
-<area href="classdds_1_1_optimal_agent.html" title="A RL agent taking optimal decisions. " alt="dds::OptimalAgent" shape="rect" coords="165,560,320,584"/>
-<area href="classdds_1_1_random_agent.html" title="A RL agent taking random decisions. " alt="dds::RandomAgent" shape="rect" coords="165,616,320,640"/>
-<area href="classdds_1_1_s_b_o_s_s_agent.html" title="A RL Agent following a SBOSS policy. " alt="dds::SBOSSAgent" shape="rect" coords="165,672,320,696"/>
-<area href="classdds_1_1_soft_max_agent.html" title="A RL Agent following a soft-max policy. " alt="dds::SoftMaxAgent" shape="rect" coords="165,728,320,752"/>
-<area href="classdds_1_1_v_d_b_e_e_greedy_agent.html" title="A RL Agent following an vdbe e-greedy policy. " alt="dds::VDBEEGreedyAgent" shape="rect" coords="165,784,320,808"/>
+<area href="classdds_1_1_e_agent.html" alt="dds::EAgent" shape="rect" coords="165,336,320,360"/>
+<area href="classdds_1_1_e_greedy_agent.html" title="A RL Agent following an e-greedy policy. " alt="dds::EGreedyAgent" shape="rect" coords="165,392,320,416"/>
+<area href="classdds_1_1_formula_agent.html" title="A RL Agent following a policy parametrized by a formula. " alt="dds::FormulaAgent" shape="rect" coords="165,448,320,472"/>
+<area href="classdds_1_1_o_p_p_s_c_s_agent.html" title="A RL agent which applies the OPPS meta-learning algorithm during its offline phase (continuous case)..." alt="dds::OPPSCSAgent" shape="rect" coords="165,504,320,528"/>
+<area href="classdds_1_1_o_p_p_s_d_s_agent.html" title="A RL agent which applies the OPPS meta-learning algorithm during its offline phase (discrete case)..." alt="dds::OPPSDSAgent" shape="rect" coords="165,560,320,584"/>
+<area href="classdds_1_1_optimal_agent.html" title="A RL agent taking optimal decisions. " alt="dds::OptimalAgent" shape="rect" coords="165,616,320,640"/>
+<area href="classdds_1_1_random_agent.html" title="A RL agent taking random decisions. " alt="dds::RandomAgent" shape="rect" coords="165,672,320,696"/>
+<area href="classdds_1_1_s_b_o_s_s_agent.html" title="A RL Agent following a SBOSS policy. " alt="dds::SBOSSAgent" shape="rect" coords="165,728,320,752"/>
+<area href="classdds_1_1_s_l_agent.html" title="A RL agent copying another agent using a supervised learning algorithm. " alt="dds::SLAgent" shape="rect" coords="165,784,320,808"/>
+<area href="classdds_1_1_soft_max_agent.html" title="A RL Agent following a soft-max policy. " alt="dds::SoftMaxAgent" shape="rect" coords="165,840,320,864"/>
+<area href="classdds_1_1_v_d_b_e_e_greedy_agent.html" title="A RL Agent following an vdbe e-greedy policy. " alt="dds::VDBEEGreedyAgent" shape="rect" coords="165,896,320,920"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -211,9 +213,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ae2ab961be2b2ebdbb8d914ca86eb58a3"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent.html#ae2ab961be2b2ebdbb8d914ca86eb58a3">toString</a> ()</td></tr>
 <tr class="memdesc:ae2ab961be2b2ebdbb8d914ca86eb58a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the string representation of this class name.  <a href="#ae2ab961be2b2ebdbb8d914ca86eb58a3">More...</a><br /></td></tr>
 <tr class="separator:ae2ab961be2b2ebdbb8d914ca86eb58a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebf0f147a3c45c1af695f78acab04f16"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classdds_1_1_agent.html">Agent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent.html#aebf0f147a3c45c1af695f78acab04f16">parse</a> (int argc, char *argv[])  throw (utils::parsing::ParsingException)</td></tr>
-<tr class="memdesc:aebf0f147a3c45c1af695f78acab04f16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the standard program options in order to to instanciate an <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a>.  <a href="#aebf0f147a3c45c1af695f78acab04f16">More...</a><br /></td></tr>
-<tr class="separator:aebf0f147a3c45c1af695f78acab04f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c0bd213303e42de521399c7cc6433cb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classdds_1_1_agent.html">Agent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent.html#a3c0bd213303e42de521399c7cc6433cb">parse</a> (int argc, char *argv[], bool fromFile=true, bool fromParameters=true)  throw (utils::parsing::ParsingException)</td></tr>
+<tr class="memdesc:a3c0bd213303e42de521399c7cc6433cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the standard program options in order to to instanciate an <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a>.  <a href="#a3c0bd213303e42de521399c7cc6433cb">More...</a><br /></td></tr>
+<tr class="separator:a3c0bd213303e42de521399c7cc6433cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_class_i_agent"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_class_i_agent')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="class_i_agent.html">IAgent</a></td></tr>
 <tr class="memitem:a07e863e7a8af2e837d0d4c83d15ca0df inherit pub_static_methods_class_i_agent"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_agent.html#a07e863e7a8af2e837d0d4c83d15ca0df">toString</a> ()</td></tr>
 <tr class="memdesc:a07e863e7a8af2e837d0d4c83d15ca0df inherit pub_static_methods_class_i_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the string representation of this class name.  <a href="#a07e863e7a8af2e837d0d4c83d15ca0df">More...</a><br /></td></tr>
@@ -322,7 +324,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Return a clone of this <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>A clone of this <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a>. </dd></dl>
 
-<p>Implemented in <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#af5d6e9c900018324008d556fdb6fdd3d">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#acb12e84384bbd1605a02c6ffe5f0b47a">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#a2570f09e03412b267e5411ed1856260d">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#ac67a2962f5967d28c46d6d5345d6657e">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#a59e4937d6faf682cf10b5786abc8b522">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a79dc3b6dde06f76d75b8fc04435ee3be">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#ab496ad1f570da8fd268a9028cf89cf7d">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a820af9b776fafc4f31625eec99c26ee1">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a4093970a196031ea5fc432488b2a84f8">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#a16eccc9dba363325081041f1108048b0">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#a63642f68cae311f60ca7a00f8f834185">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#a61f710b21b80063ae02f9b0542438434">dds::RandomAgent</a>.</p>
+<p>Implemented in <a class="el" href="classdds_1_1_s_l_agent.html#a49b00ab79ac7e7c4197b81a5d1b6d7ae">dds::SLAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#af5d6e9c900018324008d556fdb6fdd3d">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#acb12e84384bbd1605a02c6ffe5f0b47a">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#a2570f09e03412b267e5411ed1856260d">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#ac67a2962f5967d28c46d6d5345d6657e">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#a59e4937d6faf682cf10b5786abc8b522">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a79dc3b6dde06f76d75b8fc04435ee3be">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#ab496ad1f570da8fd268a9028cf89cf7d">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a820af9b776fafc4f31625eec99c26ee1">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a4093970a196031ea5fc432488b2a84f8">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#a16eccc9dba363325081041f1108048b0">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_e_agent.html#ad80f6553ed13d272f2e7734288bd0454">dds::EAgent</a>, <a class="el" href="classdds_1_1_a_n_n_agent.html#a2e8451df7c4a0cb5ec190b63fcfeb87f">dds::ANNAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#a63642f68cae311f60ca7a00f8f834185">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#a61f710b21b80063ae02f9b0542438434">dds::RandomAgent</a>.</p>
 
 </div>
 </div>
@@ -363,7 +365,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The action to perform. </dd></dl>
 
-<p>Implemented in <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#aa385df4cb1049400be9b08da1ea8341c">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#ae32037f8422cf567c1bab91654b60bc7">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#a787191df28e6fb6dd74588ab43f95c6f">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a97cd1e6d7fc23a632a0684cda5084ea3">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#aff7dbb9c4f2870ba602138fa885f89b0">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a054858eb57b01981b8f173d08c5bd248">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#aa5b252fc4d4ec4eae42b1d73c8e4be41">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#af6295d416c5250b1e4a3dbd756ffd407">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a8be27ead3e39121d4a12bc592cd8a8c4">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#ac395aea08358bd7d5dbd60ba295e06d5">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#a86367880012418a3b2abf2ef2bf839e2">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#aa607b21e822f54a6159298c61308a817">dds::RandomAgent</a>.</p>
+<p>Implemented in <a class="el" href="classdds_1_1_s_l_agent.html#a9e1b871e47e9f3e5d9d8ccc937812649">dds::SLAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#aa385df4cb1049400be9b08da1ea8341c">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#ae32037f8422cf567c1bab91654b60bc7">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#a787191df28e6fb6dd74588ab43f95c6f">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a97cd1e6d7fc23a632a0684cda5084ea3">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#aff7dbb9c4f2870ba602138fa885f89b0">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a054858eb57b01981b8f173d08c5bd248">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#aa5b252fc4d4ec4eae42b1d73c8e4be41">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#af6295d416c5250b1e4a3dbd756ffd407">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a8be27ead3e39121d4a12bc592cd8a8c4">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#ac395aea08358bd7d5dbd60ba295e06d5">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_e_agent.html#a65ed4289e1a91efb9b4bc16e9622d379">dds::EAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#a86367880012418a3b2abf2ef2bf839e2">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#aa607b21e822f54a6159298c61308a817">dds::RandomAgent</a>.</p>
 
 </div>
 </div>
@@ -393,7 +395,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_i_agent.html#a67d379cfa53cfa36c998f224204f0509">IAgent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#ac3419e18ee3344a6dad1961b90c372bb">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#accc095e372cffd83315328f01bf18edf">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#afa7a270aedc5a3ca61774aebd1b825bc">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a5540049dfa9dbeaa98eee444f7f3a9a4">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#ae3f3b43acc92dc07cf5f3b3f0d3919eb">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a103b8a8c5b388480cf5f97e5b2c96808">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#a0ab934ba07229fcd35e3a5f2325f3827">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a4187b30dc0d8466f80e7624180e7b89b">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a56ecb472599c3e2fcdac23f5e7d704db">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#acba4b638f358366a129285b56f55c4fb">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#aef2d0ce998eeae20d8ac1e73b5b335d5">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#a0507d0b215f96333f0de0ee6f9bd7ab0">dds::RandomAgent</a>.</p>
+<p>Reimplemented in <a class="el" href="classdds_1_1_s_l_agent.html#a6af0ae4862d1b07187e59986d625d7de">dds::SLAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#ac3419e18ee3344a6dad1961b90c372bb">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#accc095e372cffd83315328f01bf18edf">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#afa7a270aedc5a3ca61774aebd1b825bc">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a5540049dfa9dbeaa98eee444f7f3a9a4">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#ae3f3b43acc92dc07cf5f3b3f0d3919eb">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a103b8a8c5b388480cf5f97e5b2c96808">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#a0ab934ba07229fcd35e3a5f2325f3827">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a4187b30dc0d8466f80e7624180e7b89b">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a56ecb472599c3e2fcdac23f5e7d704db">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#acba4b638f358366a129285b56f55c4fb">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_e_agent.html#a8ecf8fc2fb9012527fa1c99403bd8e28">dds::EAgent</a>, <a class="el" href="classdds_1_1_a_n_n_agent.html#ae9d56aa5a1bfaa98349ea17ae0dd1f7f">dds::ANNAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#aef2d0ce998eeae20d8ac1e73b5b335d5">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#a0507d0b215f96333f0de0ee6f9bd7ab0">dds::RandomAgent</a>.</p>
 
 </div>
 </div>
@@ -674,11 +676,11 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#aa47fdab33f745bb04dbb4d0db351d34a">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#a157050019a6bc1d52df6d3867da65326">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#a94699143a08fd813364b7bacfd8b25b3">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a550c6b0be3a8b30c0f5ae6378662f387">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#a0b6220f744485e8e016b99eaf834afda">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#ab04167d69baac4eebba0bee194cdfbb7">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#a6d8555f7e92dc64642d1be527013fb49">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a4326db95b19adb01a374c23cbbb96181">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#aabcf876cd53773011076e3bdc58ce726">dds::SBOSSAgent</a>, and <a class="el" href="classdds_1_1_b_e_b_agent.html#a6ef53ff6137b38160e4929a6256cf342">dds::BEBAgent</a>.</p>
+<p>Reimplemented in <a class="el" href="classdds_1_1_s_l_agent.html#a09f2e165852b3a745d097454fa1ebade">dds::SLAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#aa47fdab33f745bb04dbb4d0db351d34a">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#a157050019a6bc1d52df6d3867da65326">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#a94699143a08fd813364b7bacfd8b25b3">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a550c6b0be3a8b30c0f5ae6378662f387">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#a0b6220f744485e8e016b99eaf834afda">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#ab04167d69baac4eebba0bee194cdfbb7">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#a6d8555f7e92dc64642d1be527013fb49">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a4326db95b19adb01a374c23cbbb96181">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#aabcf876cd53773011076e3bdc58ce726">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#a6ef53ff6137b38160e4929a6256cf342">dds::BEBAgent</a>, and <a class="el" href="classdds_1_1_e_agent.html#ad5dbbbbd2ed44fcbbabc9373e8bafce4">dds::EAgent</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aebf0f147a3c45c1af695f78acab04f16"></a>
+<a class="anchor" id="a3c0bd213303e42de521399c7cc6433cb"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -695,7 +697,19 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>argv</em>[]&#160;</td>
+          <td class="paramname"><em>argv</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>fromFile</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>fromParameters</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -717,7 +731,14 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parse the standard program options in order to to instanciate an <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> found (0 if it fails). </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fromFile</td><td>True if the Agents can be loaded from a file, false else. </td></tr>
+    <tr><td class="paramname">fromParameters</td><td>True if the Agents can be created from parameters, false else.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> found. </dd></dl>
 
 </div>
 </div>
@@ -761,8 +782,8 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mdp_</td><td>A <a class="el" href="classdds_1_1_m_d_p.html" title="Represent a MDP problem. ">MDP</a>. </td></tr>
-    <tr><td class="paramname">gamma</td><td>The discount factor. </td></tr>
-    <tr><td class="paramname">T</td><td>The horizon limit. </td></tr>
+    <tr><td class="paramname">gamma_</td><td>The discount factor. </td></tr>
+    <tr><td class="paramname">T_</td><td>The horizon limit. </td></tr>
   </table>
   </dd>
 </dl>
@@ -796,13 +817,13 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/DDS/src/Agent/<a class="el" href="_agent_8h_source.html">Agent.h</a></li>
-<li>src/DDS/src/Agent/Agent.cpp</li>
+<li>BBRL/src/DDS/src/Agent/<a class="el" href="_agent_8h_source.html">Agent.h</a></li>
+<li>BBRL/src/DDS/src/Agent/Agent.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

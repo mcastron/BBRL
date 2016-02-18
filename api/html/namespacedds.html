@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -115,6 +115,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_agent_factory_exception.html">AgentFactoryException</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception.  <a href="classdds_1_1_agent_factory_exception.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_a_n_n_agent.html">ANNAgent</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A RL agent based on a DNN trained during the offline phase.  <a href="classdds_1_1_a_n_n_agent.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_a_n_n_agent_factory.html">ANNAgentFactory</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a> which generates <a class="el" href="classdds_1_1_a_n_n_agent.html" title="A RL agent based on a DNN trained during the offline phase. ">ANNAgent</a>'s. (i) The <a class="el" href="classdds_1_1_a_n_n_agent_factory.html" title="An AgentFactory which generates ANNAgent&#39;s. (i) The ANNAgentFactory use another AgentFactory for gene...">ANNAgentFactory</a> use another <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a> for generating the <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> corresponding to the given parameters. (ii) The generated <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> is copied by a <a class="el" href="classdds_1_1_a_n_n_agent.html" title="A RL agent based on a DNN trained during the offline phase. ">ANNAgent</a>, and the <a class="el" href="classdds_1_1_a_n_n_agent.html" title="A RL agent based on a DNN trained during the offline phase. ">ANNAgent</a> is returned.  <a href="classdds_1_1_a_n_n_agent_factory.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_b_a_m_c_p_agent.html">BAMCPAgent</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A RL <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> following a BAMCP policy.  <a href="classdds_1_1_b_a_m_c_p_agent.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,6 +135,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_dir_multi_distribution.html">DirMultiDistribution</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A <a class="el" href="classdds_1_1_m_d_p.html" title="Represent a MDP problem. ">MDP</a> distribution represented by a Dirichlet Multinomial distribution.  <a href="classdds_1_1_dir_multi_distribution.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_e_agent.html">EAgent</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_e_greedy_agent.html">EGreedyAgent</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A RL <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> following an e-greedy policy.  <a href="classdds_1_1_e_greedy_agent.html#details">More...</a><br /></td></tr>
@@ -196,6 +204,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_s_b_o_s_s_agent.html">SBOSSAgent</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A RL <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> following a SBOSS policy.  <a href="classdds_1_1_s_b_o_s_s_agent.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_s_l_agent.html">SLAgent</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A RL agent copying another agent using a supervised learning algorithm.  <a href="classdds_1_1_s_l_agent.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_s_l_agent_factory.html">SLAgentFactory</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a> which generates <a class="el" href="classdds_1_1_s_l_agent.html" title="A RL agent copying another agent using a supervised learning algorithm. ">SLAgent</a>'s. (i) The <a class="el" href="classdds_1_1_s_l_agent_factory.html" title="An AgentFactory which generates SLAgent&#39;s. (i) The SLAgentFactory use another AgentFactory for genera...">SLAgentFactory</a> use another <a class="el" href="classdds_1_1_agent_factory.html" title="Interface of an AgentFactory to generate RL Agents. ">AgentFactory</a> for generating the <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> corresponding to the given parameters. (ii) The generated <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> is copied by a <a class="el" href="classdds_1_1_s_l_agent.html" title="A RL agent copying another agent using a supervised learning algorithm. ">SLAgent</a>, and the <a class="el" href="classdds_1_1_s_l_agent.html" title="A RL agent copying another agent using a supervised learning algorithm. ">SLAgent</a> is returned.  <a href="classdds_1_1_s_l_agent_factory.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdds_1_1_soft_max_agent.html">SoftMaxAgent</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A RL <a class="el" href="classdds_1_1_agent.html" title="Interface of an RL agent to address MDPs. ">Agent</a> following a soft-max policy.  <a href="classdds_1_1_soft_max_agent.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,7 +245,7 @@ const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <dl class="section author"><dt>Author</dt><dd>Castronovo Michael <pre class="fragment">        This namespace gathers the Agents, MDPs, MDPDistributions
         and Experiments in this particular setting.
 </pre></dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2015-06-04 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2015-12-18 </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a08f0adc57a11c0e7026c173c17a3202a"></a>
 <div class="memitem">
@@ -260,7 +274,7 @@ const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

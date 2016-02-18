@@ -8,5 +8,7 @@ var searchData=
   ['agentexception',['AgentException',['../class_agent_exception.html',1,'']]],
   ['agentfactory',['AgentFactory',['../classdds_1_1_agent_factory.html',1,'dds']]],
   ['agentfactoryexception',['AgentFactoryException',['../classdds_1_1_agent_factory_exception.html',1,'dds']]],
+  ['annagent',['ANNAgent',['../classdds_1_1_a_n_n_agent.html',1,'dds']]],
+  ['annagentfactory',['ANNAgentFactory',['../classdds_1_1_a_n_n_agent_factory.html',1,'dds']]],
   ['avgop',['AvgOp',['../classutils_1_1formula_1_1_avg_op.html',1,'utils::formula']]]
 ];

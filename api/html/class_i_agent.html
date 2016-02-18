@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">BBRL
-   &#160;<span id="projectnumber">1.5</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">BBRL is a C++ library for reinforcement learning.</div>
   </td>
@@ -109,15 +109,17 @@ Inheritance diagram for IAgent:</div>
 <area href="classdds_1_1_b_a_m_c_p_agent.html" title="A RL Agent following a BAMCP policy. " alt="dds::BAMCPAgent" shape="rect" coords="165,168,320,192"/>
 <area href="classdds_1_1_b_e_b_agent.html" title="A RL Agent following a BEB policy. " alt="dds::BEBAgent" shape="rect" coords="165,224,320,248"/>
 <area href="classdds_1_1_b_f_s3_agent.html" title="A RL Agent following a BFS3 policy. " alt="dds::BFS3Agent" shape="rect" coords="165,280,320,304"/>
-<area href="classdds_1_1_e_greedy_agent.html" title="A RL Agent following an e-greedy policy. " alt="dds::EGreedyAgent" shape="rect" coords="165,336,320,360"/>
-<area href="classdds_1_1_formula_agent.html" title="A RL Agent following a policy parametrized by a formula. " alt="dds::FormulaAgent" shape="rect" coords="165,392,320,416"/>
-<area href="classdds_1_1_o_p_p_s_c_s_agent.html" title="A RL agent which applies the OPPS meta-learning algorithm during its offline phase (continuous case)..." alt="dds::OPPSCSAgent" shape="rect" coords="165,448,320,472"/>
-<area href="classdds_1_1_o_p_p_s_d_s_agent.html" title="A RL agent which applies the OPPS meta-learning algorithm during its offline phase (discrete case)..." alt="dds::OPPSDSAgent" shape="rect" coords="165,504,320,528"/>
-<area href="classdds_1_1_optimal_agent.html" title="A RL agent taking optimal decisions. " alt="dds::OptimalAgent" shape="rect" coords="165,560,320,584"/>
-<area href="classdds_1_1_random_agent.html" title="A RL agent taking random decisions. " alt="dds::RandomAgent" shape="rect" coords="165,616,320,640"/>
-<area href="classdds_1_1_s_b_o_s_s_agent.html" title="A RL Agent following a SBOSS policy. " alt="dds::SBOSSAgent" shape="rect" coords="165,672,320,696"/>
-<area href="classdds_1_1_soft_max_agent.html" title="A RL Agent following a soft-max policy. " alt="dds::SoftMaxAgent" shape="rect" coords="165,728,320,752"/>
-<area href="classdds_1_1_v_d_b_e_e_greedy_agent.html" title="A RL Agent following an vdbe e-greedy policy. " alt="dds::VDBEEGreedyAgent" shape="rect" coords="165,784,320,808"/>
+<area href="classdds_1_1_e_agent.html" alt="dds::EAgent" shape="rect" coords="165,336,320,360"/>
+<area href="classdds_1_1_e_greedy_agent.html" title="A RL Agent following an e-greedy policy. " alt="dds::EGreedyAgent" shape="rect" coords="165,392,320,416"/>
+<area href="classdds_1_1_formula_agent.html" title="A RL Agent following a policy parametrized by a formula. " alt="dds::FormulaAgent" shape="rect" coords="165,448,320,472"/>
+<area href="classdds_1_1_o_p_p_s_c_s_agent.html" title="A RL agent which applies the OPPS meta-learning algorithm during its offline phase (continuous case)..." alt="dds::OPPSCSAgent" shape="rect" coords="165,504,320,528"/>
+<area href="classdds_1_1_o_p_p_s_d_s_agent.html" title="A RL agent which applies the OPPS meta-learning algorithm during its offline phase (discrete case)..." alt="dds::OPPSDSAgent" shape="rect" coords="165,560,320,584"/>
+<area href="classdds_1_1_optimal_agent.html" title="A RL agent taking optimal decisions. " alt="dds::OptimalAgent" shape="rect" coords="165,616,320,640"/>
+<area href="classdds_1_1_random_agent.html" title="A RL agent taking random decisions. " alt="dds::RandomAgent" shape="rect" coords="165,672,320,696"/>
+<area href="classdds_1_1_s_b_o_s_s_agent.html" title="A RL Agent following a SBOSS policy. " alt="dds::SBOSSAgent" shape="rect" coords="165,728,320,752"/>
+<area href="classdds_1_1_s_l_agent.html" title="A RL agent copying another agent using a supervised learning algorithm. " alt="dds::SLAgent" shape="rect" coords="165,784,320,808"/>
+<area href="classdds_1_1_soft_max_agent.html" title="A RL Agent following a soft-max policy. " alt="dds::SoftMaxAgent" shape="rect" coords="165,840,320,864"/>
+<area href="classdds_1_1_v_d_b_e_e_greedy_agent.html" title="A RL Agent following an vdbe e-greedy policy. " alt="dds::VDBEEGreedyAgent" shape="rect" coords="165,896,320,920"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -273,7 +275,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_serializable.html#a999ec513a350a14a0b39640bca447662">Serializable</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#ac3419e18ee3344a6dad1961b90c372bb">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_agent.html#a4826add383609f4ac070237849226697">dds::Agent</a>, <a class="el" href="classdds_1_1_formula_agent.html#accc095e372cffd83315328f01bf18edf">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#afa7a270aedc5a3ca61774aebd1b825bc">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a5540049dfa9dbeaa98eee444f7f3a9a4">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#ae3f3b43acc92dc07cf5f3b3f0d3919eb">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a103b8a8c5b388480cf5f97e5b2c96808">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#a0ab934ba07229fcd35e3a5f2325f3827">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a4187b30dc0d8466f80e7624180e7b89b">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a56ecb472599c3e2fcdac23f5e7d704db">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#acba4b638f358366a129285b56f55c4fb">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#aef2d0ce998eeae20d8ac1e73b5b335d5">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#a0507d0b215f96333f0de0ee6f9bd7ab0">dds::RandomAgent</a>.</p>
+<p>Reimplemented in <a class="el" href="classdds_1_1_s_l_agent.html#a6af0ae4862d1b07187e59986d625d7de">dds::SLAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#ac3419e18ee3344a6dad1961b90c372bb">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_agent.html#a4826add383609f4ac070237849226697">dds::Agent</a>, <a class="el" href="classdds_1_1_formula_agent.html#accc095e372cffd83315328f01bf18edf">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#afa7a270aedc5a3ca61774aebd1b825bc">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a5540049dfa9dbeaa98eee444f7f3a9a4">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#ae3f3b43acc92dc07cf5f3b3f0d3919eb">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a103b8a8c5b388480cf5f97e5b2c96808">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#a0ab934ba07229fcd35e3a5f2325f3827">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#a4187b30dc0d8466f80e7624180e7b89b">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a56ecb472599c3e2fcdac23f5e7d704db">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#acba4b638f358366a129285b56f55c4fb">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_e_agent.html#a8ecf8fc2fb9012527fa1c99403bd8e28">dds::EAgent</a>, <a class="el" href="classdds_1_1_a_n_n_agent.html#ae9d56aa5a1bfaa98349ea17ae0dd1f7f">dds::ANNAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#aef2d0ce998eeae20d8ac1e73b5b335d5">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#a0507d0b215f96333f0de0ee6f9bd7ab0">dds::RandomAgent</a>.</p>
 
 </div>
 </div>
@@ -301,7 +303,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Return the name of the class of this object, formatted for export files. If not overloaded, has the same return as '<a class="el" href="class_i_agent.html#a67d379cfa53cfa36c998f224204f0509" title="Return the name of the class of this object. This method should be overloaded by any derived class...">getClassName()</a>'. </p>
 <dl class="section return"><dt>Returns</dt><dd>The name of the class of this object, formatted for export files. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#a07d78650aff29d506a1446c158ce0c6a">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#aafa3eb16dfbc9a54a37ecbdc455e6f03">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a0a2082d4d159028ac726fab93b22e004">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#a4b9bcadb0face54ba8952a00bd18d0e9">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#adcaeeda73166cfafe06a47e90bf21d75">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a2687869f1f01ffe990383adf8562d02f">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#a1cdb462df026193069ea845b46e581d4">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#adbf3caf4cc03f15a6b697792f00a46cc">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a771a0a8c5b93cc879a3d586a3375b1be">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#ac3af2632cad33e2f75f8a1348add0ef2">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#ac130e33bd251408a5621e5a7a42fd04d">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#aede561e82f06ed0ee49ea7fe74afb815">dds::RandomAgent</a>.</p>
+<p>Reimplemented in <a class="el" href="classdds_1_1_s_l_agent.html#a6b8cda72ddde9b3ee1e9d049c01a2ec3">dds::SLAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_c_s_agent.html#a07d78650aff29d506a1446c158ce0c6a">dds::OPPSCSAgent</a>, <a class="el" href="classdds_1_1_formula_agent.html#aafa3eb16dfbc9a54a37ecbdc455e6f03">dds::FormulaAgent</a>, <a class="el" href="classdds_1_1_v_d_b_e_e_greedy_agent.html#a0a2082d4d159028ac726fab93b22e004">dds::VDBEEGreedyAgent</a>, <a class="el" href="classdds_1_1_o_p_p_s_d_s_agent.html#a4b9bcadb0face54ba8952a00bd18d0e9">dds::OPPSDSAgent</a>, <a class="el" href="classdds_1_1_soft_max_agent.html#adcaeeda73166cfafe06a47e90bf21d75">dds::SoftMaxAgent</a>, <a class="el" href="classdds_1_1_e_greedy_agent.html#a2687869f1f01ffe990383adf8562d02f">dds::EGreedyAgent</a>, <a class="el" href="classdds_1_1_b_f_s3_agent.html#a1cdb462df026193069ea845b46e581d4">dds::BFS3Agent</a>, <a class="el" href="classdds_1_1_b_a_m_c_p_agent.html#adbf3caf4cc03f15a6b697792f00a46cc">dds::BAMCPAgent</a>, <a class="el" href="classdds_1_1_s_b_o_s_s_agent.html#a771a0a8c5b93cc879a3d586a3375b1be">dds::SBOSSAgent</a>, <a class="el" href="classdds_1_1_b_e_b_agent.html#ac3af2632cad33e2f75f8a1348add0ef2">dds::BEBAgent</a>, <a class="el" href="classdds_1_1_e_agent.html#aac71cfe32a874a936e41d3c09aae0e91">dds::EAgent</a>, <a class="el" href="classdds_1_1_a_n_n_agent.html#a86662be970c9ba51aba5f52d4bd9fde4">dds::ANNAgent</a>, <a class="el" href="classdds_1_1_optimal_agent.html#ac130e33bd251408a5621e5a7a42fd04d">dds::OptimalAgent</a>, and <a class="el" href="classdds_1_1_random_agent.html#aede561e82f06ed0ee49ea7fe74afb815">dds::RandomAgent</a>.</p>
 
 </div>
 </div>
@@ -416,13 +418,13 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/IAgent/src/<a class="el" href="_i_agent_8h_source.html">IAgent.h</a></li>
-<li>src/IAgent/src/IAgent.cpp</li>
+<li>BBRL/src/IAgent/src/<a class="el" href="_i_agent_8h_source.html">IAgent.h</a></li>
+<li>BBRL/src/IAgent/src/IAgent.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 27 2015 15:51:55 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 14:34:45 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
