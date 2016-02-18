@@ -19,7 +19,7 @@
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2015-01-14
+	\date 	2015-12-18
 */
 // ===========================================================================
 /* final */ class dds::Experiment :
@@ -101,6 +101,24 @@
 		*/
 		std::string getClassName() const { return Experiment::toString(); }
 
+
+          /**
+               \brief    Return the discount factor used during the
+                         simulations.
+
+               \return   The discount factor used during the simulations.
+		*/
+		double getSimGamma() const { return simGamma; }
+		
+		
+		/**
+               \brief    Return the horizon limit used during the
+                         simulations.
+
+               \return   The horizon limit used during the simulations.
+		*/
+		unsigned int getT() const { return T; }
+
 		
 		/**
 			\brief	Serialize this Object.
@@ -117,8 +135,7 @@
 					call the 'deserialize()' method of the base class
 					before doing anything else.
 		*/
-		void deserialize(std::istream& is)
-									throw (SerializableException);
+		void deserialize(std::istream& is) throw (SerializableException);
 
 
 	private:
@@ -160,15 +177,7 @@
 		{
 			return simulation::simulate(agent, mdp, simGamma, T, safeSim);
 		}
-		
-		
-		/**
-               \brief    Return the discount factor used during the
-                         simulations.
 
-               \return   The discount factor used during the simulations.
-		*/
-		double getSimGamma() const { return simGamma; }
 		
 		
 		#ifndef NDEBUG

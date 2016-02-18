@@ -14,7 +14,7 @@
 	
 	\brief 	Interface of an AgentFactory to generate RL Agents.
 
-	\date 	2015-02-26
+	\date 	2015-12-18
 */
 // ===========================================================================
 class dds::AgentFactory : public Serializable
@@ -41,12 +41,21 @@ class dds::AgentFactory : public Serializable
 
 
           /**
-		     \brief    Parse the standard program options in order to
-		               to instanciate an AgentFactory.
+		     \brief                   Parse the standard program options in
+		                              order to to instanciate an
+		                              AgentFactory.
+
+               \param[fromFile          True if the AgentFactories can be
+                                        loaded from a file, false else.
+               \param[fromParameters    True if the AgentFactories can be
+                                        created from parameters, false else.
 		     
-		     \return   The AgentFactory found (0 if it fails).
+		     \return                  The AgentFactory found.
 		*/
-		static AgentFactory* parse(int argc, char* argv[])
+		static AgentFactory* parse(
+		          int argc, char* argv[],
+                    bool fromFile = true,
+                    bool fromParameters = true)
                                    throw (utils::parsing::ParsingException);
 
 		
@@ -72,13 +81,13 @@ class dds::AgentFactory : public Serializable
 
 
 		/**
-			\brief			Return an agent parametrized by 'paramList'.
+			\brief			Return an agent parametrized by 'paraSList'.
 			
-			\param[paramList	The parameters to use.
+			\param[paraSList	The parameters to use.
 			
-			\return			An agent parametrized by 'paramList'.
+			\return			An agent parametrized by 'paraSList'.
 		*/
-		virtual Agent* get(const std::vector<double>& paramList) const
+		virtual Agent* get(const std::vector<double>& paraSList) const
 									throw (AgentFactoryException) = 0;
 
 

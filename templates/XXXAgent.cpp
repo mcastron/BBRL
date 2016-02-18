@@ -28,20 +28,20 @@ XXXAgent::~XXXAgent()
 // ===========================================================================
 //	Public methods
 // ===========================================================================
-int XXXAgent::getAction(int xt) const throw (MDPException)
+int XXXAgent::getAction(int xt) const throw (AgentException)
 {
 	/* TODO - to implement */
 }
 
 
 void XXXAgent::learnOnline(int x, int u, int y, double r)
-											throw (MDPException)
+                                                       throw (AgentException)
 {
 	/* TODO - to implement (if needed) */
 }
 
 
-void XXXAgent::reset() throw (MDPException)
+void XXXAgent::reset() throw (AgentException)
 {
 	/* TODO - to implement (if needed) */
 	

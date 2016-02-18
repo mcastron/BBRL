@@ -9,11 +9,11 @@ NAME
 USAGE OVERVIEW               
      --offline_learning
           [--seed <integer>]                                    
-          --agent <string>                                     
-               "agent class name"
-                    --agent_file <string>                      
+          --agent <string>
                RandomAgent
                OptimalAgent
+               EOptimalAgent
+                    --epsilon <double>
                EGreedyAgent
                     --epsilon <double>                         
                SoftMaxAgent
@@ -50,31 +50,31 @@ USAGE OVERVIEW
                     --K <integer>
                     [--k <integer> --h_max <integer> --delta <double>]
                     --agent_factory <string>                   
-                         EGreedyAgentFactory
-                              --epsilon <double> <double>        
-                         SoftMaxAgentFactory
-                              --tau <double> <double>
-                         VDBEEGreedyAgentFactory
-                              --sigma <double> <double>
-                              --delta <double> <double>
-                              --ini_epsilon <double> <double>
-                         FormulaAgentFactory
-                              --weights <double> <double>
-                              --variables <integer> <string> ... <string> 
+                         --agent_factory_file <string>
                     --discount_factor <double>                 
-                    --horizon_limit <integer>               
+                    --horizon_limit <integer>
+               ANNAgent
+                    --hidden_layers <integer> <integer> ... <integer>
+                    --learning_rate <double>
+                    [--decreasing_learning_rate]
+                    --max_epoch <integer>
+                    --epoch_range <integer>
+                    --base_agent <string> (...)
+                    --n_mdps <integer>
+                    --discount_factor <double>
+                    --horizon_limit <integer>
+                    --model_file <string>
           --mdp_distribution <string>                          
                "MDP distribution class name"
                     --mdp_distribution_file <string>           
           [--compress_output]
           --output <string>                                    
      
-     --new_experiment
-          [--seed <integer>]                                          
+     --new_experiment                                         
           --name <string>
           --mdp_distribution <string>                          
                "MDP distribution class name"
-                    --mdp_distribution_file <string>           
+                    --mdp_distribution_file <string>
           --n_mdps <integer>                                   
           --n_simulations_per_mdp <integer>                    
           --discount_factor <double>                           
@@ -87,28 +87,15 @@ USAGE OVERVIEW
      --run_experiment
           [--seed <integer>]                                          
           --experiment                                         
-               --experiment_file <string>                      
+               --experiment_file <string>
           --agent <string>                                     
                "agent class name"
-                    --agent_file <string>                     
-               RandomAgent
-               OptimalAgent
+                    --agent_file <string>
           --n_threads <integer>                                   
           [--compress_output]
           --output <string> 
           --refresh_frequency <integer>                          
           --backup_frequency <integer>                           
-
-     --formula_set_generation
-          [--seed <integer>]
-          --n_variables <integer>
-          --tokens <integer> <string> ... <string>
-          --max_size <integer>
-          [--reduce
-               --n_points <integer>
-               --points_range <double> <double>]
-          [--compress_output]
-          --output <string>
 
      --mdp_distrib_generation
           --name <string>
@@ -122,6 +109,58 @@ USAGE OVERVIEW
           [--reward_variances <double> ... <double>]
           --output <string>
 
+     --formula_set_generation
+          [--seed <integer>]
+          --n_variables <integer>
+          --tokens <integer> <string> ... <string>
+          --max_size <integer>
+          [--reduce
+               --n_points <integer>
+               --points_range <double> <double>]
+          [--compress_output]
+          --output <string>
+
+     --sl_samples_generation
+          [--seed <integer>]
+          [--agent <string>                                     
+               "agent class name"]
+          --n_mdps <integer>
+          --discount_factor <double>
+          --horizon_limit <integer>
+          --experiment                                         
+               --experiment_file <string>
+          --mdp_distribution <string>                          
+               "MDP distribution class name"
+                    --mdp_distribution_file <string>
+          --output <string>          
+
+     --new_agent_factory
+          --agent_factory <string>
+               EGreedyAgentFactory
+                    --epsilon <double> <double>
+               SoftMaxAgentFactory
+                    --tau <double> <double>
+               VDBEEGreedyAgentFactory
+                    --sigma <double> <double>
+                    --delta <double> <double>
+                    --ini_epsilon <double> <double>
+               FormulaAgentFactory
+                    --weights <double> <double>
+                    --variables <integer> <string> ... <string>
+               ANNAgentFactory
+                    --hidden_layers <integer> <integer> ... <integer>
+                    --learning_rate <double>
+                    [--decreasing_learning_rate]
+                    --max_epoch <integer>
+                    --epoch_range <integer>
+                    --base_agent_factory <string>
+                         --base_agent_factory_file <string>
+                    --n_mdps <integer>
+                    --discount_factor <double>
+                    --horizon_limit <integer>
+                    --model_file <string>
+          --output <string>
+
      --help
 
 
@@ -130,6 +169,7 @@ OPTIONS DESCRIPTION
           The type of Agent to load among:
                - RandomAgent
                - OptimalAgent
+               - EOptimalAgent (parameters: --epsilon)
                - EGreedyAgent (parameters: --epsilon)
                - SoftMaxAgent (parameters: --tau)
                - VDBEEGreedyAgent (parameters: --sigma, --delta, --ini_epsilon)
@@ -138,21 +178,60 @@ OPTIONS DESCRIPTION
                - BFS3Agent (parameters: --K --C [--D])
                - SBOSSAgent (parameters: --epsilon --delta)
                - BEBAgent (parameters: --beta)
-               - OPPSDSAgent (parameters: --n_draws, --c, --formula_set, --variables, --discount_factor, --horizon_limit)
-               - OPPSCSAgent (parameters: --n_eval, [--k --h_max --delta], --agent_factory, --discount_factor, --horizon_limit)
+               - OPPSDSAgent (parameters: --n_draws, --c, --formula_set, --variables,
+                                          --discount_factor, --horizon_limit)
+               - OPPSCSAgent (parameters: --n_eval, [--k --h_max --delta],
+                                          --agent_factory,
+                                          --discount_factor, --horizon_limit)
+               - ANNAgent (parameters: --hidden_layers,
+                                       --learning_rate, [--decreasing_learning_rate],
+                                       --max_epoch, --epoch_range,
+                                       --base_agent,
+                                       --n_mdps, --discount_factor, --horizon_limit,
+                                       --model_file)
 
-          Can either be followed by agent's parameters (if any) or by a file
-          (--agent_file)
+          It has to be followed by either the agent's parameters (if any) or
+          by a file (--agent_file) depending on the selected mode.
 
      --agent_factory <string>
           The type of AgentFactory to load among:
                - EGreedyAgentFactory (parameters: --epsilon, --counters)
                - SoftMaxAgentFactory (parameters: --tau, --counters)
-               - VDBEEGreedyAgentFactory
-                 (parameters: --sigma, --delta, --ini_epsilon, --counters)
+               - VDBEEGreedyAgentFactory (parameters: --sigma, --delta, --ini_epsilon,
+                                                      --counters)
+               - FormulaAgentFactory (parameters: --weights, --variables)
+               - ANNAgentFactory (parameters: --hidden_layers,
+                                              --learning_rate, [--decreasing_learning_rate],
+                                              --max_epoch, --epoch_range,
+                                              --base_agent_factory,
+                                              --n_mdps, --discount_factor, --horizon_limit,
+                                              --model_file)
+
+          It has to be followed by either the agent factory's parameters
+          (if any) or by a file (--agent_factory_file) depending on the
+          selected mode.
 
      --agent_file <string>
           The file containing the data of the Agent to load.
+
+     --agent_factory_file <string>
+          The file containing the data of the AgentFactory to load.
+
+     --base_agent <string>
+          Treated as '--agent' option for defining the base agent (see above).
+          The base agent cannot be a MLAgent.
+          The '--agent_file' option cannot be used.
+
+     --base_agent_factory <string>
+          Treated as '--agent_factory' option for defining the base agent
+          factory (see above).
+          The base agent factory cannot be a MLAgentFactory,
+          This agent factory has to be loaded from a file, where option
+          '--agent_factory_file' is replaced by '--base_agent_factory_file'.
+
+     --base_agent_factory_file <string>
+          The file containing the data of the AgentFactory to load when using
+          the option '--base_agent_factory'.
 
      --backup_frequency <double>
           The frequency of backup creation (in s).
@@ -172,6 +251,13 @@ OPTIONS DESCRIPTION
      --C <integer>
           (BFS3Agent parameter)
           The branching factor.
+
+     --decreasing_learning_rate
+          (ANNAgent & ANNAgentFactory parameter)
+          If set, decreases the learning rate w.r.t. to epoch.
+          
+          For the ANNAgentFactory case, defines the value of this parameter
+          for ALL ANNAgents.
 
      --delta <double>
           (OPPSCSAgent parameter)
@@ -199,9 +285,17 @@ OPTIONS DESCRIPTION
           (BAMCPAgent & BFS3Agent parameter)
           The maximal depth.
 
+     --epoch_range <integer>
+          (ANNAgent & ANNAgentFactory parameter)
+          Defines the maximal number of epoch for which the MSE on VS
+          can stop to decrease before stopping the training of the ANN.
+
+          For the ANNAgentFactory case, defines the value of this parameter
+          for ALL ANNAgents.
+
      --epsilon <double>
-          (EGreedyAgent parameter)
-          The probability for the Agent to choose the next action to perform
+          (EOptimalAgent and EGreedyAgent parameter)
+          The probability of the Agent choosing the next action to perform
           randomly.
 
      --epsilon <double>
@@ -242,6 +336,23 @@ OPTIONS DESCRIPTION
      --help
           Display this help.
 
+     --hidden_layers <integer> <integer> ... <integer>
+          (ANNAgent & ANNAgentFactory parameter)
+          Defines the number of neurons for each hidden layers.
+
+          For example:
+               1 layer of  10 neurons: 
+                    --hidden_layers 1 10
+
+               2 layers of 20 neurons:
+                    --hidden_layers 2 20 20
+
+               2 layers of 10, 20 and 10 neurons:
+                    --hidden_layers 3 10 20 10
+          
+          For the ANNAgentFactory case, defines the value of this parameter
+          for ALL ANNAgents.
+                    
      --horizon_limit <integer>
           The horizon limit.
 
@@ -262,10 +373,24 @@ OPTIONS DESCRIPTION
           (BAMCPAgent & BFS3Agent parameter)
           The number of nodes to expand at each time-step.
 
+     --learning_rate <double>
+          (ANNAgent & ANNAgentFactory parameter)
+          Defines the learning rate to use for training the ANN.
+          
+          For the ANNAgentFactory case, defines the value of this parameter
+          for ALL ANNAgents.
+
+     --max_epoch <integer>
+          (ANNAgent & ANNAgentFactory parameter)
+          The maximal number of learning steps.
+          
+          For the ANNAgentFactory case, defines the value of this parameter
+          for ALL ANNAgents.
+
      --max_size <integer>
           The maximal size of a formula (= the maximal number of tokens to
           combine).
-     
+
      --mdp_distribution <string>
           The type of MDP distribution to load among:
                - DirMultiDistribution
@@ -278,7 +403,10 @@ OPTIONS DESCRIPTION
      
      --mdp_distrib_generation
           MDP distribution Generation mode, where a mdp distribution is created.
-     
+
+     --model_file
+          A file location for storing the ML model.
+
      --name <string>
           The full name of the MDP distribution.
      
@@ -292,7 +420,7 @@ OPTIONS DESCRIPTION
      --n_draws <integer>
           (OPPSDSAgent parameter)
           The number of draws of the UCB1.
-          
+     
      --n_mdps <integer>
           The number of MDPs to consider.
      
@@ -313,6 +441,9 @@ OPTIONS DESCRIPTION
 
      --name <string>
           The name of the Experiment to create.
+
+     --new_agent_factory
+          New AgentFactory mode, where an AgentFactory is created.
 
      --new_experiment
           New Experiment mode, where an Experiment is created.
@@ -385,8 +516,8 @@ OPTIONS DESCRIPTION
           (e.g.: the transition matrix).
 
      --save_trajectories
-          If set, the created experiment will not save the complete trajectories
-          of the agents tested on it (only the rewards will remain).
+          If set, the created experiment will save the complete trajectories
+          of the agents tested on it (else, only the rewards will remain).
 
      --seed <integer>
           The seed to use for initializing the RNG.
@@ -403,7 +534,20 @@ OPTIONS DESCRIPTION
           (VDBEAgentFactory parameter)
           The minimal and maximal value of parameter 'sigma' of the
           VDBEEGreedyAgents defined by this AgentFactory.
+
+     --sl_samples_generation
+          Run SL samples generation mode. It consists to draw many trajectories
+          from MDPs drawn from a given distribution, and generate SL samples.
+          Those samples will be 'tagged' by an agent in order to allow a
+          SLAgent to copy its behaviour.
           
+          When drawing the trajectories, we force random decisions at different
+          degrees in order to explore the SL state space by using many instances
+          of 'EAgent'.
+          
+          If no agent is specified, the generated samples will be 'tagged' by
+          an 'OptimalAgent'.
+
      --tau
           (SoftMaxAgent parameter)
           The temperature, controlling smoothly the transition from a greedy
@@ -506,17 +650,8 @@ USAGE EXAMPLES
                     --agent_file "data/agents/agent.dat" \
                --n_threads 1 --compress_output \
                --output "data/results/agent-exp.dat" \
+               --compress_output \
                --refresh_frequency 1 --backup_frequency 15
-
-
-     --- Formula set generation mode ---
-
-          ./BBRL-DDS --formula_set_generation \
-               --n_variables 3 \
-               --tokens 4 ADD2 42 AVG3 MUL2 \
-               --max_size 5 \
-               --reduce --n_points 1000 --points_range -100.0 100.0 \
-               --output "data/formula_sets/F.dat"
 
 
      --- MDP distribution generation mode ---
@@ -560,4 +695,33 @@ USAGE EXAMPLES
                     2 0 0 0 10 \
                     2 0 0 0 10 \
                --output "data/distributions/distrib.dat"
+
+
+     --- Formula set generation mode ---
+
+          ./BBRL-DDS --formula_set_generation \
+               --n_variables 3 \
+               --tokens 4 ADD2 42 AVG3 MUL2 \
+               --max_size 5 \
+               --reduce --n_points 1000 --points_range -100.0 100.0 \
+               --output "data/formula_sets/F.dat"
+
+
+     --- SL samples generation mode ---
+
+          ./BBRL-DDS --sl_samples_generation \
+               --n_mdps 100 \
+               --discount_factor 0.95 \
+               --horizon_limit 250 \
+               --mdp_distribution "DirMultiDistribution" \
+                    --mdp_distribution_file "data/distributions/distrib.dat" \
+               --output "data/ml_samples/agent-samples.dat"
+
+
+     --- New AgentFactory mode ---
+
+          ./BBRL-DDS --new_agent_factory \
+               --agent_factory EGreedyAgentFactory \
+                    --epsilon 0.0 1.0 \
+               --output "data/agent_factories/agent_factory.dat"
 

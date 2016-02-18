@@ -4,6 +4,7 @@
 #include "src/Agent/Agent.h"
 #include "src/Agent/RandomAgent.h"
 #include "src/Agent/OptimalAgent.h"
+#include "src/Agent/EAgent.h"
 #include "src/Agent/EGreedyAgent.h"
 #include "src/Agent/SoftMaxAgent.h"
 #include "src/Agent/VDBEEGreedyAgent.h"
@@ -17,11 +18,15 @@
 #include "src/Agent/BEBAgent.h"
 #include "src/Agent/OPPSDSAgent.h"
 #include "src/Agent/OPPSCSAgent.h"
+#include "src/Agent/SLAgent/SLAgent.h"
+#include "src/Agent/SLAgent/ANNAgent.h"
 
 #include "src/AgentFactory/AgentFactory.h"
 #include "src/AgentFactory/EGreedyAgentFactory.h"
 #include "src/AgentFactory/SoftMaxAgentFactory.h"
 #include "src/AgentFactory/VDBEEGreedyAgentFactory.h"
+#include "src/AgentFactory/FormulaAgentFactory.h"
+#include "src/AgentFactory/SLAgentFactory/ANNAgentFactory.h"
 
 #include "src/MDP/MDP.h"
 #include "src/MDP/Model.h"

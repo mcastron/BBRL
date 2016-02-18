@@ -12,7 +12,7 @@
 	
 	\brief		This namespace defines useful templates for RL elements.
 								
-	\date		2015-01-14
+	\date		2015-12-04
 */
 // ===========================================================================
 namespace rl_utils

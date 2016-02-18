@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
 		cout << "done! (in " << openTime.get() << "ms)\n";
 		
 		Chrono decompressTime;
-		cout << "\tDecompress the data and save them intot a file...";
+		cout << "\tDecompress the data and save them into a file...";
 		cout << flush;
 		ofstream os(output.c_str());
 		os << decompressStr(cStr);

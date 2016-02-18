@@ -11,9 +11,11 @@ using namespace utils;
 vector<xport::AgentData> xport::getAgentDataList(int argc, char* argv[])
 {
      vector<xport::AgentData> agentDataList;
+     vector<string> notLoaded;
 
 
      //   1.   Parse the Agents
+          //   Case 1:   '--agent --agent_file'
      int iAgent = 0;
      while (true)
      {
@@ -23,7 +25,7 @@ vector<xport::AgentData> xport::getAgentDataList(int argc, char* argv[])
           if ((iAgent + 3) >= (argc - 1)) { break; }
    
           int argcBis = 5;
-          char** argvBis = new char*[argc];
+          char** argvBis = new char*[argcBis];
           argvBis[0] = argv[0];
           argvBis[1] = argv[iAgent++];
           argvBis[2] = argv[iAgent++];
@@ -43,11 +45,69 @@ vector<xport::AgentData> xport::getAgentDataList(int argc, char* argv[])
                agentData.loadAgent(agent);
                delete agent;
           }
+          else { notLoaded.push_back(string(argvBis[4])); }
           agentDataList.push_back(agentData);
      }
      
+          //   Case 2:   '--agent_files'
+     try
+     {
+          string file = parsing::getValue(argc, argv, "--agent_files");
+          ifstream is(file.c_str());
+          
+          string agentName, agentFileName;
+          while (getline(is, agentName))
+          {
+               if (getline(is, agentFileName))
+               {
+                    int argcBis = 5;
+                    char** argvBis = new char*[argcBis];
+                    argvBis[0] = argv[0];
+                    
+                    string tmp = "--agent";
+                    argvBis[1] = new char[tmp.size() + 1];
+                    tmp.copy(argvBis[1], tmp.size());
+                    argvBis[1][tmp.size()] = '\0';                    
+                    
+                    tmp = agentName.c_str();
+                    argvBis[2] = new char[tmp.size() + 1];
+                    tmp.copy(argvBis[2], tmp.size());
+                    argvBis[2][tmp.size()] = '\0';
+                    
+                    tmp = "--agent_file";
+                    argvBis[3] = new char[tmp.size() + 1];
+                    tmp.copy(argvBis[3], tmp.size());
+                    argvBis[3][tmp.size()] = '\0';
+                    
+                    tmp = agentFileName.c_str();
+                    argvBis[4] = new char[tmp.size() + 1];
+                    tmp.copy(argvBis[4], tmp.size());
+                    argvBis[4][tmp.size()] = '\0';
+                    
+                    
+                    Agent* agent = 0;
+                    try { agent = Agent::parse(argcBis, argvBis); }
+                    catch (parsing::ParsingException&) {}
+                    delete[] argvBis;
+
+          
+                    xport::AgentData agentData;
+                    if (agent)
+                    {
+                         agentData.loadAgent(agent);
+                         delete agent;
+                    }
+                    else { notLoaded.push_back(string(argvBis[4])); }
+                    agentDataList.push_back(agentData);
+               }
+          }
+     }
+     catch (parsing::ParsingException&) {}
+     
+     
      
      //   2.   Parse the Experiments
+          //   Case 1:   '--experiment --experiment_file'
      int iExp = 0, nExp = 0;
      while (iExp < (argc - 1))
      {
@@ -57,7 +117,7 @@ vector<xport::AgentData> xport::getAgentDataList(int argc, char* argv[])
           if ((iExp + 1) >= (argc - 1)) { break; }
           
           int argcBis = 4;
-          char** argvBis = new char*[argc];
+          char** argvBis = new char*[argcBis];
           argvBis[0] = argv[0];
           argvBis[1] = argv[iExp++];
           argvBis[2] = argv[iExp++];
@@ -75,28 +135,76 @@ vector<xport::AgentData> xport::getAgentDataList(int argc, char* argv[])
                agentDataList[nExp].loadExperiment(exp);
                delete exp;
           }
-          ++nExp;         
+          else { notLoaded.push_back(string(argvBis[3])); }
+          ++nExp;
      }
+     
+          //   Case 2:   '--experiment_files'
+     try
+     {
+          string file = parsing::getValue(argc, argv, "--experiment_files");
+          ifstream is(file.c_str());
+          
+          string expFileName;
+          while (getline(is, expFileName))
+          {
+               int argcBis = 4;
+               char** argvBis = new char*[argcBis];
+               argvBis[0] = argv[0];
+               
+               string tmp = "--experiment";
+               argvBis[1] = new char[tmp.size() + 1];
+               tmp.copy(argvBis[1], tmp.size());
+               argvBis[1][tmp.size()] = '\0';
+               
+               tmp = "--experiment_file";
+               argvBis[2] = new char[tmp.size() + 1];
+               tmp.copy(argvBis[2], tmp.size());
+               argvBis[2][tmp.size()] = '\0';
+               
+               tmp = expFileName.c_str();
+               argvBis[3] = new char[tmp.size() + 1];
+               tmp.copy(argvBis[3], tmp.size());
+               argvBis[3][tmp.size()] = '\0';
+               
+               
+               Experiment* exp = 0;
+               try { exp = Experiment::parse(argcBis, argvBis); }
+               catch (parsing::ParsingException&) {}
+               delete[] argvBis;
+
+     
+               if (exp)
+               {
+                    agentDataList[nExp].loadExperiment(exp);
+                    delete exp;
+               }
+               else { notLoaded.push_back(string(argvBis[3])); }
+               ++nExp;
+          }
+     }
+     catch (parsing::ParsingException&) {}
      
      
      //   3.   Remove the AgentData's which have not been loaded correctly
      vector<AgentData> fAgentDataList;
-     unsigned int nbErrors = 0;
      for (unsigned int i = 0; i < agentDataList.size(); ++i)
      {
-          if (!agentDataList[i].isAgentLoaded()
-                    || !agentDataList[i].isExperimentLoaded())
-          {
-               ++nbErrors;
-          }
-          else { fAgentDataList.push_back(agentDataList[i]); }
+          if (agentDataList[i].isAgentLoaded()
+                    && agentDataList[i].isExperimentLoaded())
+               fAgentDataList.push_back(agentDataList[i]);
      }
      
-     
-     if (nbErrors > 0)
+
+     //   4.   Print the list of files which have not been loaded correctly
+     if (!notLoaded.empty())
      {
           cout << "\n\t";
-          cout << "WARNING: Some data are missing (" << nbErrors << ")\n\n";
+          cout << "WARNING: Some data are missing (" << notLoaded.size() << ")\n";
+
+          for (unsigned int i = 0; i < notLoaded.size(); ++i)
+               cout << "\t\t" << notLoaded[i] << "\n";
+          cout << "\n";
      }
      
      

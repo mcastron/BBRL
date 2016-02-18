@@ -17,7 +17,7 @@
 				This namespace gathers the Agents, MDPs, MDPDistributions
 				and Experiments in this particular setting.
 				
-	\date		2015-06-04
+	\date		2015-12-18
 */
 // ===========================================================================
 namespace dds
@@ -75,6 +75,13 @@ namespace dds
           \brief 	A RL agent taking optimal decisions.
 	*/
 	class OptimalAgent;
+	
+	/**
+          \class    EOptimalAgent
+          \brief 	A RL agent which adds a probability of 'epsilon' to take
+	               a random decision to an Agent.
+	*/
+	class EAgent;
 
 
 	/**
@@ -155,6 +162,21 @@ namespace dds
 	               during its offline phase (continuous case).
 	*/
 	class OPPSCSAgent;
+	
+	
+	/**
+	     \class    SLAgent
+	     \brief    A RL agent copying another agent using a supervised learning
+	               algorithm.
+	*/
+	class SLAgent;
+	
+	
+	/**
+          \class    ANNAgent
+          \brief    A RL agent based on a DNN trained during the offline phase.
+	*/
+	class ANNAgent;
 
 
      /**
@@ -262,6 +284,30 @@ namespace dds
                     (where the formulas are polynomials).
 	*/
 	class FormulaAgentFactory;
+	
+	
+	/**
+	     \class    SLAgentFactory
+	     \brief    An AgentFactory which generates SLAgent's.
+	               (i)  The SLAgentFactory use another AgentFactory for
+                         generating the Agent corresponding to the given
+                         parameters.
+                    (ii) The generated Agent is copied by a SLAgent, and
+                         the SLAgent is returned.
+	*/
+	class SLAgentFactory;
+		
+	
+	/**
+	     \class    ANNAgentFactory
+	     \brief    An AgentFactory which generates ANNAgent's.
+	               (i)  The ANNAgentFactory use another AgentFactory for
+                         generating the Agent corresponding to the given
+                         parameters.
+                    (ii) The generated Agent is copied by a ANNAgent, and
+                         the ANNAgent is returned.
+	*/
+	class ANNAgentFactory;
 	
 	
 	/**
@@ -585,15 +631,15 @@ namespace dds
 			     // =======================================================
 				/**
           			\brief			Draw the arm defined by
-          			                    'paramList' and return its score.
+          			                    'paraSList' and return its score.
           			
-          			\param[paramList	The parameters defining the arm to
+          			\param[paraSList	The parameters defining the arm to
           			                    draw.
           			
           			\return			The score of the arm defined by
-          			                    'paramList'.
+          			                    'paraSList'.
           		*/
-				double drawArm(const vector<double>& paramList) const
+				double drawArm(const vector<double>& paraSList) const
                                                        throw (std::exception);
 		};
 	}

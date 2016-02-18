@@ -23,6 +23,7 @@ if (ZLIB_FOUND)
 		GLOB_RECURSE
 		lib_files
 		src/*.cpp
+		src/fann*.c
 	)
 
 else()
@@ -31,6 +32,7 @@ else()
 		lib_files
 		src/*.cpp
 		src/zlib/*.c
+		src/fann*.c
 	)
 	
 endif()
@@ -46,3 +48,4 @@ if (ZLIB_FOUND)
 	target_link_libraries(Utils ${ZLIB_LIBRARIES})
 
 endif()
+

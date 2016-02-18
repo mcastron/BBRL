@@ -19,27 +19,57 @@ USAGE OVERVIEW
      --help
 
      [
-          --agent
+          --agent <string>
                "agent class name" 
-               --agent_file
+                    --agent_file <string>
           --experiment
-               --experiment_file
+               --experiment_file <string>
      ]*
+     [--agent_files <string>]
+     [--experiment_files <string>]
      [--prefix <string>]
      [--suffix <string>]
      [--no-pdf]
 
 
 OPTIONS DESCRIPTION
+     --agent <string>
+          The type of Agent to load among:
+               - RandomAgent
+               - OptimalAgent
+               - EOptimalAgent
+               - EGreedyAgent
+               - SoftMaxAgent
+               - VDBEEGreedyAgent
+               - FormulaAgent
+               - BAMCPAgent
+               - BFS3Agent
+               - SBOSSAgent
+               - BEBAgent
+               - OPPSDSAgent
+               - OPPSCSAgent
+               - ANNAgent
+
+          It has to be followed by a file (--agent_file).
+
+     --agent_file <string>
+          The file containing the data of the Agent to load.
+     
+     --experiment
+          Followed by the parameters of the Experiment to load.
+
+     --experiment_file <string>
+          The file containing the data of the Experiment to load.
+
+     --no-pdf
+          If specified, do not create a pdf file for the report.
+
      --prefix <string>
           Add a prefix to all generated files.
 
      --suffix <string>
           Add a suffix to all generated files.
 
-     --no-pdf
-          If specified, do not create a pdf file for the report.
-    
 
 USAGE EXAMPLES
           ./BBRL-export \
@@ -60,4 +90,8 @@ USAGE EXAMPLES
                --experiment \
                     --experiment_file "data/results/GC-1000-egreedy_agent(0.5).dat.zz"
                --suffix "test"
-
+          
+          ./BBRL-export \
+               --agent_file "agent_files_list.txt" \
+               --experiment_file "experiment_files_list.txt" \
+               --suffix "test"

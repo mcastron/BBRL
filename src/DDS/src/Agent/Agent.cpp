@@ -2,6 +2,7 @@
 #include "Agent.h"
 #include "RandomAgent.h"
 #include "OptimalAgent.h"
+#include "EAgent.h"
 #include "EGreedyAgent.h"
 #include "SoftMaxAgent.h"
 #include "VDBEEGreedyAgent.h"
@@ -13,6 +14,7 @@
 #include "BEBAgent.h"
 #include "OPPSDSAgent.h"
 #include "OPPSCSAgent.h"
+#include "SLAgent/ANNAgent.h"
 
 
 using namespace std;
@@ -35,7 +37,9 @@ Agent::Agent(string name) : IAgent(name), mdp(0), offlineTime(0.0)
 // ===========================================================================
 //	Public static methods
 // ===========================================================================
-Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
+Agent* Agent::parse(int argc, char* argv[],
+                    bool fromFile,
+                    bool fromParameters) throw (parsing::ParsingException)
 {     
       //   Get 'agentClassName'
      string agentClassName = parsing::getValue(argc, argv, "--agent");
@@ -43,6 +47,9 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
      //   'agentFile' provided
      try
      {
+          if (!fromFile) { throw parsing::ParsingException("--agent"); }
+
+
           string agentFile = parsing::getValue(argc, argv, "--agent_file");
 
           ifstream is(agentFile.c_str());
@@ -56,13 +63,51 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
      
      //   'agentFile' not provided
      catch (parsing::ParsingException& e)
-     {     
+     {
+          if (!fromParameters) { throw parsing::ParsingException("--agent"); }
+
+     
           //   Get 'agent'
           if (agentClassName == RandomAgent::toString())
                return new RandomAgent();
      
           if (agentClassName == OptimalAgent::toString())
                return new OptimalAgent();        
+          
+          if (agentClassName == EAgent::toString())
+          {
+               //   Get 'epsilon'         
+               string tmp = parsing::getValue(argc, argv, "--epsilon");
+               double epsilon = atof(tmp.c_str());
+               
+               
+               //   Get 'base agent'
+               int argcBase;
+               char** argvBase;
+               for (unsigned int i = 1; i < argc; ++i)
+               {
+                    //   '--base_agent' not found
+                    if (string(argv[i]) != "--base_agent") { continue; }
+                    
+                    
+                    //   '--base_agent' found
+                    argvBase = new char*[2 + (argc - i - 1)];
+                    argvBase[0] = argv[0];
+                    char str[] = "--agent";
+                    argvBase[1] = str;
+                    
+                    argcBase = 2;
+                    for (unsigned int j = i + 1; j < argc; ++j)
+                         argvBase[argcBase++] = argv[j];
+                        
+                    break;
+               }
+               Agent* baseAgent = Agent::parse(argcBase, argvBase, false);
+               
+               
+               //   Return
+               return new EAgent(epsilon, baseAgent);
+          }
           
           if (agentClassName == EGreedyAgent::toString())
           {
@@ -278,7 +323,8 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
 
 
                //   Get 'agentFactory'
-               AgentFactory* agentFactory = AgentFactory::parse(argc, argv);
+               AgentFactory* agentFactory =
+                         AgentFactory::parse(argc, argv, true, false);
                assert(agentFactory);
                
                
@@ -328,6 +374,98 @@ Agent* Agent::parse(int argc, char* argv[]) throw (parsing::ParsingException)
                     tmp += "defining the others!\n";
                     throw parsing::ParsingException(tmp);
                }               
+          }
+          
+          if (agentClassName == ANNAgent::toString())
+          {
+               //   Get 'hiddenLayers'
+               string tmp = parsing::getValue(
+                    argc, argv, "--hidden_layers");
+               unsigned int nLayers = atoi(tmp.c_str());
+               
+               vector<string> values = parsing::getValues(
+                    argc, argv, "--hidden_layers", nLayers + 1);
+               
+               vector<unsigned int> hiddenLayers;
+               for (unsigned int i = 1; i < values.size(); ++i)
+                    hiddenLayers.push_back(atoi(values[i].c_str()));
+
+
+               //   Get 'learningRate'
+               tmp = parsing::getValue(argc, argv, "--learning_rate");
+               double learningRate = atof(tmp.c_str());
+
+               
+               //   Get 'decreasingLearningRate'
+               bool decreasingLearningRate =
+                    parsing::hasFlag(argc, argv, "--decreasing_learning_rate");
+
+               
+               //   Get 'maxEpoch'
+               tmp = parsing::getValue(argc, argv, "--max_epoch");
+               unsigned int maxEpoch = atoi(tmp.c_str());
+
+
+               //   Get 'epochRange'
+               tmp = parsing::getValue(argc, argv, "--epoch_range");
+               unsigned int epochRange = atoi(tmp.c_str());
+          
+          
+               //   Get 'base agent'
+               int argcBase;
+               char** argvBase;
+               for (unsigned int i = 1; i < argc; ++i)
+               {
+                    //   '--base_agent' not found
+                    if (string(argv[i]) != "--base_agent") { continue; }
+                    
+                    
+                    //   '--base_agent' found
+                    argvBase = new char*[2 + (argc - i - 1)];
+                    argvBase[0] = argv[0];
+                    char str[] = "--agent";
+                    argvBase[1] = str;
+                    
+                    argcBase = 2;
+                    for (unsigned int j = i + 1; j < argc; ++j)
+                         argvBase[argcBase++] = argv[j];
+                        
+                    break;
+               }
+               Agent* baseAgent = Agent::parse(argcBase, argvBase, false);
+               
+               if (dynamic_cast<SLAgent*>(baseAgent) != 0)
+               {
+                    delete baseAgent;
+                    throw parsing::ParsingException( "--base_agent");
+               }
+               
+               
+               //   Get 'nbOfMDPs'
+               tmp = parsing::getValue(argc, argv, "--n_mdps");
+               unsigned int nbOfMDPs = atoi(tmp.c_str());
+               
+               
+               //   Get 'simGamma'
+               tmp = parsing::getValue(argc, argv, "--discount_factor");
+               double simGamma = atof(tmp.c_str());
+               
+               
+               //   Get 'T'
+               tmp = parsing::getValue(argc, argv, "--horizon_limit");
+               unsigned int T = atoi(tmp.c_str());
+               
+               
+               //   Get 'SLModelFileName'
+               string SLModelFileName =
+                         parsing::getValue(argc, argv, "--model_file");
+               
+          
+               //   Return               
+               return new ANNAgent(
+                         hiddenLayers, learningRate, decreasingLearningRate,
+                         maxEpoch, epochRange,
+                         baseAgent, nbOfMDPs, simGamma, T, SLModelFileName);
           }
      }
      

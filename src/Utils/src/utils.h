@@ -13,7 +13,7 @@
 	
 	\brief		A collection of general tools.
 	
-	\date		2015-08-28
+	\date		2015-10-30
 */
 // ===========================================================================
 namespace utils
@@ -76,8 +76,8 @@ namespace utils
                \brief    An interface to specialize for UCT.
      	*/
      	class UCT;
-	}	
-	
+	}
+
 
 	/**
 		\brief	This namespace gathers several functions related to
@@ -1051,9 +1051,9 @@ namespace utils
                               
                               //   Check all edges
                               std::vector<std::pair<int, int> > commonEdges;
-                              for (int i = 0; i < size(); ++i)
+                              for (int i = 0; i < (int) size(); ++i)
                               {
-                                   for (int j = 0; j < path.size(); ++j)
+                                   for (int j = 0; j < (int) path.size(); ++j)
                                    {
                                         if (get(i) == path.get(j))
                                         {
@@ -1131,7 +1131,7 @@ namespace utils
                               if (extLoop.empty() || !extLoop.isLoop())
                                    return false;
 
-                              for (int i = 0; i < intLoops.size(); ++i)
+                              for (int i = 0; i < (int) intLoops.size(); ++i)
                               {
                                    const Path& cur = intLoops[i];
                                    if (cur.empty() || !cur.isLoop())
@@ -1166,7 +1166,7 @@ namespace utils
                          //   internal
                          bool setIntLoops(std::vector<Path> nIntLoops)
                          {
-                              for (int i = 0; i < nIntLoops.size(); ++i)
+                              for (int i = 0; i < (int) nIntLoops.size(); ++i)
                               {
                                    Path& cur = nIntLoops[i];
                                    if (cur.empty() || !cur.isLoop())

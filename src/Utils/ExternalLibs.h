@@ -39,3 +39,7 @@
 #include "src/zlib/zlib.h"
 
 #endif
+
+
+//   fann
+#include "src/fann/fann.h"

@@ -7,7 +7,7 @@
 # =============================================================================
 #!/bin/bash
 
-cd scripts/lua_scripts/
+cd lua_scripts/
 lua makeInit.lua > 0-init.sh
 
 if [ "$#" -ne 1 ]; then

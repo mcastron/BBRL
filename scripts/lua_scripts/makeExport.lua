@@ -288,26 +288,59 @@ for i, experiments in ipairs({ experiments_accurate, experiments_inaccurate }) d
      end
      
      
-          --   Generate the export command
+          --   Generate the export command    
      print()
      print("./BBRL-export \\")
-     for _, exp in ipairs(experiments) do
-          local prefix = exp.exp .. "-" .. exp.prior .. "-"
-                         .. experiments.shortName .. "-"
      
+     local count = 0
+     for _, exp in ipairs(experiments) do
           for i = 1, #olTasks do
-               if (exp.expFile == reTasks[i].exp.expFile) then     
-                    local agentName = olTasks[i].agent.name
-                    print(getTab(1) .. "--agent " .. agentName .. " \\")
-                    print(getTab(2) .. "--agent_file \""
-                          .. olOutput[i] .. "\" \\")
-               
-                    print(getTab(1) .. "--experiment \\")
-                    print(getTab(2) .. "--experiment_file \""
-                          .. reOutput[i] .. "\" \\")
+               if (exp.expFile == reTasks[i].exp.expFile) then count = count + 1
                end
           end
      end
+     
+     if (count >= 100) then
+          local olFileName = "export-agent-file-list(" .. i .. ").txt";
+          local reFileName = "export-exp-file-list(" .. i .. ").txt";
+          
+          local olFile = io.open("../" .. olFileName, "w")
+          local reFile = io.open("../" .. reFileName, "w")
+          
+          for _, exp in ipairs(experiments) do
+               for i = 1, #olTasks do
+                    if (exp.expFile == reTasks[i].exp.expFile) then
+                         local agentName = olTasks[i].agent.name
+                    
+                         olFile:write(agentName .. "\n" .. olOutput[i] .. "\n")
+                         reFile:write(reOutput[i] .. "\n")
+                    end
+               end
+          end
+          
+          print(getTab(1) .. "--agent_files \"scripts/" .. olFileName .. "\" \\")
+          print(getTab(1) .. "--experiment_files \"scripts/" .. reFileName .. "\" \\")
+     
+     else
+          for _, exp in ipairs(experiments) do
+               local prefix = exp.exp .. "-" .. exp.prior .. "-"
+                        .. experiments.shortName .. "-"
+
+               for i = 1, #olTasks do
+                   if (exp.expFile == reTasks[i].exp.expFile) then     
+                        local agentName = olTasks[i].agent.name
+                        print(getTab(1) .. "--agent " .. agentName .. " \\")
+                        print(getTab(2) .. "--agent_file \""
+                              .. olOutput[i] .. "\" \\")
+
+                        print(getTab(1) .. "--experiment \\")
+                        print(getTab(2) .. "--experiment_file \""
+                              .. reOutput[i] .. "\" \\")
+                   end
+               end
+          end
+     end     
+
      
      if (i == 1) then print(getTab(1) .. "--suffix \"accurate\"")
      else             print(getTab(1) .. "--suffix \"inaccurate\"")

@@ -91,27 +91,28 @@ function getOLCommand(task)
 
 
      --   OL options
+     local agentName = task.agent.name
+     for i, v in ipairs(task.vIndex) do
+          if (task.agent.params[i].labels) then
+               agentName = agentName .. "-" .. task.agent.params[i].labels[v]
+          elseif (task.agent.params[i].values[v] == "$T") then
+               agentName = agentName .. "-" .. task.exp.T
+          else
+               agentName = agentName .. "-" .. task.agent.params[i].values[v]
+          end
+     end
+     
      local olOptionsStr = ""
      for _, opt in ipairs(task.agent.olOptions) do
+          opt = opt:gsub("$PRIOR", task.exp.prior)
+          opt = opt:gsub("$AGENT_STR", agentName)
           olOptionsStr = olOptionsStr .. getTab(1) .. opt .. " \\\n"          
      end
 
 
      --   Output command
      local outputFileName = "data/agents/" .. task.exp.prior
-     outputFileName = outputFileName .. "-" .. task.agent.name
-     for i, v in ipairs(task.vIndex) do
-          if (task.agent.params[i].labels) then
-               outputFileName = outputFileName .. "-"
-                                .. task.agent.params[i].labels[v]
-          elseif (task.agent.params[i].values[v] == "$T") then
-               outputFileName = outputFileName .. "-"
-                                .. task.exp.T
-          else
-               outputFileName = outputFileName .. "-"
-                                .. task.agent.params[i].values[v]
-          end
-     end
+     outputFileName = outputFileName .. "-" .. agentName
      outputFileName = outputFileName .. ".dat"
      
      local outputStr = getTab(1)

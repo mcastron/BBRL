@@ -13,7 +13,7 @@
 	
 	\brief 	Interface of a RL Experiment.
 			
-	\date 	2015-02-22
+	\date 	2015-09-22
 */
 // ===========================================================================
 template<typename AgentType, typename MDPType, typename SimulationRecordType>
@@ -99,6 +99,15 @@ class IExperiment : public Serializable
 			\return	The number of test MDPs used in this Experiment.
 		*/
 		unsigned int getNbOfMDPs() const { return mdpList.size(); }
+		
+		
+		/**
+               \brief    Return the discount factor used during the
+                         simulations.
+
+               \return   The discount factor used during the simulations.
+		*/
+		virtual double getSimGamma() const = 0;
 
 
 		/**
@@ -137,6 +146,17 @@ class IExperiment : public Serializable
 					simulations, discounted by 'gamma' (in ]0; 1]).
 		*/
 		std::vector<double> computeDSRList(double gamma = -1.0) const;
+		
+		
+		/**
+               \brief    Return the list of MDPs used by this IExperiment.
+               
+               \return   The list of MDPs used by this IExperiment.
+		*/
+		std::vector<MDPType*> getMDPList() const
+		{
+               return mdpList;
+		}
 		
 		
 		/**
@@ -286,16 +306,7 @@ class IExperiment : public Serializable
 	
 		// =================================================================
 		//	Protected methods
-		// =================================================================
-		/**
-               \brief    Return the discount factor used during the
-                         simulations.
-
-               \return   The discount factor used during the simulations.
-		*/
-		virtual double getSimGamma() const = 0;
-		
-		
+		// =================================================================		
 		/**
 			\brief		Perform a single simulation.
 			

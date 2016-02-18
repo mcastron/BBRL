@@ -620,7 +620,7 @@ class utils::gnuplot::details::LabelPositionOptim : public algorithm::StoSOO
                int i, j = polyCorners - 1;
                bool oddNodes = false;
                
-               const vector<double>& polyX = x;
+               //const vector<double>& polyX = x;
                const vector<double>& polyY = y;
                for (i = 0; i < polyCorners; i++)
                {
@@ -754,7 +754,7 @@ std::vector<utils::gnuplot::details::Path>
      Path cPath;
      
      int c = 0;
-     for (unsigned int i = 0; i < size(); ++i)
+     for (int i = 0; i < (int) size(); ++i)
      {
           if (i == cuts[c])
           {
@@ -781,7 +781,7 @@ std::vector<utils::gnuplot::details::Path>
           
           if (tail == head)
           {
-               for (int j = 0; j < b.size(); ++j) { a.add(b.get(j)); }
+               for (int j = 0; j < (int) b.size(); ++j) { a.add(b.get(j)); }
 
                paths[0] = a;
                paths.pop_back();
@@ -853,7 +853,7 @@ bool utils::gnuplot::details::Polygon::mergeWith(const Polygon& poly)
      
           //   Check if external loop of polygon #1 touches another loop
      k = 0;
-     for (l = 0; l < loops2.size(); ++l)
+     for (l = 0; l < (int) loops2.size(); ++l)
      {
           commonEdges = loops1[k].getCommonEdges(loops2[l]);
           if (!commonEdges.empty()) { break; }
@@ -863,7 +863,7 @@ bool utils::gnuplot::details::Polygon::mergeWith(const Polygon& poly)
      if (commonEdges.empty())
      {
           l = 0;
-          for (k = 0; k < loops1.size(); ++k)
+          for (k = 0; k < (int) loops1.size(); ++k)
           {
                commonEdges = loops1[k].getCommonEdges(loops2[l]);
                if (!commonEdges.empty()) { break; }
@@ -968,17 +968,17 @@ bool utils::gnuplot::details::Polygon::mergeWith(const Polygon& poly)
 
      //   Gather the internal loops
      intLoops.clear();
-     for (unsigned int i = 0; i < loops1.size(); ++i)
+     for (int i = 0; i < (int) loops1.size(); ++i)
      {
           if (i != k) { intLoops.push_back(loops1[i]); }
      }
      
-     for (unsigned int i = 0; i < loops2.size(); ++i)
+     for (int i = 0; i < (int) loops2.size(); ++i)
      {
           if (i != l) { intLoops.push_back(loops2[i]); }
      }
      
-     for (unsigned int i = 0; i < mLoops.size(); ++i)
+     for (int i = 0; i < (int) mLoops.size(); ++i)
      {
           if (i != max) { intLoops.push_back(mLoops[i]); }
      }
@@ -996,7 +996,7 @@ utils::gnuplot::details::Point
      //   Simplify the polygon and retrieve the coordinates of each edge
      unsigned int N = extLoop.size();
      vector<double> x, y;
-     for (int i = 0; i < N; ++i)
+     for (int i = 0; i < (int) N; ++i)
      {
           Point p = extLoop.get((i - 1 + N) % N).getFrom();
           Point q = extLoop.get((i + 1)     % N).getFrom();
@@ -1051,7 +1051,7 @@ void utils::gnuplot::details::Polygon::print() const
 {
      std::cout << "Ext Loop:\n";
      const Path& l = extLoop;
-     for (int i = 0; i < l.size(); ++i)
+     for (int i = 0; i < (int) l.size(); ++i)
      {
           Point p = l.get(i).getFrom();
           
@@ -1069,7 +1069,7 @@ void utils::gnuplot::details::Polygon::print() const
           for (int c = 0; it != end; ++it, ++c)
           {
                std::cout << *it;
-               if (c < (list.size() - 1))
+               if (c < (int) (list.size() - 1))
                     std::cout << ", ";
           }
           
@@ -1089,7 +1089,7 @@ void utils::gnuplot::details::Polygon::print() const
      {
           std::cout << "Int Loop #" << j << "\n";
           const Path& l = intLoops[j];
-          for (int i = 0; i < l.size(); ++i)
+          for (int i = 0; i < (int) l.size(); ++i)
           {
                double x = l.get(i).getFrom().getX();
                double y = l.get(i).getFrom().getY();
@@ -1208,8 +1208,10 @@ std::vector<utils::gnuplot::details::Polygon>
                
                unsigned int x0 = ((int) j - 1) <   0 ?  0       : (j - 1);
                unsigned int y0 = ((int) i - 1) <   0 ?  0       : (i - 1);
-               unsigned int x1 = ((int) j + 1) >= nX ? (nX - 1) : (j + 1);
-               unsigned int y1 = ((int) i + 1) >= nY ? (nY - 1) : (i + 1);
+               unsigned int x1 = ((int) j + 1) >=
+                                            (int) nX ? (nX - 1) : (j + 1);
+               unsigned int y1 = ((int) i + 1) >=
+                                            (int) nY ? (nY - 1) : (i + 1);
                
                set<unsigned int> list = grid[i][j].getList();
                
@@ -1275,7 +1277,7 @@ std::vector<utils::gnuplot::details::Polygon>
      
      
      //   Merge the polygons
-     int count = 0;
+     //int count = 0;
      bool merged;
      do
      {

@@ -1,31 +1,29 @@
 
-/* TODO - replace "XXXAgent" the agent class name */
-
-
-#ifndef XXXAGENT_H
-#define XXXAGENT_H
+#ifndef EAGENT_H
+#define EAGENT_H
 
 #include "Agent.h"
+#include "../MDP/MDP.h"
 #include "../dds.h"
 #include "../../ExternalLibs.h"
 
 
 // ===========================================================================
-/**
-	\class 	XXXAgent
+/*
+	\class 	EAgent
 	\author 	Castronovo Michael
 	
-	\brief 	Interface of ??? Agent to address MDP problems for:
+	\brief 	A RL agent which adds a probability of 'epsilon' to take
+	          a random decision to an Agent.
+	          It has been designed to address:
 				- DISCRETE state space (int)
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-               (TODO - to complete)
-
-	\date 	2015-09-17
+	\date 	2015-12-18
 */
 // ===========================================================================
-/* final */ class dds::XXXAgent : public dds::Agent
+/* final */ class dds::EAgent : public dds::Agent
 {		
 	public:
 		// =================================================================
@@ -35,16 +33,28 @@
 			\brief	Constructor.
 			
 			\param[is	The 'ifstream' containting the data representing
-					the XXXAgent to load.
+					the EAgent to load.
 					(can either be compressed or uncompressed)
 		*/
-		XXXAgent(std::istream& is);
+		EAgent(std::istream& is);
+
+		
+		/**
+			\brief		     Constructor.
+			
+			\param[epsilon_     The probability to select an action
+							randomly.
+							
+			\param[baseAgent_   The agent taking the decisions with a
+			                    probability of 'epsilon - 1'.
+		*/
+		EAgent(double epsilon_, Agent* baseAgent_);
 		
 		
 		/**
 			\brief	Destructor.
 		*/
-		~XXXAgent();
+		~EAgent();
 
 
 		// =================================================================
@@ -55,10 +65,7 @@
 			
 			\return	The string representation of this class name.
 		*/
-		static std::string toString()
-		{
-		   return "XXXAgent";
-		}
+		static std::string toString() { return "EAgent"; }
 
 
 		// =================================================================
@@ -67,15 +74,17 @@
 		/**
 			\brief	Return the action to perform on the currently
 					associated MDP from state 'x'.
+					Consists to draw a Optimal action from the action
+					space of the currently associated MDP.
 			
 			\param[xt	The state from which a decision has to be made.
 			
 			\return	The action to perform.
 		*/
 		int getAction(int xt) const throw (AgentException);
-		
-		
-		/**
+
+
+          /**
 			\brief	Learn from <x, u, y, r> transition (online).
 			
 			\param[x	The origin state.
@@ -84,17 +93,17 @@
 			\param[r	The reward observed.
 		*/
 		void learnOnline(int x, int u, int y, double r)
-                                                       throw (AgentException);
+		                                             throw (AgentException);
 
-		
+
 		/**
 			\brief	Reset this agent.
 					(called when this Agent is associated to a new MDP).
 		*/
 		void reset() throw (AgentException);
-		
-		
-		/**
+
+          
+          /**
                \brief    Free unnecessary data.
                          (called when this Agent has finished to interact
                          with the current MDP).
@@ -109,20 +118,32 @@
 		*/
 		Agent* clone() const
 		{
-		     /* TODO - call 'Serializable::checkIn<>()' in 'dds::init()' */
-			return cloneInstance<XXXAgent>(this);
+			return cloneInstance<EAgent>(this);
 		}
-		
-		
+
+
 		/**
 			\brief	Return the name of the class of this object.
 					This method should be overloaded by any derived class.
 			
 			\return	The name of the class of this object.
 		*/
-		std::string getClassName() const { return XXXAgent::toString(); }
+		std::string getClassName() const { return EAgent::toString(); }
 
-		
+
+          /**
+               \brief    Return the name of the class of this object, formatted
+                         for export files.
+
+               \return   The name of the class of this object, formatted for
+                         export files.
+		*/
+		std::string getExportClassName() const
+		{
+		     return "e-" + baseAgent->getExportClassName();
+		}
+
+
 		/**
 			\brief	Serialize this Object.
 					If overloaded, the new 'serialize()' method should
@@ -140,12 +161,22 @@
 		*/
 		void deserialize(std::istream& is) throw (SerializableException);
 
-
+		
 	private:
 		// =================================================================
 		//	Private attributes
 		// =================================================================
-		/* TODO - insert your attributes here */
+		/**
+			\brief	The probability to select an action randomly.
+		*/
+		double epsilon;
+		
+		
+		/**
+			\brief	The agent taking the decisions with a probability
+			          of 'epsilon - 1'.
+		*/
+		Agent* baseAgent;
 		
 		
 		// =================================================================
@@ -153,15 +184,12 @@
 		// =================================================================
 		/**
 			\brief			Learn from a MDP distribution offline.
-
-							Consist to learn an appropriate initial
-							model.
 			
 			\param[mdpDistrib	A MDP distribution.
 		*/
 		void learnOffline_aux(const MDPDistribution* mdpDistrib)
-											throw (AgentException);
-
+										     throw (AgentException);
+		
 		
 		#ifndef NDEBUG
 		/**

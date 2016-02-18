@@ -17,7 +17,7 @@
 				- DISCRETE action space (int)
 				- SINGLE reward (double)
 
-	\date 	2015-03-17
+	\date 	2015-12-18
 */
 // ===========================================================================
 class dds::Agent : public IAgent
@@ -52,12 +52,19 @@ class dds::Agent : public IAgent
 		
 		
 		/**
-		     \brief    Parse the standard program options in order to
-		               to instanciate an Agent.
+		     \brief                   Parse the standard program options in
+		                              order to to instanciate an Agent.
+
+               \param[fromFile          True if the Agents can be loaded from
+                                        a file, false else.
+               \param[fromParameters    True if the Agents can be created
+                                        from parameters, false else.
 		     
-		     \return   The Agent found (0 if it fails).
+		     \return                  The Agent found.
 		*/
-		static Agent* parse(int argc, char* argv[])
+		static Agent* parse(int argc, char* argv[],
+		                    bool fromFile = true,
+		                    bool fromParameters = true)
                                    throw (utils::parsing::ParsingException);
 
 
@@ -88,8 +95,8 @@ class dds::Agent : public IAgent
 			\brief		Associate this Agent to a MDP.
 			
 			\param[mdp_	A MDP.
-			\param[gamma	The discount factor.
-			\param[T		The horizon limit.
+			\param[gamma_  The discount factor.
+			\param[T_  	The horizon limit.
 		*/
 		void setMDP(const MDP* mdp_, double gamma_, unsigned int T_)
 											throw (AgentException);

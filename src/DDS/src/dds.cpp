@@ -3,6 +3,7 @@
 
 #include "Agent/RandomAgent.h"
 #include "Agent/OptimalAgent.h"
+#include "Agent/EAgent.h"
 #include "Agent/EGreedyAgent.h"
 #include "Agent/SoftMaxAgent.h"
 #include "Agent/VDBEEGreedyAgent.h"
@@ -13,6 +14,7 @@
 #include "Agent/BEBAgent.h"
 #include "Agent/OPPSDSAgent.h"
 #include "Agent/OPPSCSAgent.h"
+#include "Agent/SLAgent/ANNAgent.h"
 
 #include "Agent/FormulaAgent/QMean.h"
 #include "Agent/FormulaAgent/QSelf.h"
@@ -22,6 +24,7 @@
 #include "AgentFactory/SoftMaxAgentFactory.h"
 #include "AgentFactory/VDBEEGreedyAgentFactory.h"
 #include "AgentFactory/FormulaAgentFactory.h"
+#include "AgentFactory/SLAgentFactory/ANNAgentFactory.h"
 
 #include "MDP/MDP.h"
 #include "MDP/CModel.h"
@@ -53,6 +56,9 @@ void dds::init(unsigned int seed)
 	Serializable::checkIn<OptimalAgent>(
 			&Serializable::createInstance<OptimalAgent>);
 
+     Serializable::checkIn<EAgent>(
+			&Serializable::createInstance<EAgent>);
+
 	Serializable::checkIn<EGreedyAgent>(
 			&Serializable::createInstance<EGreedyAgent>);
 
@@ -83,6 +89,9 @@ void dds::init(unsigned int seed)
 	Serializable::checkIn<OPPSCSAgent>(
 			&Serializable::createInstance<OPPSCSAgent>);
 
+     Serializable::checkIn<ANNAgent>(
+               &Serializable::createInstance<ANNAgent>);
+
 
      //   FVariables
      Serializable::checkIn<QMean>(
@@ -96,7 +105,7 @@ void dds::init(unsigned int seed)
 
      Serializable::checkIn<QCounterVar>(
 			&Serializable::createInstance<QCounterVar>);
-			
+		
 			
 	//  AgentFactorys
 	Serializable::checkIn<EGreedyAgentFactory>(
@@ -110,6 +119,9 @@ void dds::init(unsigned int seed)
 
 	Serializable::checkIn<FormulaAgentFactory>(
 			&Serializable::createInstance<FormulaAgentFactory>);
+
+     Serializable::checkIn<ANNAgentFactory>(
+			&Serializable::createInstance<ANNAgentFactory>);
 
 
 	//	MDP
@@ -227,16 +239,50 @@ dds::opps::StoSOO::StoSOO(
 double dds::opps::StoSOO::f(const std::vector<double>& x) const
                                                        throw (std::exception)
 {
+//      cout << "\n\n\t[ Sto-SOO testing < " << x[0];
+//      for (unsigned int i = 1; i < x.size(); ++i) { cout << ", " << x[i]; }
+//      cout << " > ]\n";
+// 
+//      Agent* agent = agentFactory->get(x);
+// 	MDP* mdp = mdpDistrib->draw();
+// 		
+// 	dds::simulation::SimulationRecord simRec;
+// 	simRec = dds::simulation::simulate(agent, mdp, gamma, T, false);
+// 	
+// 	delete agent;
+// 	delete mdp;
+// 	
+// 	double dsr = simRec.computeDSR();
+// 	cout << "\n\t[ Sto-SOO got " << dsr << " ]\n\n";
+// 	
+// 	return dsr;
+
+     unsigned int nMDPs = 500;
+
+     cout << "\n\n\t[ Sto-SOO testing < " << x[0];
+     for (unsigned int i = 1; i < x.size(); ++i) { cout << ", " << x[i]; }
+     cout << " > ]\n";
+
      Agent* agent = agentFactory->get(x);
-	MDP* mdp = mdpDistrib->draw();
-		
-	dds::simulation::SimulationRecord simRec;
-	simRec = dds::simulation::simulate(agent, mdp, gamma, T, false);
+	
+	double meanDSR = 0.0;
+     for (unsigned int i = 0; i < nMDPs; ++i)
+     {
+          MDP* mdp = mdpDistrib->draw();
+          
+          dds::simulation::SimulationRecord simRec;
+          simRec = dds::simulation::simulate(agent, mdp, gamma, T, false);
+          
+          delete mdp;
+     
+          meanDSR += simRec.computeDSR();
+	}
+	meanDSR /= nMDPs;
 	
 	delete agent;
-	delete mdp;
 	
-	return simRec.computeDSR();
+	cout << "\n\t[ Sto-SOO got " << meanDSR << " ]\n\n";
+	return meanDSR;
 }
 
 
@@ -284,9 +330,9 @@ dds::opps::UCT::UCT(
 
 
 double dds::opps::UCT::drawArm(
-		const vector<double>& paramList) const throw (std::exception)
+		const vector<double>& paraSList) const throw (std::exception)
 {
-	Agent* agent = agentFactory->get(paramList);
+	Agent* agent = agentFactory->get(paraSList);
 	MDP* mdp = mdpDistrib->draw();
 		
 	dds::simulation::SimulationRecord simRec;

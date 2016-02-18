@@ -1,7 +1,8 @@
 
+#include <algorithm>
 #include <assert.h>
-#include <iomanip>
 #include <fstream>
+#include <iomanip>
 #include <set>
 #include <string>
 #include <sstream>
