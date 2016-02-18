@@ -12,8 +12,9 @@ USAGE OVERVIEW
           --agent <string>
                RandomAgent
                OptimalAgent
-               EOptimalAgent
+               EAgent
                     --epsilon <double>
+                    --base_agent <string> (...)
                EGreedyAgent
                     --epsilon <double>                         
                SoftMaxAgent
@@ -169,7 +170,7 @@ OPTIONS DESCRIPTION
           The type of Agent to load among:
                - RandomAgent
                - OptimalAgent
-               - EOptimalAgent (parameters: --epsilon)
+               - EAgent (parameters: --epsilon --base_agent)
                - EGreedyAgent (parameters: --epsilon)
                - SoftMaxAgent (parameters: --tau)
                - VDBEEGreedyAgent (parameters: --sigma, --delta, --ini_epsilon)

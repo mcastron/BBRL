@@ -37,7 +37,7 @@ OPTIONS DESCRIPTION
           The type of Agent to load among:
                - RandomAgent
                - OptimalAgent
-               - EOptimalAgent
+               - EAgent
                - EGreedyAgent
                - SoftMaxAgent
                - VDBEEGreedyAgent
