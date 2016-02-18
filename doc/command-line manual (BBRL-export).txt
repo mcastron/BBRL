@@ -55,11 +55,27 @@ OPTIONS DESCRIPTION
      --agent_file <string>
           The file containing the data of the Agent to load.
      
+     --agent_files <string>
+          The file containing the list of agent files to load.
+          e.g.:
+               RandomAgent
+               data/agents/random_agent.dat
+               EGreedyAgent
+               "data/agents/egreedy_agent(0.1).dat"
+               ...
+     
      --experiment
           Followed by the parameters of the Experiment to load.
 
      --experiment_file <string>
           The file containing the data of the Experiment to load.
+          
+     --experiment_files <string>
+          The file containing the list of experiment files to load.
+          e.g.:
+               "data/results/GC-1000-random_agent.dat.zz"
+               "data/results/GC-1000-egreedy_agent(0.1).dat.zz"
+               ...
 
      --no-pdf
           If specified, do not create a pdf file for the report.
@@ -92,6 +108,6 @@ USAGE EXAMPLES
                --suffix "test"
           
           ./BBRL-export \
-               --agent_file "agent_files_list.txt" \
-               --experiment_file "experiment_files_list.txt" \
+               --agent_files "agent_files_list.txt" \
+               --experiment_files "experiment_files_list.txt" \
                --suffix "test"
