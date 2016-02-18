@@ -84,6 +84,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <img src="https://travis-ci.org/mcastron/BBRL.svg"  alt="alt tag"/>
 </div>
 <p>BBRL (**B**enchmarking tools for **B**ayesian **R**einforcement **L**earning) is a C++ open-source library used to compare Bayesian reinforcement learning algorithms. For more information about my research, visit my <a href="http://www.montefiore.ulg.ac.be/~mcastron/index.html">website</a>.</p>
+<p>2.0</p><ul>
+<li>Added a modified version of 'fann' library in 'utils' (from version 2.2.0).</li>
+<li>Added 'EAgent' and 'ANNAgent' agents.</li>
+<li>Added 'ANNAgentFactory' agent factory.</li>
+<li>Updated 'BBRL-export' in order to handle agent and experiment files listed in two separated files.</li>
+<li>Added '&ndash;sl_samples_generation' to 'BBRL-DDS' for generating the data required by 'ANNAgent'.</li>
+<li>Added '&ndash;new_agent_factory' to 'BBRL-DDS' for allowing the creation of an 'ANNAgentFactory' (which is based on another 'AgentFactory'),</li>
+<li>'<a class="el" href="namespacexport.html#a08ddbd9433b3e69e92abcb90395b1c77" title="Return the data of the agents referenced by &#39;argc&#39; and &#39;argv&#39;. ">xport::getAgentDataList()</a>' will now list all possible missing files when called.</li>
+</ul>
 <p>1.5</p><ul>
 <li>TinyBRL has been renamed BBRL.</li>
 </ul>
@@ -177,7 +186,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 18 2016 14:34:46 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 18 2016 15:55:04 for BBRL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
